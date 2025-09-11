@@ -1,0 +1,16 @@
+datasets==3.5.0
+diffusers==0.33.1
+galois==0.4.5
+ldpc==2.3.4
+matplotlib==3.10.1
+numpy==2.2.5
+Pillow==11.2.1
+pycryptodome==3.22.0
+scikit_learn==1.6.1
+scipy==1.15.2
+sentence_transformers==4.1.0
+torch==2.6.0+cu126
+torchvision==0.21.0+cu126
+tqdm==4.67.1
+transformers==4.47.1
+ujson==5.10.0

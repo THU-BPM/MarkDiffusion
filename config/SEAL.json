@@ -1,0 +1,11 @@
+{
+    "algorithm_name": "SEAL",
+    "k_value": 1024,
+    "b_value": 7,
+    "patch_distance_threshold": 3,
+    "theta_mid": 70,
+    "secret_salt": 42,
+    "cap_processor": "/mnt/ckpt/blip2-flan-t5-xl",
+    "cap_model": "/mnt/ckpt/blip2-flan-t5-xl",
+    "sentence_model": "/mnt/ckpt/finetuned-caption-embedding"
+}

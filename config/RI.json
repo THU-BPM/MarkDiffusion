@@ -1,0 +1,18 @@
+{
+    "algorithm_name": "RI",
+    "ring_width": 1,
+    "quantization_levels": 4,
+    "ring_value_range": 64,
+    "fix_gt": 1,
+    "time_shift": 1,
+    "time_shift_factor": 1.0,
+    "assigned_keys": 10,
+    "channel_min": 1,
+    "radius": 14,
+    "radius_cutoff": 3,
+    "anchor_x_offset": 0,
+    "anchor_y_offset": 0,
+    "heter_watermark_channel": [0],
+    "ring_watermark_channel": [3],
+    "threshold": 50
+}

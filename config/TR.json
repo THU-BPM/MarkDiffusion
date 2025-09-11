@@ -1,0 +1,10 @@
+{
+    "algorithm_name": "TR",
+    "w_seed": 999999,
+    "w_channel": 0,
+    "w_pattern": "zeros",
+    "w_mask_shape": "circle",
+    "w_radius": 10,
+    "w_pattern_const": 0,
+    "threshold": 50
+}

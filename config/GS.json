@@ -1,0 +1,10 @@
+{
+    "algorithm_name": "GS",
+    "channel_copy": 1,
+    "wm_key": 42,
+    "hw_copy": 8,
+    "chacha": true,
+    "chacha_key_seed": 123456,
+    "chacha_nonce_seed": 789012,
+    "threshold": 0.7
+} 

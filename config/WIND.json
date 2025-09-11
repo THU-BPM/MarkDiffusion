@@ -1,0 +1,11 @@
+{
+    "algorithm_name": "WIND",
+    "w_seed": 99999,
+    "num_noises": 1000,
+    "num_groups": 10,
+    "secret_salt": "your-secret-salt-string",
+    "hash_function": "sha256",
+    "group_radius": 5,
+    "threshold": 0.5,
+    "current_index": 0
+}
