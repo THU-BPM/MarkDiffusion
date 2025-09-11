@@ -3,7 +3,6 @@ Diffusion_tutorial.ipynb
 *.mp4
 rocket.png
 *.zip
-*.png
 fid_outputs
 demo.jpg
 dataset/mscoco/filter.ipynb
