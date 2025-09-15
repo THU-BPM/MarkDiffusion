@@ -9,7 +9,6 @@ dataset/mscoco/filter.ipynb
 dataset/mscoco/ground_truth_bkp
 utils/backup/
 watermark/robin/generated_images/
-MarkDiffusion_demo.ipynb
 .env
 output
 backup
