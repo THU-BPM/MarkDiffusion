@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="img/markdiffusion-color.jpg" style="width: 65%;"/>
+<img src="img/markdiffusion-color-1.jpg" style="width: 65%;"/>
 
-# An Open-Source Toolkit for Watermarking of Latent Diffusion Models
+# An Open-Source Toolkit for Generative Watermarking of Latent Diffusion Models
 
 [![Homepage](https://img.shields.io/badge/Homepage-5F259F?style=for-the-badge&logo=homepage&logoColor=white)](https://generative-watermark.github.io/)
 [![Paper](https://img.shields.io/badge/Paper-A42C25?style=for-the-badge&logo=arxiv&logoColor=white)](https://arxiv.org/abs/2509.10569)
