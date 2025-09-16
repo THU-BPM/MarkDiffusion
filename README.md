@@ -1,6 +1,15 @@
-# MarkDiffusion: An Open-Source Toolkit for Generative Watermarking of Latent Diffusion Models
+<div align="center">
 
-> 🎉 **We welcome PRs!** If you have implemented a LDM watermarking algorithm or are interested in contributing one, we'd love to include it in MarkDiffusion. Join our community and help make generative watermarking more accessible to everyone!
+<img src="img/markdiffusion-color.jpg" style="width: 65%;"/>
+
+# An Open-Source Toolkit for Watermarking of Latent Diffusion Models
+
+[![Homepage](https://img.shields.io/badge/Homepage-5F259F?style=for-the-badge&logo=homepage&logoColor=white)](https://generative-watermark.github.io/)
+[![Paper](https://img.shields.io/badge/Paper-A42C25?style=for-the-badge&logo=arxiv&logoColor=white)](https://arxiv.org/abs/2509.10569)
+
+</div>
+
+> 🔥 **As a new released project, We welcome PRs!** If you have implemented a LDM watermarking algorithm or are interested in contributing one, we'd love to include it in MarkDiffusion. Join our community and help make generative watermarking more accessible to everyone!
 
 ## Contents
 
@@ -417,3 +426,14 @@ print(pipeline.evaluate(my_watermark))
 ```
 
 ## Citation
+```
+@misc{pan2025markdiffusionopensourcetoolkitgenerative,
+      title={MarkDiffusion: An Open-Source Toolkit for Generative Watermarking of Latent Diffusion Models}, 
+      author={Leyi Pan and Sheng Guan and Zheyu Fu and Luyang Si and Zian Wang and Xuming Hu and Irwin King and Philip S. Yu and Aiwei Liu and Lijie Wen},
+      year={2025},
+      eprint={2509.10569},
+      archivePrefix={arXiv},
+      primaryClass={cs.CR},
+      url={https://arxiv.org/abs/2509.10569}, 
+}
+```
