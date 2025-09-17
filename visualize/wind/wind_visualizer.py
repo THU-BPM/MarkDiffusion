@@ -322,3 +322,65 @@ class WINDVisualizer(BaseVisualizer):
                     cbar.ax.tick_params(labelsize=6)
         
         return ax
+                              
+    def draw_inverted_group_pattern_fft(self,
+                                            channel: int | None = None,
+                                            title: str = "WIND Two-Stage Detection Visualization",
+                                            cmap: str = "viridis",
+                                            use_color_bar: bool = True,
+                                            ax: Axes | None = None,
+                                            **kwargs) -> Axes:
+        
+        # Get inverted latents
+        reversed_latents = self.data.reversed_latents[self.watermarking_step]
+        
+        if channel is not None:
+            # Single channel visualization
+            latent_channel = reversed_latents[0, channel]
+        else:
+            # Average across all channels for clearer visualization
+            latent_channel = reversed_latents[0].mean(dim=0)
+        
+        # Convert to frequency domain 
+        z_fft = torch.fft.fftshift(torch.fft.fft2(latent_channel), dim=(-1, -2))
+        
+        # Get the group pattern that would be detected
+        index = self.data.current_index % self.data.M
+        if channel is not None:
+            group_pattern = self.group_pattern[channel]
+        else:
+            group_pattern = self.group_pattern.mean(dim=0)
+        
+        # Create circular mask 
+        mask = self._create_circle_mask(64, self.data.group_radius)
+        
+        # Remove group pattern
+        z_fft_cleaned = z_fft - group_pattern * mask
+        
+        detection_signal = torch.abs(z_fft_cleaned)
+        
+        # Apply same mask that detector uses to focus on watermark region
+        detection_signal = detection_signal * mask
+        
+        # Plot the detection signal
+        im = ax.imshow(detection_signal.cpu().numpy(), cmap=cmap, **kwargs)
+        
+        if title != "":
+            detection_info = f" (Group {index}, Radius {self.data.group_radius})"
+            ax.set_title(title + detection_info, fontsize=10)
+        
+        ax.axis('off')
+        
+        # Add colorbar
+        if use_color_bar:
+            cbar = ax.figure.colorbar(im, ax=ax)
+            cbar.set_label('Detection Signal Magnitude', fontsize=8)
+        
+        return ax
+    
+    def _create_circle_mask(self, size: int, r: int) -> torch.Tensor:
+        """Create circular mask for watermark region (same as in detector)"""
+        y, x = torch.meshgrid(torch.arange(size), torch.arange(size), indexing='ij')
+        center = size // 2
+        dist = (x - center)**2 + (y - center)**2
+        return ((dist >= (r-2)**2) & (dist <= r**2)).float().to(self.data.orig_watermarked_latents.device)
