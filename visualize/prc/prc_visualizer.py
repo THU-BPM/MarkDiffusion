@@ -136,7 +136,54 @@ class PRCVisualizer(BaseVisualizer):
         ax.set_title(title, fontsize=12)
         return ax
     
-
+    def draw_recovered_codeword(self,
+                              title: str = "Recovered Codeword (c̃)",
+                              cmap: str = "viridis",
+                              use_color_bar: bool = True,
+                              vmin: float = -1.0,
+                              vmax: float = 1.0,
+                              ax: Axes | None = None,
+                              **kwargs) -> Axes:
+        """
+        Draw the recovered codeword (c̃) from PRC detection
+        
+        This visualizes the recovered codeword from prc_detection.recovered_prc
+        
+        Parameters:
+            title (str): The title of the plot
+            cmap (str): The colormap to use
+            use_color_bar (bool): Whether to display the colorbar
+            vmin (float): Minimum value for colormap (-1.0)
+            vmax (float): Maximum value for colormap (1.0)
+            ax (Axes): The axes to plot on
+            
+        Returns:
+            Axes: The plotted axes
+        """
+        if hasattr(self.data, 'recovered_prc') and self.data.recovered_prc is not None:
+            recovered_codeword = self.data.recovered_prc.cpu().numpy().flatten()
+            
+            # Ensure it's the expected length
+            if len(recovered_codeword) == 16384:
+                # Reshape to 2D for visualization (128x128 = 16384)
+                codeword_2d = recovered_codeword.reshape((128, 128))
+                
+                im = ax.imshow(codeword_2d, cmap=cmap, vmin=vmin, vmax=vmax, aspect='equal', **kwargs)
+                
+                if use_color_bar:
+                    cbar = ax.figure.colorbar(im, ax=ax, shrink=0.8)
+                    cbar.set_label('Codeword Value', fontsize=8)
+            else:
+                ax.text(0.5, 0.5, f'Recovered Codeword\nUnexpected Length: {len(recovered_codeword)}\n(Expected: 16384)', 
+                       ha='center', va='center', fontsize=12, transform=ax.transAxes)
+        else:
+            ax.text(0.5, 0.5, 'Recovered Codeword (c̃)\nNot Available', 
+                   ha='center', va='center', fontsize=12, transform=ax.transAxes)
+        
+        ax.set_title(title, fontsize=10)
+        ax.axis('off')
+        return ax
+                                  
     def draw_difference_map(self,
                            title: str = "Difference Map",
                            cmap: str = "hot",

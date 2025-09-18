@@ -151,6 +151,7 @@ class PRCDetector(BaseDetector):
         if detector_type != 'is_watermark':
             raise ValueError(f'Detector type {detector_type} is not supported for PRC. Use "is_watermark" instead.')
         reversed_prc = self._recover_posteriors(reversed_latents.to(torch.float64).flatten().cpu(), variances=self.var).flatten().cpu()
+        self.recovered_prc = reversed_prc
         detect_result, score = self._detect_watermark(reversed_prc)
         decoding_result = self._decode_message(reversed_prc)
         if decoding_result is None:

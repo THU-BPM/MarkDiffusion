@@ -279,7 +279,7 @@ class SEAL(BaseWatermark):
         
     def get_data_for_visualize(self, 
                                image: Image.Image, 
-                               prompt: str, 
+                               prompt: str="", 
                                guidance_scale: float=1, 
                                decoder_inv: bool=False,
                                *args, **kwargs) -> DataForVisualization:
@@ -329,13 +329,20 @@ class SEAL(BaseWatermark):
             **inversion_kwargs
         )
         
+        # Get original watermarked latents 
+        orig_watermarked_latents = self.get_orig_watermarked_latents()
+        
+        # Get original embedding 
+        original_embedding = self.original_embedding
+
         # Create DataForVisualization object with SEAL-specific data
         data_for_visualization = DataForVisualization(
             config=self.config,
             utils=self.utils,
+            orig_watermarked_latents=orig_watermarked_latents,
             reversed_latents=reversed_latents,
             inspected_embedding=normalized_inspected_embedding,
-            original_embedding=self.original_embedding,
+            original_embedding=original_embedding,
             reference_noise=inspected_noise,
             image=image,
         )

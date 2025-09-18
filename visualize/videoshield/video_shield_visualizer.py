@@ -132,10 +132,13 @@ class VideoShieldVisualizer(BaseVisualizer):
                 watermark_data = watermark[0, channel, mid_frame].cpu().numpy()
                 frame_info = f" - Frame {mid_frame} (middle)"
             
-            ax.imshow(watermark_data, cmap=cmap, vmin=0, vmax=1, interpolation='nearest')
+            im=ax.imshow(watermark_data, cmap=cmap, vmin=0, vmax=1, interpolation='nearest')
             if title != "":
                 ax.set_title(f"{title} - Channel {channel}{frame_info}", fontsize=10)
             ax.axis('off')
+            
+            cbar = ax.figure.colorbar(im, ax=ax, alpha=0.0)
+            cbar.ax.set_visible(False)
         else:
             # Multi-channel visualization
             num_channels = ch_stride
@@ -242,12 +245,14 @@ class VideoShieldVisualizer(BaseVisualizer):
                 reconstructed_watermark_data = reconstructed_watermark[0, channel, mid_frame].cpu().numpy()
                 frame_info = f" - Frame {mid_frame} (middle)"
             
-            ax.imshow(reconstructed_watermark_data, cmap=cmap, vmin=0, vmax=1, interpolation='nearest')
+            im=ax.imshow(reconstructed_watermark_data, cmap=cmap, vmin=0, vmax=1, interpolation='nearest')
             if title != "":
                 ax.set_title(f"{title} - Channel {channel}{frame_info} (Bit Acc: {bit_acc:.3f})", fontsize=10)
             else:
                 ax.set_title(f"Channel {channel}{frame_info} (Bit Acc: {bit_acc:.3f})", fontsize=10)
             ax.axis('off')
+            cbar = ax.figure.colorbar(im, ax=ax, alpha=0.0)
+            cbar.ax.set_visible(False)
         else:
             # Multi-channel visualization
             num_channels = ch_stride
@@ -297,5 +302,105 @@ class VideoShieldVisualizer(BaseVisualizer):
                 sub_ax.imshow(reconstructed_watermark_data, cmap=cmap, vmin=0, vmax=1, interpolation='nearest')
                 sub_ax.set_title(f'Channel {i}', fontsize=8, pad=3)
                 sub_ax.axis('off')
+        
+        return ax
+    
+    def draw_watermarked_video_frames(self,
+                                    num_frames: int = 4,
+                                    title: str = "Watermarked Video Frames",
+                                    ax: Axes | None = None) -> Axes:
+        """Draw multiple frames from the watermarked video.
+        
+        This method displays a grid of video frames to show the temporal
+        consistency of the watermarked video.
+        
+        Args:
+            num_frames: Number of frames to display (default: 4)
+            title: The title of the plot
+            ax: The axes to plot on
+            
+        Returns:
+            The plotted axes
+        """
+        if not hasattr(self.data, 'video_frames') or self.data.video_frames is None:
+            raise ValueError("No video frames available for visualization. Please ensure video_frames is provided in data_for_visualization.")
+        
+        video_frames = self.data.video_frames
+        total_frames = len(video_frames)
+        
+        # Limit num_frames to available frames
+        num_frames = min(num_frames, total_frames)
+        
+        # Calculate which frames to show (evenly distributed)
+        if num_frames == 1:
+            frame_indices = [total_frames // 2]  # Middle frame
+        else:
+            frame_indices = [int(i * (total_frames - 1) / (num_frames - 1)) for i in range(num_frames)]
+        
+        # Calculate grid layout
+        rows = int(np.ceil(np.sqrt(num_frames)))
+        cols = int(np.ceil(num_frames / rows))
+        
+        # Clear the axis and set title
+        ax.clear()
+        if title != "":
+            ax.set_title(title, pad=20, fontsize=12)
+        ax.axis('off')
+        
+        # Use gridspec for better control
+        gs = GridSpecFromSubplotSpec(rows, cols, subplot_spec=ax.get_subplotspec(), 
+                                     wspace=0.1, hspace=0.4)
+        
+        # Create subplots for each frame
+        for i, frame_idx in enumerate(frame_indices):
+            row_idx = i // cols
+            col_idx = i % cols
+            
+            # Create subplot using gridspec
+            sub_ax = ax.figure.add_subplot(gs[row_idx, col_idx])
+            
+            # Get the frame - keep it simple like the demo
+            frame = video_frames[frame_idx]
+            
+            # Convert frame to displayable format - keep it simple and robust
+            try:
+                # First, convert tensor to numpy if needed
+                if hasattr(frame, 'cpu'):  # PyTorch tensor
+                    frame = frame.cpu().numpy()
+                elif hasattr(frame, 'numpy'):  # Other tensor types
+                    frame = frame.numpy()
+                elif hasattr(frame, 'convert'):  # PIL Image
+                    frame = np.array(frame)
+                
+                # Handle channels-first format (C, H, W) -> (H, W, C) for numpy arrays
+                if isinstance(frame, np.ndarray) and len(frame.shape) == 3:
+                    if frame.shape[0] in [1, 3, 4]:  # Channels first
+                        frame = np.transpose(frame, (1, 2, 0))
+                
+                # Ensure proper data type for matplotlib
+                if isinstance(frame, np.ndarray):
+                    if frame.dtype == np.float64:
+                        frame = frame.astype(np.float32)
+                    elif frame.dtype not in [np.uint8, np.float32]:
+                        # Convert to float32 and normalize if needed
+                        frame = frame.astype(np.float32)
+                        if frame.max() > 1.0:
+                            frame = frame / 255.0
+                
+                im = sub_ax.imshow(frame)
+                
+            except Exception as e:
+                 print(f"Error displaying frame {frame_idx}: {e}")
+                
+            sub_ax.set_title(f'Frame {frame_idx}', fontsize=10, pad=5)
+            sub_ax.axis('off')
+        
+        # Hide unused subplots
+        for i in range(num_frames, rows * cols):
+            row_idx = i // cols
+            col_idx = i % cols
+            if row_idx < rows and col_idx < cols:
+                empty_ax = ax.figure.add_subplot(gs[row_idx, col_idx])
+                empty_ax.axis('off')
         
         return ax

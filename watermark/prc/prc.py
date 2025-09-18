@@ -258,7 +258,6 @@ class PRC(BaseWatermark):
                                decoder_inv: bool=False,
                                *args,
                                **kwargs) -> DataForVisualization:
-                                   
         # 1. Generate watermarked latents and collect intermediate data
         set_random_seed(self.config.gen_seed)
         
@@ -294,7 +293,6 @@ class PRC(BaseWatermark):
         ).images[0]
         
         # 3. Perform watermark detection to get inverted latents (for comparison)
-        # Following GS/TR pattern: detect on generated watermarked_image, but display input image
         inverted_latents = None
         try:
             # Use the same detection process as _detect_watermark_in_image
@@ -315,7 +313,7 @@ class PRC(BaseWatermark):
             else:
                 text_embeddings = prompt_embeds
             
-            # Preprocess watermarked image for detection (like GS and TR)
+            # Preprocess watermarked image for detection
             processed_image = transform_to_model_format(
                 watermarked_image, 
                 target_size=self.config.image_size[0]
@@ -345,6 +343,23 @@ class PRC(BaseWatermark):
         except Exception as e:
             print(f"Warning: Could not perform inversion for visualization: {e}")
             inverted_latents = None
+        
+        # 3.5. Run actual detection to get recovered PRC codeword
+        recovered_prc = None
+        try:
+            if inverted_latents is not None:
+                # Use the detector to recover the PRC codeword
+                detection_result = self.detector.eval_watermark(inverted_latents)
+                # The detector should have recovered_prc attribute or return it
+                if hasattr(self.detector, 'recovered_prc') and self.detector.recovered_prc is not None:
+                    recovered_prc = self.detector.recovered_prc
+                elif 'recovered_prc' in detection_result:
+                    recovered_prc = detection_result['recovered_prc']
+                else:
+                    print("Warning: Detector did not provide recovered_prc")
+        except Exception as e:
+            print(f"Warning: Could not recover PRC codeword for visualization: {e}")
+            recovered_prc = None
     
         # 4. Prepare PRC-specific data
         # Convert message to binary
@@ -353,8 +368,8 @@ class PRC(BaseWatermark):
         # Get generator matrix
         generator_matrix = torch.tensor(np.array(self.utils.encoding_key[0], dtype=float), dtype=torch.float32)
         
-        # Get parity check matrix (if needed for visualization)
-        parity_check_matrix = self.utils.decoding_key[1]  # This is already a sparse matrix
+        # Get parity check matrix
+        parity_check_matrix = self.utils.decoding_key[1] 
         
         # PRC parameters for visualization
         prc_params = {
@@ -375,6 +390,7 @@ class PRC(BaseWatermark):
             utils=self.utils,                      
             latent_lists=[watermarked_latents],
             orig_latents=watermarked_latents,
+            orig_watermarked_latents=watermarked_latents,
             watermarked_latents=watermarked_latents,
             watermarked_image=watermarked_image,    
             image=image,                            
@@ -387,6 +403,7 @@ class PRC(BaseWatermark):
             generator_matrix=generator_matrix,
             parity_check_matrix=parity_check_matrix,
             prc_params=prc_params,
-            threshold=self.config.threshold
+            threshold=self.config.threshold,
+            recovered_prc=torch.tensor(recovered_prc, dtype=torch.float32) if recovered_prc is not None else None
         )
     
