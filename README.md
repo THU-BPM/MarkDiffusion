@@ -427,13 +427,10 @@ print(pipeline.evaluate(my_watermark))
 
 ## Citation
 ```
-@misc{pan2025markdiffusionopensourcetoolkitgenerative,
-      title={MarkDiffusion: An Open-Source Toolkit for Generative Watermarking of Latent Diffusion Models}, 
-      author={Leyi Pan and Sheng Guan and Zheyu Fu and Luyang Si and Zian Wang and Xuming Hu and Irwin King and Philip S. Yu and Aiwei Liu and Lijie Wen},
-      year={2025},
-      eprint={2509.10569},
-      archivePrefix={arXiv},
-      primaryClass={cs.CR},
-      url={https://arxiv.org/abs/2509.10569}, 
+@article{pan2025markdiffusion,
+  title={MarkDiffusion: An Open-Source Toolkit for Generative Watermarking of Latent Diffusion Models},
+  author={Pan, Leyi and Guan, Sheng and Fu, Zheyu and Si, Luyang and Wang, Zian and Hu, Xuming and King, Irwin and Yu, Philip S and Liu, Aiwei and Wen, Lijie},
+  journal={arXiv preprint arXiv:2509.10569},
+  year={2025}
 }
 ```
