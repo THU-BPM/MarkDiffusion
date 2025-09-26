@@ -11,6 +11,7 @@ CONFIG_MAPPING_NAMES = {
     'SEAL': 'watermark.seal.SEALConfig',
     'ROBIN': 'watermark.robin.ROBINConfig',
     'WIND': 'watermark.wind.WINDConfig',
+    'GM': 'watermark.gm.GMConfig',
 }
 
 def config_name_from_alg_name(name: str) -> Optional[str]:
