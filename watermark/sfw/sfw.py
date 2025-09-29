@@ -404,13 +404,16 @@ class SFW(BaseWatermark):
                                decoder_inv: bool=False,
                                *args,
                                **kwargs) -> DataForVisualization:
-        """Get data for visualization including detection inversion - similar to GS logic."""
+        """Get data for visualization including detection inversion"""
         # Use config values as defaults if not explicitly provided
         guidance_scale_to_use = guidance_scale if guidance_scale is not None else self.config.guidance_scale
         
         # Step 1: Generate watermarked latents (generation process)
         set_random_seed(self.config.gen_seed)
-        watermarked_latents = self.utils.inject_watermark(self.config.init_latents)
+        if (self.config.wm_type=="HSQR"):
+            watermarked_latents = self.utils.inject_hsqr(self.config.init_latents)
+        else:
+            watermarked_latents = self.utils.inject_wm(self.config.init_latents)
         
         # Step 2: Generate actual watermarked image using the same process as _generate_watermarked_image
         generation_params = {
@@ -488,5 +491,5 @@ class SFW(BaseWatermark):
             utils=self.utils,
             reversed_latents=reversed_latents_list,
             orig_watermarked_latents=self.orig_watermarked_latents,
-            image=image,
+            image=image
         )
