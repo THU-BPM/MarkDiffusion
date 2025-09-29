@@ -18,3 +18,4 @@ test.ipynb
 model/musiq/musiq_spaq_ckpt-358bb6af.pth
 VBench
 video_detection
+watermark/gm/ckpts/model_final.pth
