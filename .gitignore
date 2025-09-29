@@ -13,6 +13,7 @@ watermark/robin/generated_images/
 output
 backup
 test_*.py
+!test_method.py
 dino
 test.ipynb
 model/musiq/musiq_spaq_ckpt-358bb6af.pth
