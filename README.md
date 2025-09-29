@@ -13,6 +13,7 @@
 
 ## Contents
 
+- [Updates](#updates)
 - [Introduction to MarkDiffusion](#introduction-to-markdiffusion)
   - [Overview](#overview)
   - [Key Features](#key-features)
@@ -25,6 +26,9 @@
   - [Visualizing Watermarking Mechanisms](#visualizing-watermarking-mechanisms)
   - [Evaluation Pipelines](#evaluation-pipelines)
 - [Citation](#citation)
+
+## Updates
+🔥 (2025.9.29) Add [GaussMarker](https://arxiv.org/abs/2506.11444) watermarking method, thanks Luyang Si for his PR!
 
 ## Introduction to MarkDiffusion
 
@@ -55,6 +59,7 @@ The toolkit comprises three key components: a unified implementation framework f
 | ROBIN | Pattern | Image | [ROBIN: Robust and Invisible Watermarks for Diffusion Models with Adversarial Optimization](https://arxiv.org/abs/2411.03862) |
 | WIND | Pattern | Image | [Hidden in the Noise: Two-Stage Robust Watermarking for Images](https://arxiv.org/abs/2412.04653) |
 | Gaussian-Shading | Key | Image | [Gaussian Shading: Provable Performance-Lossless Image Watermarking for Diffusion Models](https://arxiv.org/abs/2404.04956) |
+| GaussMarker | Key | Image | [GaussMarker: Robust Dual-Domain Watermark for Diffusion Models](https://arxiv.org/abs/2506.11444) |
 | PRC | Key | Image | [An undetectable watermark for generative image models](https://arxiv.org/abs/2410.07369) |
 | SEAL | Key | Image | [SEAL: Semantic Aware Image Watermarking](https://arxiv.org/abs/2503.12172) |
 | VideoShield | Key | Video | [VideoShield: Regulating Diffusion-based Video Generation Models via Watermarking](https://arxiv.org/abs/2501.14195) |
