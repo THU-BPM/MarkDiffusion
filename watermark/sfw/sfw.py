@@ -390,6 +390,7 @@ class SFW(BaseWatermark):
             num_inference_steps=num_steps_to_use,
             **inversion_kwargs
         )[-1]
+        # Step 5: Evaluate Watermark
         if 'detector_type' in kwargs:
             return self.detector.eval_watermark(reversed_latents, detector_type=kwargs['detector_type'])
         else:
