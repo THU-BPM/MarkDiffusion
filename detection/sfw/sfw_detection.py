@@ -58,9 +58,12 @@ class SFWDetector(BaseDetector):
                         reversed_latents: torch.Tensor,
                         reference_latents: torch.Tensor = None,
                         detector_type: str = "l1_distance") -> float:
+        start, end = 10, 54
+        center_slice = (slice(None), slice(None), slice(start, end), slice(start, end))
+        reversed_latents_fft = torch.zeros_like(reversed_latents, dtype=torch.complex64)
+        reversed_latents_fft[center_slice] = torch.fft.fftshift(torch.fft.fft2(reversed_latents[center_slice]), dim=(-1, -2))
         if self.wm_type == "HSQR":
             if detector_type == 'l1_distance':
-                reversed_latents_fft = torch.fft.fftshift(torch.fft.fft2(reversed_latents), dim=(-1, -2)) #[self.watermarking_mask].flatten()
                 hsqr_distance = self.get_distance_hsqr(qr_gt_bool=self.gt_patch, target_fft=reversed_latents_fft)
                 return {
                     'is_watermark': hsqr_distance < self.threshold, 
@@ -70,7 +73,6 @@ class SFWDetector(BaseDetector):
                 raise ValueError(f"SFW(HSQR)'s watermark detector type {self.detector_type} not supported")
         else:
             if detector_type == 'l1_distance':
-                reversed_latents_fft = torch.fft.fftshift(torch.fft.fft2(reversed_latents), dim=(-1, -2)) #[self.watermarking_mask].flatten()
                 target_patch = self.gt_patch #[self.watermarking_mask].flatten()
                 l1_distance = torch.abs(reversed_latents_fft[self.watermarking_mask] - target_patch[self.watermarking_mask]).mean().item()
                 return {
