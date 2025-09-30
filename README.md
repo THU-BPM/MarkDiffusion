@@ -12,7 +12,7 @@
 > 🔥 **As a new released project, We welcome PRs!** If you have implemented a LDM watermarking algorithm or are interested in contributing one, we'd love to include it in MarkDiffusion. Join our community and help make generative watermarking more accessible to everyone!
 
 ## Contents
-
+- [Notes](#-notes)
 - [Updates](#updates)
 - [Introduction to MarkDiffusion](#introduction-to-markdiffusion)
   - [Overview](#overview)
@@ -26,6 +26,9 @@
   - [Visualizing Watermarking Mechanisms](#visualizing-watermarking-mechanisms)
   - [Evaluation Pipelines](#evaluation-pipelines)
 - [Citation](#citation)
+
+## ❗❗❗ Notes
+As the MarkDiffusion repository content becomes increasingly rich and its size grows larger, we have created a model storage repository on Hugging Face called [Generative-Watermark-Toolkits](https://huggingface.co/Generative-Watermark-Toolkits) to facilitate usage. This repository contains various default models for watermarking algorithms that involve self-trained models. We have removed the model weights from the corresponding `ckpts/` folders of these watermarking algorithms in the main repository. **When using the code, please first download the corresponding models from the Hugging Face repository according to the config paths and save them to the `ckpts/` directory before running the code.**
 
 ## Updates
 🔥 (2025.9.29) Add [GaussMarker](https://arxiv.org/abs/2506.11444) watermarking method, thanks Luyang Si for his PR!
