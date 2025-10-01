@@ -31,7 +31,7 @@ from evaluation.pipelines.image_quality_analysis import (
 )
 from evaluation.tools.image_quality_analyzer import (
 NIQECalculator, 
-CLIPScoreCalculator, FIDCalculator, InceptionScoreCalculator, LPIPSAnalyzer, PSNRAnalyzer)
+CLIPScoreCalculator, FIDCalculator, InceptionScoreCalculator, LPIPSAnalyzer, PSNRAnalyzer,SSIMAnalyzer)
 from utils.diffusion_config import DiffusionConfig
 from diffusers import DPMSolverMultistepScheduler, StableDiffusionPipeline
 import dotenv
@@ -40,13 +40,13 @@ import dotenv
 dotenv.load_dotenv()
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-model_path = os.getenv("MODEL_PATH")
+model_path = "/data2/shared_model/fuzheyu/stable-diffusion-2-1-base/"
 """
-    DirectImageQualityAnalysisPipeline: PSNRAnalyzer
+    DirectImageQualityAnalysisPipeline: PSNRAnalyzer, SSIMAnalyzer
     ReferencedImageQualityAnalysisPipeline: CLIPScoreCalculator
     GroupImageQualityAnalysisPipeline: FIDCalculator, InceptionScoreCalculator
     RepeatImageQualityAnalysisPipeline: LPIPSAnalyzer
-    ComparedImageQualityAnalysisPipeline: PSNRAnalyzer
+    ComparedImageQualityAnalysisPipeline: PSNRAnalyzer, SSIMAnalyzer
 
 """
 
@@ -130,6 +130,15 @@ def assess_image_quality(algorithm_name, metric, max_samples=10):
                                                      watermarked_image_editor_list=[],
                                                      unwatermarked_image_editor_list=[],
                                                      analyzers=[PSNRAnalyzer()],
+                                                     show_progress=True, 
+                                                     return_type=QualityPipelineReturnType.MEAN_SCORES)
+        
+    elif metric == 'SSIM':
+        my_dataset = StableDiffusionPromptsDataset(max_samples=max_samples)
+        pipeline = DirectImageQualityAnalysisPipeline(dataset=my_dataset, 
+                                                     watermarked_image_editor_list=[],
+                                                     unwatermarked_image_editor_list=[],
+                                                     analyzers=[SSIMAnalyzer()],
                                                      show_progress=True, 
                                                      return_type=QualityPipelineReturnType.MEAN_SCORES)
     else:

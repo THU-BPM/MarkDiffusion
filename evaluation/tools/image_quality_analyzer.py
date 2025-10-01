@@ -6,6 +6,7 @@ import torch.nn.functional as F
 import numpy as np
 from abc import abstractmethod
 import lpips
+from imquality import brisque
 
 class ImageQualityAnalyzer:
     """Base class for image quality analyzer."""
@@ -924,3 +925,64 @@ class NIQECalculator(DirectImageQualityAnalyzer):
         niqe_score = np.sqrt(np.dot(np.dot(X, pinv_cov), X))
         
         return float(niqe_score)
+
+
+class SSIMAnalyzer(ComparedImageQualityAnalyzer):
+    """SSIM analyzer for image quality analysis.
+    
+    Calculates Structural Similarity Index between two images.
+    Higher SSIM indicates better quality/similarity.
+    """
+    
+    def __init__(self, max_pixel_value: float = 255.0):
+        """Initialize the SSIM analyzer.
+        
+        Args:
+            max_pixel_value: Maximum pixel value (255 for 8-bit images)
+        """
+        super().__init__()
+        self.max_pixel_value = max_pixel_value
+        self.C1 = (0.01 * max_pixel_value) ** 2
+        self.C2 = (0.03 * max_pixel_value) ** 2
+        self.C3 = self.C2 / 2.0
+
+    def analyze(self, image: Image.Image, reference: Image.Image, *args, **kwargs) -> float:
+        """Calculate SSIM between two images.
+
+        Args:
+            image (Image.Image): Image to evaluate
+            reference (Image.Image): Reference image
+
+        Returns:
+            float: SSIM value (0 to 1)
+        """
+        # Convert to RGB if necessary
+        if image.mode != 'RGB':
+            image = image.convert('RGB')
+        if reference.mode != 'RGB':
+            reference = reference.convert('RGB')
+        
+        # Resize if necessary
+        if image.size != reference.size:
+            reference = reference.resize(image.size, Image.Resampling.BILINEAR)
+        
+        # Convert to numpy arrays
+        img_array = np.array(image, dtype=np.float32)
+        ref_array = np.array(reference, dtype=np.float32)
+        
+        # Calculate means
+        mu_x = np.mean(img_array)
+        mu_y = np.mean(ref_array)
+        
+        # Calculate variances and covariance
+        sigma_x = np.std(img_array)
+        sigma_y = np.std(ref_array)
+        sigma_xy = np.mean((img_array - mu_x) * (ref_array - mu_y))
+        
+        # Calculate SSIM
+        luminance_mean=(2 * mu_x * mu_y + self.C1) / (mu_x**2 + mu_y**2 + self.C1)
+        contrast=(2 * sigma_x * sigma_y + self.C2) / (sigma_x**2 + sigma_y**2 + self.C2)
+        structure_comparison=(sigma_xy + self.C3) / (sigma_x * sigma_y + self.C3)
+        ssim = luminance_mean * contrast * structure_comparison
+
+        return float(ssim)
