@@ -17,6 +17,7 @@ VISUALIZATION_DATA_MAPPING = {
     'ROBIN': 'visualize.robin.ROBINVisualizer',
     'VideoShield': 'visualize.videoshield.VideoShieldVisualizer',
     'VideoMark': 'visualize.videomark.VideoMarkVisualizer',
+    'GM': 'visualize.gm.GaussMarkerVisualizer',
 }
 
 class AutoVisualizer:
