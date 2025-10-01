@@ -7,6 +7,7 @@ CONFIG_MAPPING_NAMES = {
     'GS': 'watermark.gs.GSConfig',
     'PRC': 'watermark.prc.PRCConfig',
     'VideoShield': 'watermark.videoshield.VideoShieldConfig',
+    "VideoMark": 'watermark.videomark.VideoMarkConfig',
     'RI': 'watermark.ri.RIConfig',
     'SEAL': 'watermark.seal.SEALConfig',
     'ROBIN': 'watermark.robin.ROBINConfig',

@@ -478,25 +478,37 @@ class BaseWatermark(ABC):
             
         # Handle Image-to-Video pipeline
         elif is_i2v_pipeline(self.config.pipe):
-            # For I2V, input should be an image
+            # For I2V, input should be an image, text prompt is optional
             input_image = None
-            
+            text_prompt = None
+
+            # Check if input_data is an image passed via kwargs
+            if "input_image" in kwargs and isinstance(kwargs["input_image"], Image.Image):
+                input_image = kwargs["input_image"]
+
             # Check if input_data is an image
-            if isinstance(input_data, Image.Image):
+            elif isinstance(input_data, Image.Image):                
                 input_image = input_data
+
             # If input_data is a string but we need an image, check if an image path was provided
             elif isinstance(input_data, str):
-                try:
-                    from PIL import Image as PILImage
-                    input_image = PILImage.open(input_data).convert("RGB")
-                except Exception as e:
-                    raise ValueError(f"Input data is neither an Image object nor a valid image path. Failed to load image from path: {e}")
-            
+                import os
+                from PIL import Image as PILImage
+
+                if os.path.exists(input_data):
+                    try:
+                        input_image = PILImage.open(input_data).convert("RGB")
+                    except Exception as e:
+                        raise ValueError(f"Input data is neither an Image object nor a valid image path. Failed to load image from path: {e}")
+                else:
+                    # Treat as text prompt if no valid image path
+                    text_prompt = input_data
             if input_image is None:
                 raise ValueError("Input image is required for Image-to-Video pipeline")
                 
             # Construct generation parameters
             generation_params = {
+                "image": input_image,
                 "height": self.config.image_size[0],
                 "width": self.config.image_size[1],
                 "num_frames": self.config.num_frames,
@@ -505,6 +517,9 @@ class BaseWatermark(ABC):
                 "max_guidance_scale": self.config.guidance_scale,
                 "output_type": "np",
             }
+            # In I2VGen-XL, the text prompt is needed
+            if text_prompt is not None:
+                generation_params["prompt"] = text_prompt
             
             # Add parameters from config.gen_kwargs
             if hasattr(self.config, "gen_kwargs") and self.config.gen_kwargs:
@@ -519,7 +534,6 @@ class BaseWatermark(ABC):
             # Generate the video
             set_random_seed(self.config.gen_seed)
             video = self.config.pipe(
-                input_image,
                 **generation_params
             ).frames[0]
             
