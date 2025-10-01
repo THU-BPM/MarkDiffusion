@@ -14,6 +14,7 @@ WATERMARK_MAPPING_NAMES={
     'GS': 'watermark.gs.GS',
     'PRC': 'watermark.prc.PRC',
     'VideoShield': 'watermark.videoshield.VideoShieldWatermark',
+    "VideoMark": 'watermark.videomark.VideoMarkWatermark',
     'RI': 'watermark.ri.RI',
     'SEAL': 'watermark.seal.SEAL',
     'ROBIN': 'watermark.robin.ROBIN',
@@ -24,8 +25,8 @@ WATERMARK_MAPPING_NAMES={
 # Dictionary mapping pipeline types to supported watermarking algorithms
 PIPELINE_SUPPORTED_WATERMARKS = {
     PIPELINE_TYPE_IMAGE: ["TR", "GS", "PRC", "RI", "SEAL", "ROBIN", "WIND", "GM"],
-    PIPELINE_TYPE_TEXT_TO_VIDEO: ["VideoShield"],
-    PIPELINE_TYPE_IMAGE_TO_VIDEO: ["VideoShield"]
+    PIPELINE_TYPE_TEXT_TO_VIDEO: ["VideoShield", "VideoMark"],
+    PIPELINE_TYPE_IMAGE_TO_VIDEO: ["VideoShield", "VideoMark"]
 }
 
 def watermark_name_from_alg_name(name: str) -> Optional[str]:

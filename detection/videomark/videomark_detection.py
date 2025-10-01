@@ -20,10 +20,15 @@ from scipy.special import erf
 from detection.base import BaseDetector
 from ldpc import bp_decoder
 from galois import FieldArray
-   
-class PRCDetector(BaseDetector):
+import sys        
+from Levenshtein import distance
+
+class VideoMarkDetector(BaseDetector):
     
     def __init__(self,
+                 message_sequence: np.ndarray,
+                 watermark: np.ndarray,
+                 num_frames: int,
                  var: int,
                  decoding_key: tuple,
                  GF: Type[FieldArray],
@@ -31,6 +36,9 @@ class PRCDetector(BaseDetector):
                  device: torch.device):
         super().__init__(threshold, device)
 
+        self.message_sequence = message_sequence
+        self.watermark = watermark
+        self.num_frames = num_frames
         self.var = var
         self.decoding_key = decoding_key
         self.GF = GF
@@ -62,8 +70,8 @@ class PRCDetector(BaseDetector):
         
         const = 0.5 * np.sum(np.power(log_plus, 2) + np.power(log_minus, 2) - 0.5 * np.power(log_prod, 2))
         threshold = np.sqrt(2 * const * np.log(1 / false_positive_rate)) + 0.5 * log_prod.sum()
-        print(f"threshold: {threshold}")
-        return log_plus.sum() >= threshold, log_plus.sum()
+        #print(f"threshold: {threshold}")
+        return log_plus.sum() >= threshold#, log_plus.sum()
         
     def _boolean_row_reduce(self, A, print_progress=False):
         """Given a GF(2) matrix, do row elimination and return the first k rows of A that form an invertible matrix
@@ -127,47 +135,80 @@ class PRCDetector(BaseDetector):
             print("Solving linear system...")
         recovered_string = np.linalg.solve(ordered_generator_matrix[top_invertible_rows], self.GF(ordered_x_decoded[top_invertible_rows]))
 
-        if not (recovered_string[:len(test_bits)] == test_bits).all():
-            return None
         return np.array(recovered_string[len(test_bits) + g:])
         
-    def _binary_array_to_str(self, binary_array: np.ndarray) -> str:
-        """Convert binary array back to string."""
-        # Ensure the binary array length is divisible by 8 (1 byte = 8 bits)
-        assert len(binary_array) % 8 == 0, "Binary array length must be a multiple of 8"
-        
-        # Group the binary array into chunks of 8 bits
-        byte_chunks = binary_array.reshape(-1, 8)
-        
-        # Convert each byte (8 bits) to a character
-        chars = [chr(int(''.join(map(str, byte)), 2)) for byte in byte_chunks]
-        
-        # Join the characters to form the original string
-        return ''.join(chars)
-        
+    def bits_to_string(self, bits):
+        return ''.join(map(str, bits))
+
+    def recover(self, idx_list, message_list, distance_list, message_length):
+        """Recover the original message sequence from indices, messages, and distances."""
+        valid_entries = [(idx, msg, dist) 
+                        for idx, msg, dist in zip(idx_list, message_list, distance_list) 
+                        if idx != -1]
+        valid_entries.sort(key=lambda x: x[0])
+
+        sorted_order, recovered_message, recovered_distance = [], [], []
+        valid_idx = 0
+
+        for idx in idx_list:
+            if idx == -1:
+                sorted_order.append(-1)
+                recovered_message.append([-1] * message_length)
+                recovered_distance.append(message_length)
+            else:
+                sorted_order.append(valid_entries[valid_idx][0])
+                recovered_message.append(valid_entries[valid_idx][1])
+                recovered_distance.append(valid_entries[valid_idx][2])
+                valid_idx += 1
+
+        return (np.array(sorted_order),
+                np.array(recovered_message),
+                np.array(recovered_distance))
+
+
+
     def eval_watermark(self, reversed_latents: torch.Tensor, reference_latents: torch.Tensor = None, detector_type: str = "is_watermark") -> float:
         """Evaluate watermark in reversed latents."""
-        if detector_type != 'is_watermark':
-            raise ValueError(f'Detector type {detector_type} is not supported for PRC. Use "is_watermark" instead.')
-        reversed_prc = self._recover_posteriors(reversed_latents.to(torch.float64).flatten().cpu(), variances=self.var).flatten().cpu()
-        self.recovered_prc = reversed_prc
-        detect_result, score = self._detect_watermark(reversed_prc)
-        decoding_result = self._decode_message(reversed_prc)
-        if decoding_result is None:
-            return {
-                'is_watermark': False,
-                "score": score, # Keep the score for potential future use
-                'decoding_result': decoding_result,
-                "decoded_message": None
-            }
-        decoded_message = self._binary_array_to_str(decoding_result)
-        combined_result = detect_result or (decoding_result is not None)
-        print(f"detection_result: {detect_result}, decoding_result: {decoding_result}, combined_result: {combined_result}")
+        if detector_type != 'bit_acc':
+            raise ValueError(f'Detector type {detector_type} is not supported for VideoMark. Use "bit_acc" instead.')
+        idx_list, message_list, distance_list = [], [], []
+        message_length = self.message_sequence.shape[1]
+        message_sequence_str = [self.bits_to_string(msg) for msg in self.message_sequence]
+
+        for frame_index in range(1, self.num_frames):
+
+            reversed_prc = self._recover_posteriors(
+                reversed_latents[:, :, frame_index].to(torch.float64).flatten().cpu(),
+                variances=self.var
+            ).flatten().cpu()
+            self.recovered_prc = reversed_prc
+
+            # Detect & Decode
+            if not self._detect_watermark(reversed_prc):
+                decode_message = np.full((1, message_length), -1)
+                decode_message_str = "<message_placeholder>"
+            else:
+                decode_message = self._decode_message(reversed_prc)
+                decode_message_str = self.bits_to_string(decode_message)
+
+            # Temporal Message Matching (TMM)
+            distances = np.array([distance(decode_message_str, msg) for msg in message_sequence_str])
+            min_distance = distances.min()
+            idx = -1 if np.all(distances == distances[0]) else distances.argmin()
+
+            message_list.append(decode_message)
+            distance_list.append(min_distance)
+            idx_list.append(idx)
+
+        recovered_index, recovered_message, recovered_distance = self.recover(
+            idx_list, message_list, distance_list, message_length
+        )
+        bit_acc = np.mean(recovered_message == self.watermark[1:])
+
         return {
-            'is_watermark': bool(combined_result),
-            "score": score, # Keep the score for potential future use
-            'decoding_result': decoding_result,
-            "decoded_message": decoded_message
+            "bit_acc": float(bit_acc),
+            "recovered_index": recovered_index,
+            "recovered_message": recovered_message,
+            "recovered_distance": recovered_distance,
         }
-    
     

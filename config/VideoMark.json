@@ -1,0 +1,21 @@
+{
+    "algorithm_name": "PRC",
+    "fpr": 1e-9,
+    "prc_t": 3,
+    "var": 1.5,
+    "sequence_length": 1000,
+    "message_length" : 32,
+    "threshold": 0.5,
+    "keygen":{
+        "gen_matrix_seed": 42,
+        "indice_seed":43,
+        "one_time_pad_seed": 44,
+        "test_bits_seed": 45,
+        "permute_bits_seed": 46
+    },
+    "encode":{
+        "payload_seed": 47,
+        "error_seed": 48,
+        "pseudogaussian_seed": 49
+    }
+} 
