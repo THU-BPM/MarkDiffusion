@@ -11,6 +11,7 @@ CONFIG_MAPPING_NAMES = {
     'SEAL': 'watermark.seal.SEALConfig',
     'ROBIN': 'watermark.robin.ROBINConfig',
     'WIND': 'watermark.wind.WINDConfig',
+    'SFW': 'watermark.sfw.SFWConfig',
     'GM': 'watermark.gm.GMConfig',
 }
 

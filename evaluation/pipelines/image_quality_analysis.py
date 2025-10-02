@@ -362,8 +362,17 @@ class DirectImageQualityAnalysisPipeline(ImageQualityAnalysisPipeline):
         w_scores, u_scores = [], []
         # For direct analyzers, we analyze each image independently
         for watermarked_image, unwatermarked_image in bar:
-            w_score = analyzer.analyze(watermarked_image)
-            u_score = analyzer.analyze(unwatermarked_image)
+             # watermarked score
+            try:
+                w_score = analyzer.analyze(watermarked_image)
+            except TypeError:
+                # analyzer expects a reference -> use unwatermarked_image as reference
+                w_score = analyzer.analyze(watermarked_image, unwatermarked_image)
+            # unwatermarked score
+            try:
+                u_score = analyzer.analyze(unwatermarked_image)
+            except TypeError:
+                u_score = analyzer.analyze(unwatermarked_image, watermarked_image)
             w_scores.append(w_score)
             u_scores.append(u_score)
         
@@ -597,11 +606,9 @@ class ComparedImageQualityAnalysisPipeline(ImageQualityAnalysisPipeline):
         return range(self.dataset.num_samples)
     
     def _prepare_input_for_quality_analyzer(self, 
-                                          watermarked_images: List[Image.Image], 
-                                          unwatermarked_images: List[Image.Image], 
-                                          reference_images: List[Image.Image]):
+                                          prepared_dataset: DatasetForEvaluation):
         """Prepare input for comparison analyzer."""
-        return [(watermarked_image, unwatermarked_image) for watermarked_image, unwatermarked_image in zip(watermarked_images, unwatermarked_images)]
+        return [(watermarked_image, unwatermarked_image) for watermarked_image, unwatermarked_image in zip(prepared_dataset.watermarked_images, prepared_dataset.unwatermarked_images)]
     
     def analyze_quality(self, 
                         prepared_data: List[Tuple[Image.Image, Image.Image]], 

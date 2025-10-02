@@ -18,11 +18,13 @@ WATERMARK_MAPPING_NAMES={
     'SEAL': 'watermark.seal.SEAL',
     'ROBIN': 'watermark.robin.ROBIN',
     'WIND': 'watermark.wind.WIND',
+    'SFW': 'watermark.sfw.SFW',
     'GM': 'watermark.gm.GM'
 }
 
 # Dictionary mapping pipeline types to supported watermarking algorithms
 PIPELINE_SUPPORTED_WATERMARKS = {
+    PIPELINE_TYPE_IMAGE: ["TR", "GS", "PRC", "RI", "SEAL", "ROBIN", "WIND","SFW"],
     PIPELINE_TYPE_IMAGE: ["TR", "GS", "PRC", "RI", "SEAL", "ROBIN", "WIND", "GM"],
     PIPELINE_TYPE_TEXT_TO_VIDEO: ["VideoShield"],
     PIPELINE_TYPE_IMAGE_TO_VIDEO: ["VideoShield"]

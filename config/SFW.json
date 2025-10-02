@@ -1,0 +1,8 @@
+{
+    "algorithm_name": "SFW",
+    "w_seed": 42,
+    "wm_type": "HSQR",
+    "delta": 1,
+    "w_channel": 3,
+    "threshold": 50
+}
