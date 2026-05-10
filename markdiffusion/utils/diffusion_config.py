@@ -17,7 +17,7 @@ from dataclasses import dataclass
 from typing import Optional, Union, Any, Dict
 import torch
 from diffusers import DPMSolverMultistepScheduler, StableDiffusionPipeline, TextToVideoSDPipeline, StableVideoDiffusionPipeline
-from utils.pipeline_utils import (
+from markdiffusion.utils.pipeline_utils import (
     get_pipeline_type, 
     PIPELINE_TYPE_IMAGE, 
     PIPELINE_TYPE_TEXT_TO_VIDEO, 

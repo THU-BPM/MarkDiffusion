@@ -1,20 +1,20 @@
 import torch
 import torch.nn as nn
-from model.amt.networks.blocks.raft import (
+from markdiffusion.model.amt.networks.blocks.raft import (
     SmallUpdateBlock,
     coords_grid,
     BidirCorrBlock
 )
-from model.amt.networks.blocks.feat_enc import (
+from markdiffusion.model.amt.networks.blocks.feat_enc import (
     SmallEncoder
 )
-from model.amt.networks.blocks.ifrnet import (
+from markdiffusion.model.amt.networks.blocks.ifrnet import (
     resize,
     Encoder,
     InitDecoder,
     IntermediateDecoder
 )
-from model.amt.networks.blocks.multi_flow import (
+from markdiffusion.model.amt.networks.blocks.multi_flow import (
     multi_flow_combine,
     MultiFlowDecoder
 )

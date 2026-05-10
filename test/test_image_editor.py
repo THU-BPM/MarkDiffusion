@@ -34,7 +34,7 @@ from PIL import Image
 import os
 import tempfile
 
-from evaluation.tools.image_editor import (
+from markdiffusion.evaluation.tools.image_editor import (
     ImageEditor,
     JPEGCompression,
     Rotation,

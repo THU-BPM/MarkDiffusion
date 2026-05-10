@@ -5,8 +5,8 @@ from matplotlib.axes import Axes
 from matplotlib.gridspec import GridSpecFromSubplotSpec
 import numpy as np
 import math
-from visualize.base import BaseVisualizer
-from visualize.data_for_visualization import DataForVisualization
+from markdiffusion.visualize.base import BaseVisualizer
+from markdiffusion.visualize.data_for_visualization import DataForVisualization
 
 class SEALVisualizer(BaseVisualizer):
     """SEAL watermark visualization class"""

@@ -10,7 +10,7 @@ import torch
 
 class TestEdgeCases:
     def test_signal_accuracy_bool_mask_empty(self):
-        import detection.gm.gm_detection as gm_detection
+        import markdiffusion.detection.gm.gm_detection as gm_detection
         class G:
             def __init__(self, H=4, W=4):
                 self.tau_bits = 0.5
@@ -46,7 +46,7 @@ class TestEdgeCases:
 
     def test_signal_accuracy_numeric_mask_match(self):
         import torch
-        import detection.gm.gm_detection as gm_detection
+        import markdiffusion.detection.gm.gm_detection as gm_detection
 
         class G:
             def __init__(self, H=4, W=4):
@@ -85,7 +85,7 @@ class TestEdgeCases:
     def test_gnr_checkpoint_not_found_local_candidates(self):
         import torch
         import pytest
-        import detection.gm.gm_detection as gm_detection
+        import markdiffusion.detection.gm.gm_detection as gm_detection
 
         class G:
             def __init__(self, H=4, W=4):
@@ -121,7 +121,7 @@ class TestEdgeCases:
     def test_fuser_hf_snapshot_fallback_failure(self, monkeypatch):
         import torch
         import pytest
-        import detection.gm.gm_detection as gm_detection
+        import markdiffusion.detection.gm.gm_detection as gm_detection
 
         class G:
             def __init__(self, H=4, W=4):
@@ -164,7 +164,7 @@ class TestEdgeCases:
     def test_fuser_local_candidates_failure(self):
         import torch
         import pytest
-        import detection.gm.gm_detection as gm_detection
+        import markdiffusion.detection.gm.gm_detection as gm_detection
 
         class G:
             def __init__(self, H=4, W=4):
@@ -201,7 +201,7 @@ class TestEdgeCases:
         import torch
         import numpy as np
         import joblib
-        import detection.gm.gm_detection as gm_detection
+        import markdiffusion.detection.gm.gm_detection as gm_detection
 
         class G:
             def __init__(self, H=4, W=4):
@@ -253,7 +253,7 @@ class TestEdgeCases:
     
     # robin
     def test_robin_l1_distance_resizes_mask_and_gt_patch(self):
-        from detection.robin.robin_detection import ROBINDetector
+        from markdiffusion.detection.robin.robin_detection import ROBINDetector
         device = torch.device("cpu")
         mask_small = torch.ones(1, 1, 4, 4, dtype=torch.bool, device=device)
         gt_patch_small = torch.ones(1, 1, 4, 4, device=device, dtype=torch.complex64)
@@ -272,7 +272,7 @@ class TestEdgeCases:
 
     def test_robin_cosine_similarity_resizes_with_float_mask(self):
         import torch
-        from detection.robin.robin_detection import ROBINDetector
+        from markdiffusion.detection.robin.robin_detection import ROBINDetector
 
         device = torch.device("cpu")
         mask_small = torch.ones(1, 1, 4, 4, dtype=torch.float32, device=device)
@@ -294,7 +294,7 @@ class TestEdgeCases:
     def test_robin_unsupported_detector_type_raises(self):
         import torch
         import pytest
-        from detection.robin.robin_detection import ROBINDetector
+        from markdiffusion.detection.robin.robin_detection import ROBINDetector
 
         device = torch.device("cpu")
         mask = torch.ones(1, 1, 8, 8, dtype=torch.bool, device=device)
@@ -313,7 +313,7 @@ class TestEdgeCases:
     # videoshield
     def test_videoshield_vote_threshold_one(self):
         import torch
-        from detection.videoshield.videoshield_detection import VideoShieldDetector
+        from markdiffusion.detection.videoshield.videoshield_detection import VideoShieldDetector
 
         device = torch.device("cpu")
         watermark = torch.randint(0, 2, (1, 1, 4, 4), dtype=torch.uint8, device=device)
@@ -328,7 +328,7 @@ class TestEdgeCases:
     def test_videoshield_stream_key_no_keys(self):
         import numpy as np
         import torch
-        from detection.videoshield.videoshield_detection import VideoShieldDetector
+        from markdiffusion.detection.videoshield.videoshield_detection import VideoShieldDetector
 
         device = torch.device("cpu")
         watermark = torch.randint(0, 2, (1, 1, 4, 4), dtype=torch.uint8, device=device)
@@ -340,7 +340,7 @@ class TestEdgeCases:
     def test_videoshield_stream_key_with_keys(self):
         import numpy as np
         import torch
-        from detection.videoshield.videoshield_detection import VideoShieldDetector
+        from markdiffusion.detection.videoshield.videoshield_detection import VideoShieldDetector
 
         device = torch.device("cpu")
         watermark = torch.randint(0, 2, (1, 1, 4, 4), dtype=torch.uint8, device=device)
@@ -361,7 +361,7 @@ class TestEdgeCases:
 
     def test_videoshield_video_diffusion_inverse_mismatch_expected_frames(self):
         import torch
-        from detection.videoshield.videoshield_detection import VideoShieldDetector
+        from markdiffusion.detection.videoshield.videoshield_detection import VideoShieldDetector
 
         device = torch.device("cpu")
         watermark = torch.randint(0, 2, (1, 1, 4, 4), dtype=torch.uint8, device=device)
@@ -378,7 +378,7 @@ class TestEdgeCases:
 
     def test_videoshield_video_diffusion_inverse_remainder_alignment(self):
         import torch
-        from detection.videoshield.videoshield_detection import VideoShieldDetector
+        from markdiffusion.detection.videoshield.videoshield_detection import VideoShieldDetector
 
         device = torch.device("cpu")
         watermark = torch.randint(0, 2, (1, 1, 4, 4), dtype=torch.uint8, device=device)
@@ -395,8 +395,8 @@ class TestEdgeCases:
 
     def test_videoshield_video_diffusion_inverse_exception_returns_zeros(self, monkeypatch):
         import torch
-        from detection.videoshield import videoshield_detection as vs_det
-        from detection.videoshield.videoshield_detection import VideoShieldDetector
+        from markdiffusion.detection.videoshield import videoshield_detection as vs_det
+        from markdiffusion.detection.videoshield.videoshield_detection import VideoShieldDetector
 
         device = torch.device("cpu")
         watermark = torch.randint(0, 2, (1, 1, 4, 4), dtype=torch.uint8, device=device)
@@ -416,7 +416,7 @@ class TestEdgeCases:
     def test_videoshield_eval_unsupported_detector_type_raises(self):
         import torch
         import pytest
-        from detection.videoshield.videoshield_detection import VideoShieldDetector
+        from markdiffusion.detection.videoshield.videoshield_detection import VideoShieldDetector
 
         device = torch.device("cpu")
         watermark = torch.randint(0, 2, (1, 1, 4, 4), dtype=torch.uint8, device=device)
@@ -427,7 +427,7 @@ class TestEdgeCases:
 
     def test_videoshield_eval_empty_latents_returns_false(self):
         import torch
-        from detection.videoshield.videoshield_detection import VideoShieldDetector
+        from markdiffusion.detection.videoshield.videoshield_detection import VideoShieldDetector
 
         device = torch.device("cpu")
         watermark = torch.randint(0, 2, (1, 1, 2, 2), dtype=torch.uint8, device=device)
@@ -440,8 +440,8 @@ class TestEdgeCases:
 
     def test_videoshield_eval_video_basic_no_keys(self, monkeypatch):
         import torch
-        from detection.videoshield import videoshield_detection as vs_det
-        from detection.videoshield.videoshield_detection import VideoShieldDetector
+        from markdiffusion.detection.videoshield import videoshield_detection as vs_det
+        from markdiffusion.detection.videoshield.videoshield_detection import VideoShieldDetector
 
         
         device = torch.device("cpu")
@@ -473,7 +473,7 @@ class TestEdgeCases:
 
     def test_videoshield_eval_video_with_keys(self):
         import torch
-        from detection.videoshield.videoshield_detection import VideoShieldDetector
+        from markdiffusion.detection.videoshield.videoshield_detection import VideoShieldDetector
 
         device = torch.device("cpu")
 
@@ -502,8 +502,8 @@ class TestEdgeCases:
     
     def test_videoshield_eval_image_case_no_keys_monkeypatch_inverse(self, monkeypatch):
         import torch
-        from detection.videoshield import videoshield_detection as vs_det
-        from detection.videoshield.videoshield_detection import VideoShieldDetector
+        from markdiffusion.detection.videoshield import videoshield_detection as vs_det
+        from markdiffusion.detection.videoshield.videoshield_detection import VideoShieldDetector
 
         device = torch.device("cpu")
         watermark = torch.randint(0, 2, (1, 1, 2, 2), dtype=torch.uint8, device=device)
@@ -536,7 +536,7 @@ class TestEdgeCases:
     def test_videoshield_eval_image_case_with_keys_from_numpy_reshape(self, monkeypatch):
         import numpy as np
         import torch
-        from detection.videoshield.videoshield_detection import VideoShieldDetector
+        from markdiffusion.detection.videoshield.videoshield_detection import VideoShieldDetector
 
         device = torch.device("cpu")
         # Image-case watermark and latents: 4D [B, C, H, W]
@@ -595,7 +595,7 @@ class TestEdgeCases:
 
     def test_vs_draw_watermark_bits_channel_oob_raises(self):
         import matplotlib.pyplot as plt
-        from visualize.videoshield.video_shield_visualizer import VideoShieldVisualizer
+        from markdiffusion.visualize.videoshield.video_shield_visualizer import VideoShieldVisualizer
         data = self._make_vs_data()
         vis = VideoShieldVisualizer(data_for_visualization=data, is_video=True)
         fig, ax = plt.subplots(1, 1, figsize=(4, 4))
@@ -609,7 +609,7 @@ class TestEdgeCases:
 
     def test_vs_draw_watermark_bits_frame_oob_raises(self):
         import matplotlib.pyplot as plt
-        from visualize.videoshield.video_shield_visualizer import VideoShieldVisualizer
+        from markdiffusion.visualize.videoshield.video_shield_visualizer import VideoShieldVisualizer
         data = self._make_vs_data()
         vis = VideoShieldVisualizer(data_for_visualization=data, is_video=True)
         fig, ax = plt.subplots(1, 1, figsize=(4, 4))
@@ -623,7 +623,7 @@ class TestEdgeCases:
 
     def test_vs_draw_watermark_bits_channel_mid_frame_title_blank(self):
         import matplotlib.pyplot as plt
-        from visualize.videoshield.video_shield_visualizer import VideoShieldVisualizer
+        from markdiffusion.visualize.videoshield.video_shield_visualizer import VideoShieldVisualizer
         data = self._make_vs_data()
         vis = VideoShieldVisualizer(data_for_visualization=data, is_video=True)
         fig, ax = plt.subplots(1, 1, figsize=(4, 4))
@@ -636,7 +636,7 @@ class TestEdgeCases:
 
     def test_vs_draw_watermark_bits_multi_channel_mid_frame(self):
         import matplotlib.pyplot as plt
-        from visualize.videoshield.video_shield_visualizer import VideoShieldVisualizer
+        from markdiffusion.visualize.videoshield.video_shield_visualizer import VideoShieldVisualizer
         data = self._make_vs_data()
         vis = VideoShieldVisualizer(data_for_visualization=data, is_video=True)
         fig, ax = plt.subplots(1, 1, figsize=(6, 6))
@@ -649,7 +649,7 @@ class TestEdgeCases:
 
     def test_vs_draw_reconstructed_bits_channel_oob_raises(self, monkeypatch):
         import matplotlib.pyplot as plt
-        from visualize.videoshield.video_shield_visualizer import VideoShieldVisualizer
+        from markdiffusion.visualize.videoshield.video_shield_visualizer import VideoShieldVisualizer
         data = self._make_vs_data()
         vis = VideoShieldVisualizer(data_for_visualization=data, is_video=True)
         # make decrypt a pass-through to hit torch.from_numpy reshape
@@ -667,7 +667,7 @@ class TestEdgeCases:
     def test_vs_draw_reconstructed_bits_channel_title_empty(self, monkeypatch):
         import matplotlib.pyplot as plt
         import torch
-        from visualize.videoshield.video_shield_visualizer import VideoShieldVisualizer
+        from markdiffusion.visualize.videoshield.video_shield_visualizer import VideoShieldVisualizer
         data = self._make_vs_data()
         vis = VideoShieldVisualizer(data_for_visualization=data, is_video=True)
         # decrypt pass-through
@@ -687,7 +687,7 @@ class TestEdgeCases:
     def test_vs_draw_reconstructed_bits_multi_channel_mid_frame_title_paths(self, monkeypatch):
         import matplotlib.pyplot as plt
         import torch
-        from visualize.videoshield.video_shield_visualizer import VideoShieldVisualizer
+        from markdiffusion.visualize.videoshield.video_shield_visualizer import VideoShieldVisualizer
         data = self._make_vs_data()
         vis = VideoShieldVisualizer(data_for_visualization=data, is_video=True)
         monkeypatch.setattr(VideoShieldVisualizer, "_stream_key_decrypt", lambda self, x: x)
@@ -707,7 +707,7 @@ class TestEdgeCases:
 
     def test_vs_draw_watermarked_video_frames_deprecated_dispatch(self):
         import matplotlib.pyplot as plt
-        from visualize.videoshield.video_shield_visualizer import VideoShieldVisualizer
+        from markdiffusion.visualize.videoshield.video_shield_visualizer import VideoShieldVisualizer
         data = self._make_vs_data()
         vis = VideoShieldVisualizer(data_for_visualization=data, is_video=True)
         fig, ax = plt.subplots(1, 1, figsize=(6, 6))
@@ -723,7 +723,7 @@ class TestEdgeCases:
     def test_videomark_align_posteriors_length_equal_truncate_pad(self, monkeypatch):
         import numpy as np
         import torch
-        from detection.videomark.videomark_detection import VideoMarkDetector
+        from markdiffusion.detection.videomark.videomark_detection import VideoMarkDetector
 
         # Dummy decoding_key components
         G = np.eye(5, dtype=int)               # generator_matrix (code_length=5)
@@ -780,7 +780,7 @@ class TestEdgeCases:
 
     def test_videomark_boolean_row_reduce_none(self):
         import numpy as np
-        from detection.videomark.videomark_detection import VideoMarkDetector
+        from markdiffusion.detection.videomark.videomark_detection import VideoMarkDetector
 
         # Minimal detector just to access method
         dummy = object()
@@ -805,7 +805,7 @@ class TestEdgeCases:
         import numpy as np
         import torch
         import pytest
-        from detection.videomark.videomark_detection import VideoMarkDetector
+        from markdiffusion.detection.videomark.videomark_detection import VideoMarkDetector
 
         # Minimal decoding_key
         G = np.eye(3, dtype=int)
@@ -836,7 +836,7 @@ class TestEdgeCases:
         import numpy as np
         import torch
         import pytest
-        from detection.videomark.videomark_detection import VideoMarkDetector
+        from markdiffusion.detection.videomark.videomark_detection import VideoMarkDetector
 
         G = np.eye(3, dtype=int)
         class H:
@@ -864,8 +864,8 @@ class TestEdgeCases:
     def test_videomark_eval_frame_mismatch_and_bit_acc(self, monkeypatch):
         import numpy as np
         import torch
-        from detection.videomark import videomark_detection as vm_det
-        from detection.videomark.videomark_detection import VideoMarkDetector
+        from markdiffusion.detection.videomark import videomark_detection as vm_det
+        from markdiffusion.detection.videomark.videomark_detection import VideoMarkDetector
 
         monkeypatch.setattr(vm_det, "erf", lambda x: torch.erf(x))
 
@@ -922,8 +922,8 @@ class TestEdgeCases:
     def test_videomark_eval_not_enough_frames_returns_zero(self, monkeypatch):
         import numpy as np
         import torch
-        from detection.videomark import videomark_detection as vm_det
-        from detection.videomark.videomark_detection import VideoMarkDetector
+        from markdiffusion.detection.videomark import videomark_detection as vm_det
+        from markdiffusion.detection.videomark.videomark_detection import VideoMarkDetector
 
         # Patch erf for torch
         monkeypatch.setattr(vm_det, "erf", lambda x: torch.erf(x))
@@ -965,7 +965,7 @@ class TestEdgeCases:
         import torch
         import matplotlib.pyplot as plt
         from types import SimpleNamespace
-        from visualize.sfw.sfw_visualizer import SFWVisualizer
+        from markdiffusion.visualize.sfw.sfw_visualizer import SFWVisualizer
 
         # Data setup: HSQR branch, gt_patch as complex 4D -> selects [0], uses abs
         B, C, H, W = 1, 2, 16, 16
@@ -990,7 +990,7 @@ class TestEdgeCases:
         import torch
         import matplotlib.pyplot as plt
         from types import SimpleNamespace
-        from visualize.sfw.sfw_visualizer import SFWVisualizer
+        from markdiffusion.visualize.sfw.sfw_visualizer import SFWVisualizer
 
         # Data setup: non-HSQR branch uses watermarking_mask
         B, C, H, W = 1, 2, 16, 16
@@ -1016,7 +1016,7 @@ class TestEdgeCases:
         import torch
         import matplotlib.pyplot as plt
         from types import SimpleNamespace
-        from visualize.sfw.sfw_visualizer import SFWVisualizer
+        from markdiffusion.visualize.sfw.sfw_visualizer import SFWVisualizer
 
         # HSQR, step None path; gt_patch as 3D array -> selects first channel
         B, C, F, H, W = 1, 2, 3, 16, 16
@@ -1042,7 +1042,7 @@ class TestEdgeCases:
         import torch
         import matplotlib.pyplot as plt
         from types import SimpleNamespace
-        from visualize.sfw.sfw_visualizer import SFWVisualizer
+        from markdiffusion.visualize.sfw.sfw_visualizer import SFWVisualizer
 
         # Non-HSQR branch, step specified, mask path
         B, C, F, H, W = 1, 2, 3, 16, 16
@@ -1063,14 +1063,14 @@ class TestEdgeCases:
             plt.close(fig)
     
     def test_config_get_message_returns_valid_index(self):
-        from watermark.videomark.video_mark import VideoMarkConfig
+        from markdiffusion.watermark.videomark.video_mark import VideoMarkConfig
         start = VideoMarkConfig._get_message(10, 3)
         assert 0 <= start < 7
     
     def test_utils_sample_prc_codeword_with_basis(self):
         import torch
         from types import SimpleNamespace
-        from watermark.videomark.video_mark import VideoMarkUtils
+        from markdiffusion.watermark.videomark.video_mark import VideoMarkUtils
 
         # Build a utils instance without running __init__
         utils = object.__new__(VideoMarkUtils)
@@ -1091,7 +1091,7 @@ class TestEdgeCases:
         import importlib
         from unittest.mock import patch
 
-        vm_module = importlib.import_module('watermark.videomark.video_mark')
+        vm_module = importlib.import_module('markdiffusion.watermark.videomark.video_mark')
         VideoMarkWatermark = vm_module.VideoMarkWatermark
 
         # Build instance bypassing heavy __init__
@@ -1103,7 +1103,7 @@ class TestEdgeCases:
 
         vm.config = SimpleNamespace(pipe=DummyPipe())
 
-        with patch('watermark.videomark.video_mark.is_video_pipeline', return_value=False):
+        with patch('markdiffusion.watermark.videomark.video_mark.is_video_pipeline', return_value=False):
             try:
                 vm._generate_watermarked_video(prompt="test")
                 assert False, "Expected ValueError for non-video pipeline"
@@ -1120,7 +1120,7 @@ class TestEdgeCases:
         import importlib
         from unittest.mock import patch
 
-        vm_module = importlib.import_module('watermark.videomark.video_mark')
+        vm_module = importlib.import_module('markdiffusion.watermark.videomark.video_mark')
         VideoMarkWatermark = vm_module.VideoMarkWatermark
 
         # Dummy pipe that records kwargs and returns an object with 'videos'
@@ -1165,8 +1165,8 @@ class TestEdgeCases:
         # No-op for set_orig_watermarked_latents
         monkeypatch.setattr(vm, 'set_orig_watermarked_latents', lambda x: None)
 
-        with patch('watermark.videomark.video_mark.is_video_pipeline', return_value=True):
-            with patch('watermark.videomark.video_mark.is_i2v_pipeline', return_value=False):
+        with patch('markdiffusion.watermark.videomark.video_mark.is_video_pipeline', return_value=True):
+            with patch('markdiffusion.watermark.videomark.video_mark.is_i2v_pipeline', return_value=False):
                 frames = vm._generate_watermarked_video(prompt="hello")
                 # Ensure frames list contains PIL Images created from uint8 ndarray and original PIL
                 assert isinstance(frames, list)
@@ -1184,7 +1184,7 @@ class TestEdgeCases:
         import importlib
         from unittest.mock import patch
 
-        vm_module = importlib.import_module('watermark.videomark.video_mark')
+        vm_module = importlib.import_module('markdiffusion.watermark.videomark.video_mark')
         VideoMarkWatermark = vm_module.VideoMarkWatermark
 
         class DummyPipe:
@@ -1215,7 +1215,7 @@ class TestEdgeCases:
         vm.utils = DummyUtils()
         monkeypatch.setattr(vm, 'set_orig_watermarked_latents', lambda x: None)
 
-        with patch('watermark.videomark.video_mark.is_video_pipeline', return_value=True):
+        with patch('markdiffusion.watermark.videomark.video_mark.is_video_pipeline', return_value=True):
             frames = vm._generate_watermarked_video(prompt="tuple-output")
             assert isinstance(frames, list)
             assert isinstance(frames[0], Image.Image)
@@ -1226,7 +1226,7 @@ class TestEdgeCases:
         import importlib
         from unittest.mock import patch
 
-        vm_module = importlib.import_module('watermark.videomark.video_mark')
+        vm_module = importlib.import_module('markdiffusion.watermark.videomark.video_mark')
         VideoMarkWatermark = vm_module.VideoMarkWatermark
 
         class DummyPipe:
@@ -1257,7 +1257,7 @@ class TestEdgeCases:
         vm.utils = DummyUtils()
         monkeypatch.setattr(vm, 'set_orig_watermarked_latents', lambda x: None)
 
-        with patch('watermark.videomark.video_mark.is_video_pipeline', return_value=True):
+        with patch('markdiffusion.watermark.videomark.video_mark.is_video_pipeline', return_value=True):
             try:
                 vm._generate_watermarked_video(prompt="tensor-conversion")
                 assert False, "Expected ValueError due to unexpected tensor shape"
@@ -1270,7 +1270,7 @@ class TestEdgeCases:
         import importlib
         from unittest.mock import patch
 
-        vm_module = importlib.import_module('watermark.videomark.video_mark')
+        vm_module = importlib.import_module('markdiffusion.watermark.videomark.video_mark')
         VideoMarkWatermark = vm_module.VideoMarkWatermark
 
         class DummyPipe:
@@ -1299,7 +1299,7 @@ class TestEdgeCases:
         vm.utils = DummyUtils()
         monkeypatch.setattr(vm, 'set_orig_watermarked_latents', lambda x: None)
 
-        with patch('watermark.videomark.video_mark.is_video_pipeline', return_value=True):
+        with patch('markdiffusion.watermark.videomark.video_mark.is_video_pipeline', return_value=True):
             try:
                 vm._generate_watermarked_video(prompt="bad-type")
                 assert False, "Expected TypeError due to unexpected frame type"
@@ -1311,7 +1311,7 @@ class TestEdgeCases:
         import importlib
         from unittest.mock import patch
 
-        vm_module = importlib.import_module('watermark.videomark.video_mark')
+        vm_module = importlib.import_module('markdiffusion.watermark.videomark.video_mark')
         VideoMarkWatermark = vm_module.VideoMarkWatermark
 
         class DummyPipe:
@@ -1343,8 +1343,8 @@ class TestEdgeCases:
         vm.utils = DummyUtils()
         monkeypatch.setattr(vm, 'set_orig_watermarked_latents', lambda x: None)
 
-        with patch('watermark.videomark.video_mark.is_video_pipeline', return_value=True):
-            with patch('watermark.videomark.video_mark.is_i2v_pipeline', return_value=True):
+        with patch('markdiffusion.watermark.videomark.video_mark.is_video_pipeline', return_value=True):
+            with patch('markdiffusion.watermark.videomark.video_mark.is_i2v_pipeline', return_value=True):
                 vm._generate_watermarked_video(prompt="permute")
                 # Latents passed to pipe should be (b,f,c,h,w) after permutation
                 latents = vm.config.pipe.last_kwargs['latents']
@@ -1354,7 +1354,7 @@ class TestEdgeCases:
         import torch
         import importlib
 
-        vm_module = importlib.import_module('watermark.videomark.video_mark')
+        vm_module = importlib.import_module('markdiffusion.watermark.videomark.video_mark')
         VideoMarkWatermark = vm_module.VideoMarkWatermark
 
         vm = object.__new__(VideoMarkWatermark)
@@ -1396,7 +1396,7 @@ class TestEdgeCases:
                 return t.to(dtype=dtype) if dtype is not None else t
             return orig_tensor(x, dtype=dtype)
 
-        vm_module = importlib.import_module('watermark.videomark.video_mark')
+        vm_module = importlib.import_module('markdiffusion.watermark.videomark.video_mark')
         VideoMarkWatermark = vm_module.VideoMarkWatermark
 
         class DFV:
@@ -1482,10 +1482,10 @@ class TestEdgeCases:
 
         vm.detector = DummyDetector()
 
-        with patch('watermark.videomark.video_mark.DataForVisualization', DFV):
-            with patch('watermark.videomark.video_mark.DenoisingLatentsCollector', DummyCollector):
+        with patch('markdiffusion.watermark.videomark.video_mark.DataForVisualization', DFV):
+            with patch('markdiffusion.watermark.videomark.video_mark.DenoisingLatentsCollector', DummyCollector):
                 # Patch only inside the module to avoid global recursion
-                with patch('watermark.videomark.video_mark.torch.tensor', new=safe_tensor):
+                with patch('markdiffusion.watermark.videomark.video_mark.torch.tensor', new=safe_tensor):
                     result = vm.get_data_for_visualize(video_frames=torch.randn(2, 3, 2, 2), prompt="viz")
                 # Ensure recovered_prc is None in returned data
                 assert result.kwargs.get('recovered_prc') is None
@@ -1506,7 +1506,7 @@ class TestEdgeCases:
                 return t.to(dtype=dtype) if dtype is not None else t
             return orig_tensor(x, dtype=dtype)
 
-        vm_module = importlib.import_module('watermark.videomark.video_mark')
+        vm_module = importlib.import_module('markdiffusion.watermark.videomark.video_mark')
         VideoMarkWatermark = vm_module.VideoMarkWatermark
 
         class DFV:
@@ -1584,16 +1584,16 @@ class TestEdgeCases:
 
         vm.detector = FailingDetector()
 
-        with patch('watermark.videomark.video_mark.DataForVisualization', DFV):
-            with patch('watermark.videomark.video_mark.DenoisingLatentsCollector', DummyCollector):
-                with patch('watermark.videomark.video_mark.torch.tensor', new=safe_tensor):
+        with patch('markdiffusion.watermark.videomark.video_mark.DataForVisualization', DFV):
+            with patch('markdiffusion.watermark.videomark.video_mark.DenoisingLatentsCollector', DummyCollector):
+                with patch('markdiffusion.watermark.videomark.video_mark.torch.tensor', new=safe_tensor):
                     result = vm.get_data_for_visualize(video_frames=torch.randn(2, 3, 2, 2), prompt="viz")
                 # Ensure recovered_prc is None in returned data after exception
                 assert result.kwargs.get('recovered_prc') is None
 
     # wind
     def test_wind_retrieve_group_exception_returns_minus_one(self):
-        from detection.wind.wind_detection import WINDetector
+        from markdiffusion.detection.wind.wind_detection import WINDetector
         device = torch.device('cpu')
         # Group pattern has mismatched shape to z_fft, causing broadcasting error inside try
         group_patterns = {0: torch.ones(4, 4, device=device)}
@@ -1612,7 +1612,7 @@ class TestEdgeCases:
     def test_wind_match_noise_invalid_group_returns_default(self):
         # Covers line 88: early return when group_id invalid or not in noise_groups
         import torch
-        from detection.wind.wind_detection import WINDetector
+        from markdiffusion.detection.wind.wind_detection import WINDetector
 
         device = torch.device('cpu')
         det = WINDetector(noise_groups={}, group_patterns={}, threshold=0.5, device=device)
@@ -1624,7 +1624,7 @@ class TestEdgeCases:
     def test_wind_eval_watermark_unsupported_detector_type_raises(self):
         # Covers line 132: raise ValueError when unsupported detector_type
         import torch
-        from detection.wind.wind_detection import WINDetector
+        from markdiffusion.detection.wind.wind_detection import WINDetector
 
         device = torch.device('cpu')
         # Valid shapes to avoid other errors, we only test detector_type handling
@@ -1646,7 +1646,7 @@ class TestEdgeCases:
     def test_wind_eval_watermark_exception_path_returns_defaults(self, monkeypatch):
         # Covers lines 154-161: exception handling in eval_watermark
         import torch
-        from detection.wind.wind_detection import WINDetector
+        from markdiffusion.detection.wind.wind_detection import WINDetector
 
         device = torch.device('cpu')
         # Mismatched pattern to force error inside _match_noise when multiplying pattern * mask
@@ -1671,7 +1671,7 @@ class TestEdgeCases:
     def test_prc_recover_posteriors_variances_none(self):
         import torch
         import numpy as np
-        from detection.prc.prc_detection import PRCDetector
+        from markdiffusion.detection.prc.prc_detection import PRCDetector
         # Minimal detector with dummy decoding_key
         decoding_key = (None, None, None, 0.1, 0.0, np.array([0, 1]), 0, 5, 2)
         det = PRCDetector(var=1, decoding_key=decoding_key, GF=lambda x: x, threshold=0.5, device=torch.device('cpu'))
@@ -1685,7 +1685,7 @@ class TestEdgeCases:
         # Covers line 43: float variance branch; output is a torch.Tensor
         import torch
         import numpy as np
-        from detection.prc.prc_detection import PRCDetector
+        from markdiffusion.detection.prc.prc_detection import PRCDetector
 
         decoding_key = (None, None, None, 0.1, 0.0, np.array([0, 1]), 0, 5, 2)
         det = PRCDetector(var=1, decoding_key=decoding_key, GF=lambda x: x, threshold=0.5, device=torch.device('cpu'))
@@ -1699,7 +1699,7 @@ class TestEdgeCases:
         # Covers line 50: basis not None branch; result can be 0-dim torch.Tensor
         import torch
         import numpy as np
-        from detection.prc.prc_detection import PRCDetector
+        from markdiffusion.detection.prc.prc_detection import PRCDetector
 
         decoding_key = (None, None, None, 0.1, 0.0, np.array([0, 1]), 0, 5, 2)
         det = PRCDetector(var=1, decoding_key=decoding_key, GF=lambda x: x, threshold=0.5, device=torch.device('cpu'))
@@ -1713,7 +1713,7 @@ class TestEdgeCases:
     def test_prc_boolean_row_reduce_noninvertible_returns_none(self):
         # Covers lines 84-85: non-invertible branch returns None
         import numpy as np
-        from detection.prc.prc_detection import PRCDetector
+        from markdiffusion.detection.prc.prc_detection import PRCDetector
 
         decoding_key = (None, None, None, 0.1, 0.0, np.array([0, 1]), 0, 5, 2)
         det = PRCDetector(var=1, decoding_key=decoding_key, GF=lambda x: x, threshold=0.5, device=None)
@@ -1727,8 +1727,8 @@ class TestEdgeCases:
         # Covers lines 90-91: print progress branch; patch sys into module to avoid NameError
         import numpy as np
         import sys as py_sys
-        from detection.prc.prc_detection import PRCDetector
-        import detection.prc.prc_detection as prc_mod
+        from markdiffusion.detection.prc.prc_detection import PRCDetector
+        import markdiffusion.detection.prc.prc_detection as prc_mod
 
         # Inject sys into module namespace
         prc_mod.sys = py_sys
@@ -1746,7 +1746,7 @@ class TestEdgeCases:
         # Covers line 151: ValueError when detector_type not supported
         import torch
         import numpy as np
-        from detection.prc.prc_detection import PRCDetector
+        from markdiffusion.detection.prc.prc_detection import PRCDetector
 
         decoding_key = (None, None, None, 0.1, 0.0, np.array([0, 1]), 0, 5, 2)
         det = PRCDetector(var=1, decoding_key=decoding_key, GF=lambda x: x, threshold=0.5, device=torch.device('cpu'))
@@ -1762,8 +1762,8 @@ class TestEdgeCases:
         # Plus line 131: return None when test_bits mismatch
         import numpy as np
         import sys as py_sys
-        from detection.prc.prc_detection import PRCDetector
-        import detection.prc.prc_detection as prc_mod
+        from markdiffusion.detection.prc.prc_detection import PRCDetector
+        import markdiffusion.detection.prc.prc_detection as prc_mod
         from unittest.mock import patch
 
         # Inject sys into module namespace for print_progress path
@@ -1806,7 +1806,7 @@ class TestEdgeCases:
             def numpy(self, force=True):
                 return self.arr
 
-        with patch('detection.prc.prc_detection.bp_decoder', MockBPD):
+        with patch('markdiffusion.detection.prc.prc_detection.bp_decoder', MockBPD):
             with patch('numpy.linalg.solve', return_value=np.ones(k, dtype=int)):
                 posteriors = PosteriorsWrapper(np.linspace(-0.5, 0.5, k))
                 res = det._decode_message(posteriors, print_progress=True, max_bp_iter=None)
@@ -1815,7 +1815,7 @@ class TestEdgeCases:
     def test_prc_binary_array_to_str(self):
         # Covers lines 137-146: conversion from binary array to string
         import numpy as np
-        from detection.prc.prc_detection import PRCDetector
+        from markdiffusion.detection.prc.prc_detection import PRCDetector
 
         det = PRCDetector(var=1, decoding_key=(None,)*9, GF=lambda x: x, threshold=0.5, device=None)
 
@@ -1884,7 +1884,7 @@ class TestEdgeCases:
         monkeypatch.setitem(sys.modules, "accelerate", accelerate)
 
         import torch
-        from watermark.robin.watermark_generator import get_watermarking_mask
+        from markdiffusion.watermark.robin.watermark_generator import get_watermarking_mask
 
         device = 'cpu'
         init_latents_w = torch.zeros((2, 3, 16, 16), dtype=torch.float32, device=device)
@@ -1938,7 +1938,7 @@ class TestEdgeCases:
         monkeypatch.setitem(sys.modules, "accelerate", accelerate)
 
         import torch
-        from watermark.robin.watermark_generator import get_watermarking_mask
+        from markdiffusion.watermark.robin.watermark_generator import get_watermarking_mask
 
         device = 'cpu'
         init_latents_w = torch.zeros((1, 3, 16, 16), dtype=torch.float32, device=device)
@@ -1991,7 +1991,7 @@ class TestEdgeCases:
         monkeypatch.setitem(sys.modules, "accelerate", accelerate)
 
         import torch
-        from watermark.robin.watermark_generator import get_watermarking_mask
+        from markdiffusion.watermark.robin.watermark_generator import get_watermarking_mask
 
         device = 'cpu'
         init_latents_w = torch.zeros((2, 3, 32, 32), dtype=torch.float32, device=device)
@@ -2045,7 +2045,7 @@ class TestEdgeCases:
         monkeypatch.setitem(sys.modules, "accelerate", accelerate)
 
         import torch
-        from watermark.robin.watermark_generator import get_watermarking_mask
+        from markdiffusion.watermark.robin.watermark_generator import get_watermarking_mask
 
         device = 'cpu'
         init_latents_w = torch.zeros((1, 2, 32, 32), dtype=torch.float32, device=device)
@@ -2100,7 +2100,7 @@ class TestEdgeCases:
         monkeypatch.setitem(sys.modules, "accelerate", accelerate)
 
         import torch
-        from watermark.robin.watermark_generator import get_watermarking_mask
+        from markdiffusion.watermark.robin.watermark_generator import get_watermarking_mask
 
         device = 'cpu'
         init_latents_w = torch.zeros((1, 1, 8, 8), dtype=torch.float32, device=device)
@@ -2150,7 +2150,7 @@ class TestEdgeCases:
         monkeypatch.setitem(sys.modules, "accelerate", accelerate)
 
         import torch
-        from watermark.robin.watermark_generator import get_watermarking_mask
+        from markdiffusion.watermark.robin.watermark_generator import get_watermarking_mask
 
         device = 'cpu'
         init_latents_w = torch.zeros((1, 1, 8, 8), dtype=torch.float32, device=device)
@@ -2203,7 +2203,7 @@ class TestEdgeCases:
         monkeypatch.setitem(sys.modules, "accelerate", accelerate)
 
         import torch
-        from watermark.robin.watermark_generator import inject_watermark
+        from markdiffusion.watermark.robin.watermark_generator import inject_watermark
 
         init_latents = torch.randn((1, 4, 8, 8), dtype=torch.float32)
         mask = torch.zeros_like(init_latents, dtype=torch.bool)
@@ -2216,7 +2216,7 @@ class TestEdgeCases:
     
     # pipeline
     def test_detection_pipeline_watermark_detection_result_str(self):
-        from evaluation.pipelines.detection import WatermarkDetectionResult
+        from markdiffusion.evaluation.pipelines.detection import WatermarkDetectionResult
         res = WatermarkDetectionResult(generated_or_retrieved_media=["img1"], edited_media=["img1_ed"], detect_result={"l1_distance": 0.5})
         s = str(res)
         assert "generated_or_retrieved_media" in s and "edited_media" in s and "detect_result" in s
@@ -2224,9 +2224,9 @@ class TestEdgeCases:
     def test_detection_pipeline_edit_media_with_image_and_video_editors_and_invalid(self):
         from PIL import Image
         from types import SimpleNamespace
-        from evaluation.pipelines.detection import WatermarkDetectionPipeline
-        from evaluation.tools.image_editor import ImageEditor
-        from evaluation.tools.video_editor import VideoEditor
+        from markdiffusion.evaluation.pipelines.detection import WatermarkDetectionPipeline
+        from markdiffusion.evaluation.tools.image_editor import ImageEditor
+        from markdiffusion.evaluation.tools.video_editor import VideoEditor
 
         # Stub dataset
         dataset = SimpleNamespace()
@@ -2269,7 +2269,7 @@ class TestEdgeCases:
     def test_watermarked_media_detection_pipeline_evaluate_return_types(self):
         from PIL import Image
         from types import SimpleNamespace
-        from evaluation.pipelines.detection import WatermarkedMediaDetectionPipeline, DetectionPipelineReturnType
+        from markdiffusion.evaluation.pipelines.detection import WatermarkedMediaDetectionPipeline, DetectionPipelineReturnType
 
         # Stub dataset
         class DummyDataset:
@@ -2309,7 +2309,7 @@ class TestEdgeCases:
 
     def test_watermarked_media_detection_invalid_generated_media_type_raises(self):
         from types import SimpleNamespace
-        from evaluation.pipelines.detection import WatermarkedMediaDetectionPipeline, DetectionPipelineReturnType
+        from markdiffusion.evaluation.pipelines.detection import WatermarkedMediaDetectionPipeline, DetectionPipelineReturnType
 
         class DummyDataset:
             num_samples = 1
@@ -2331,7 +2331,7 @@ class TestEdgeCases:
 
     def test_unwatermarked_media_detection_get_iterable_modes_and_generate_or_retrieve(self):
         from PIL import Image
-        from evaluation.pipelines.detection import UnWatermarkedMediaDetectionPipeline
+        from markdiffusion.evaluation.pipelines.detection import UnWatermarkedMediaDetectionPipeline
 
         # Ground truth mode: num_references != 0 triggers assert but passes
         class GroundTruthDataset:
@@ -2381,7 +2381,7 @@ class TestEdgeCases:
     def test_base_pipeline_pass_methods(self):
         # Cover pass statements in base class methods _get_iterable and _generate_or_retrieve_media
         from types import SimpleNamespace
-        from evaluation.pipelines.detection import WatermarkDetectionPipeline
+        from markdiffusion.evaluation.pipelines.detection import WatermarkDetectionPipeline
 
         dataset = SimpleNamespace()
         pipe = WatermarkDetectionPipeline(dataset=dataset, media_editor_list=[], show_progress=False)
@@ -2392,7 +2392,7 @@ class TestEdgeCases:
     def test_inception_score_too_few_images(self, monkeypatch):
         import pytest
         from PIL import Image
-        from evaluation.tools.image_quality_analyzer import InceptionScoreCalculator
+        from markdiffusion.evaluation.tools.image_quality_analyzer import InceptionScoreCalculator
         # Avoid heavy model load
         monkeypatch.setattr(InceptionScoreCalculator, "_load_model", lambda self: None)
 
@@ -2404,7 +2404,7 @@ class TestEdgeCases:
     def test_inception_score_non_divisible_splits(self, monkeypatch):
         import pytest
         from PIL import Image
-        from evaluation.tools.image_quality_analyzer import InceptionScoreCalculator
+        from markdiffusion.evaluation.tools.image_quality_analyzer import InceptionScoreCalculator
 
         monkeypatch.setattr(InceptionScoreCalculator, "_load_model", lambda self: None)
 
@@ -2417,7 +2417,7 @@ class TestEdgeCases:
         import torch
         import numpy as np
         from PIL import Image
-        from evaluation.tools.image_quality_analyzer import InceptionScoreCalculator
+        from markdiffusion.evaluation.tools.image_quality_analyzer import InceptionScoreCalculator
 
         class DummyModel:
             def __call__(self, batch):
@@ -2442,7 +2442,7 @@ class TestEdgeCases:
     def test_inception_warning_print(self, monkeypatch, capsys):
         import numpy as np
         from PIL import Image
-        from evaluation.tools.image_quality_analyzer import InceptionScoreCalculator
+        from markdiffusion.evaluation.tools.image_quality_analyzer import InceptionScoreCalculator
 
         monkeypatch.setattr(InceptionScoreCalculator, "_load_model", lambda self: None)
 
@@ -2462,7 +2462,7 @@ class TestEdgeCases:
     def test_clip_init_no_clip_installed(self, monkeypatch):
         import pytest
         import builtins
-        from evaluation.tools.image_quality_analyzer import CLIPScoreCalculator
+        from markdiffusion.evaluation.tools.image_quality_analyzer import CLIPScoreCalculator
 
         real_import = builtins.__import__
 
@@ -2480,7 +2480,7 @@ class TestEdgeCases:
         import torch
         from PIL import Image
         import types
-        from evaluation.tools import image_quality_analyzer as iqa
+        from markdiffusion.evaluation.tools import image_quality_analyzer as iqa
 
         def stub_load(self):
             class DummyModel:
@@ -2508,7 +2508,7 @@ class TestEdgeCases:
         import torch
         from PIL import Image
         import types
-        from evaluation.tools import image_quality_analyzer as iqa
+        from markdiffusion.evaluation.tools import image_quality_analyzer as iqa
 
         def stub_load(self):
             class DummyModel:
@@ -2529,7 +2529,7 @@ class TestEdgeCases:
     def test_clip_image_mode_wrong_reference_type(self, monkeypatch):
         import torch
         from PIL import Image
-        from evaluation.tools import image_quality_analyzer as iqa
+        from markdiffusion.evaluation.tools import image_quality_analyzer as iqa
 
         def stub_load(self):
             class DummyModel:
@@ -2549,7 +2549,7 @@ class TestEdgeCases:
     def test_clip_image_mode_converts_reference(self, monkeypatch):
         import torch
         from PIL import Image
-        from evaluation.tools import image_quality_analyzer as iqa
+        from markdiffusion.evaluation.tools import image_quality_analyzer as iqa
 
         def stub_load(self):
             class DummyModel:
@@ -2568,7 +2568,7 @@ class TestEdgeCases:
     def test_clip_invalid_reference_source(self, monkeypatch):
         import torch
         from PIL import Image
-        from evaluation.tools import image_quality_analyzer as iqa
+        from markdiffusion.evaluation.tools import image_quality_analyzer as iqa
 
         def stub_load(self):
             class DummyModel:
@@ -2587,7 +2587,7 @@ class TestEdgeCases:
     def test_fid_too_few_images(self, monkeypatch):
         import pytest
         from PIL import Image
-        from evaluation.tools.image_quality_analyzer import FIDCalculator
+        from markdiffusion.evaluation.tools.image_quality_analyzer import FIDCalculator
 
         monkeypatch.setattr(FIDCalculator, "_load_model", lambda self: None)
         fid = FIDCalculator(device="cpu")
@@ -2597,7 +2597,7 @@ class TestEdgeCases:
     def test_fid_non_divisible_splits(self, monkeypatch):
         import pytest
         from PIL import Image
-        from evaluation.tools.image_quality_analyzer import FIDCalculator
+        from markdiffusion.evaluation.tools.image_quality_analyzer import FIDCalculator
 
         monkeypatch.setattr(FIDCalculator, "_load_model", lambda self: None)
         fid = FIDCalculator(device="cpu", splits=2)
@@ -2610,7 +2610,7 @@ class TestEdgeCases:
         import numpy as np
         import types
         import sys
-        from evaluation.tools.image_quality_analyzer import FIDCalculator
+        from markdiffusion.evaluation.tools.image_quality_analyzer import FIDCalculator
 
         fake_scipy = types.SimpleNamespace(
             linalg=types.SimpleNamespace(
@@ -2630,7 +2630,7 @@ class TestEdgeCases:
 
     def test_lpips_len_lt2(self, monkeypatch):
         from PIL import Image
-        from evaluation.tools.image_quality_analyzer import LPIPSAnalyzer
+        from markdiffusion.evaluation.tools.image_quality_analyzer import LPIPSAnalyzer
 
         monkeypatch.setattr(LPIPSAnalyzer, "_load_model", lambda self: None)
         lp = LPIPSAnalyzer(device="cpu")
@@ -2640,7 +2640,7 @@ class TestEdgeCases:
     def test_lpips_converts_non_rgb(self, monkeypatch):
         import torch
         from PIL import Image
-        from evaluation.tools import image_quality_analyzer as iqa
+        from markdiffusion.evaluation.tools import image_quality_analyzer as iqa
 
         class DummyModel:
             def eval(self): pass
@@ -2654,7 +2654,7 @@ class TestEdgeCases:
         monkeypatch.setattr(iqa.lpips, "LPIPS", lambda net="alex": DummyModel())
         monkeypatch.setattr(iqa.lpips, "im2tensor", dummy_im2tensor)
 
-        from evaluation.tools.image_quality_analyzer import LPIPSAnalyzer
+        from markdiffusion.evaluation.tools.image_quality_analyzer import LPIPSAnalyzer
         lp = LPIPSAnalyzer(device="cpu")
         # Use grayscale images to hit conversion (line 483)
         img1 = Image.new("L", (16, 16))
@@ -2665,7 +2665,7 @@ class TestEdgeCases:
     def test_psnr_convert_resize_inf(self):
         import numpy as np
         from PIL import Image
-        from evaluation.tools.image_quality_analyzer import PSNRAnalyzer
+        from markdiffusion.evaluation.tools.image_quality_analyzer import PSNRAnalyzer
 
         # Create identical images with different modes and sizes to trigger converts and resize (526, 528, 532)
         img = Image.new("L", (32, 32), color=128)
@@ -2677,7 +2677,7 @@ class TestEdgeCases:
 
     def test_niqe_load_params_failure(self):
         import pytest
-        from evaluation.tools.image_quality_analyzer import NIQECalculator
+        from markdiffusion.evaluation.tools.image_quality_analyzer import NIQECalculator
 
         # Provide a bad path to trigger load failure (lines 599-600)
         with pytest.raises(RuntimeError):
@@ -2687,7 +2687,7 @@ class TestEdgeCases:
         import numpy as np
         import pytest
         from PIL import Image
-        from evaluation.tools.image_quality_analyzer import NIQECalculator
+        from markdiffusion.evaluation.tools.image_quality_analyzer import NIQECalculator
 
         # Avoid heavy SciPy/gamma precompute in __init__
         def stub_load_params(self, model_path):
@@ -2709,12 +2709,12 @@ class TestEdgeCases:
     def test_vif_convert_and_interpolate(self, monkeypatch):
         import torch
         from PIL import Image
-        from evaluation.tools import image_quality_analyzer as iqa
+        from markdiffusion.evaluation.tools import image_quality_analyzer as iqa
 
         # Replace piq.vif_p to avoid dependency and compute quickly
         monkeypatch.setattr(iqa.piq, "vif_p", lambda x, y, data_range=1.0: torch.tensor(0.42))
 
-        from evaluation.tools.image_quality_analyzer import VIFAnalyzer
+        from markdiffusion.evaluation.tools.image_quality_analyzer import VIFAnalyzer
         vif = VIFAnalyzer(device="cpu")
         # Grayscale images trigger conversion (1043), different sizes trigger interpolation (1063-1064)
         img = Image.new("L", (32, 40))
@@ -2725,11 +2725,11 @@ class TestEdgeCases:
     def test_fsim_convert_and_interpolate(self, monkeypatch):
         import torch
         from PIL import Image
-        from evaluation.tools import image_quality_analyzer as iqa
+        from markdiffusion.evaluation.tools import image_quality_analyzer as iqa
 
         monkeypatch.setattr(iqa.piq, "fsim", lambda x, y, data_range=1.0: torch.tensor(0.77))
 
-        from evaluation.tools.image_quality_analyzer import FSIMAnalyzer
+        from markdiffusion.evaluation.tools.image_quality_analyzer import FSIMAnalyzer
         fsim = FSIMAnalyzer(device="cpu")
         # Grayscale triggers conversion (1087), different sizes trigger interpolation (1107-1108)
         img = Image.new("L", (48, 36))
@@ -2739,7 +2739,7 @@ class TestEdgeCases:
     
     # video quality analysis
     def test_silent_progress_bar_iter_and_desc(self):
-        from evaluation.pipelines.video_quality_analysis import SilentProgressBar
+        from markdiffusion.evaluation.pipelines.video_quality_analysis import SilentProgressBar
         data = [1, 2, 3]
         bar = SilentProgressBar(data)
         bar.set_description("desc") # no-op
@@ -2747,7 +2747,7 @@ class TestEdgeCases:
     
     def test_pipeline_get_progress_bar_true_false(self):
         import types
-        from evaluation.pipelines.video_quality_analysis import VideoQualityAnalysisPipeline
+        from markdiffusion.evaluation.pipelines.video_quality_analysis import VideoQualityAnalysisPipeline
 
         # Minimal stubs
         dataset = types.SimpleNamespace()
@@ -2781,7 +2781,7 @@ class TestEdgeCases:
 
     def test_pipeline_get_prompt(self):
         import types
-        from evaluation.pipelines.video_quality_analysis import VideoQualityAnalysisPipeline
+        from markdiffusion.evaluation.pipelines.video_quality_analysis import VideoQualityAnalysisPipeline
 
         class DummyDataset:
             def get_prompt(self, index):
@@ -2802,7 +2802,7 @@ class TestEdgeCases:
     def test_get_watermarked_video(self):
         import types
         from PIL import Image
-        from evaluation.pipelines.video_quality_analysis import VideoQualityAnalysisPipeline
+        from markdiffusion.evaluation.pipelines.video_quality_analysis import VideoQualityAnalysisPipeline
 
         class DummyDataset:
             def get_prompt(self, index):
@@ -2827,7 +2827,7 @@ class TestEdgeCases:
 
     def test_get_unwatermarked_video(self):
         from PIL import Image
-        from evaluation.pipelines.video_quality_analysis import VideoQualityAnalysisPipeline
+        from markdiffusion.evaluation.pipelines.video_quality_analysis import VideoQualityAnalysisPipeline
 
         class DummyDataset:
             def get_prompt(self, index):
@@ -2852,7 +2852,7 @@ class TestEdgeCases:
 
     def test_edit_watermarked_and_unwatermarked_video(self):
         from PIL import Image
-        from evaluation.pipelines.video_quality_analysis import VideoQualityAnalysisPipeline
+        from markdiffusion.evaluation.pipelines.video_quality_analysis import VideoQualityAnalysisPipeline
 
         class DummyFrameEditor:
             def edit(self, frame):
@@ -2882,7 +2882,7 @@ class TestEdgeCases:
 
     def test_prepare_dataset_with_references_silent_progress(self):
         from PIL import Image
-        from evaluation.pipelines.video_quality_analysis import DirectVideoQualityAnalysisPipeline
+        from markdiffusion.evaluation.pipelines.video_quality_analysis import DirectVideoQualityAnalysisPipeline
 
         class DummyDataset:
             def __init__(self):
@@ -2921,7 +2921,7 @@ class TestEdgeCases:
         assert len(dataset_eval.reference_videos) == 2  # num_references > 0 branch
 
     def test_prepare_input_for_quality_analyzer_base_returns_none(self):
-        from evaluation.pipelines.video_quality_analysis import VideoQualityAnalysisPipeline
+        from markdiffusion.evaluation.pipelines.video_quality_analysis import VideoQualityAnalysisPipeline
         pipeline = VideoQualityAnalysisPipeline(
             dataset=object(),
             watermarked_video_editor_list=[],
@@ -2937,7 +2937,7 @@ class TestEdgeCases:
 
     def test_store_results_creates_files(self, tmp_path):
         from PIL import Image
-        from evaluation.pipelines.video_quality_analysis import VideoQualityAnalysisPipeline, DatasetForEvaluation
+        from markdiffusion.evaluation.pipelines.video_quality_analysis import VideoQualityAnalysisPipeline, DatasetForEvaluation
 
         class DummyDataset:
             name = "ds"
@@ -2975,7 +2975,7 @@ class TestEdgeCases:
 
     def test_direct_pipeline_evaluate_runs(self):
         from PIL import Image
-        from evaluation.pipelines.video_quality_analysis import DirectVideoQualityAnalysisPipeline
+        from markdiffusion.evaluation.pipelines.video_quality_analysis import DirectVideoQualityAnalysisPipeline
 
         class DummyDataset:
             def __init__(self):
@@ -3011,7 +3011,7 @@ class TestEdgeCases:
 
     def test_direct_pipeline_evaluate_runs(self):
         from PIL import Image
-        from evaluation.pipelines.video_quality_analysis import DirectVideoQualityAnalysisPipeline
+        from markdiffusion.evaluation.pipelines.video_quality_analysis import DirectVideoQualityAnalysisPipeline
 
         class DummyDataset:
             def __init__(self):
@@ -3052,7 +3052,7 @@ class TestEdgeCases:
     def test_transform_to_model_format_image_with_target(self):
         from PIL import Image
         import torch
-        from utils.media_utils import transform_to_model_format
+        from markdiffusion.utils.media_utils import transform_to_model_format
         img = Image.new("RGB", (32, 24), color=(128, 128, 128))
         out = transform_to_model_format(img, target_size=16)
         assert isinstance(out, torch.Tensor)
@@ -3062,7 +3062,7 @@ class TestEdgeCases:
     def test_transform_to_model_format_image_no_target(self):
         from PIL import Image
         import torch
-        from utils.media_utils import transform_to_model_format
+        from markdiffusion.utils.media_utils import transform_to_model_format
 
         img = Image.new("RGB", (20, 10), color=(255, 0, 0))
         out = transform_to_model_format(img)
@@ -3072,7 +3072,7 @@ class TestEdgeCases:
     def test_transform_to_model_format_list_pil(self):
         from PIL import Image
         import torch
-        from utils.media_utils import transform_to_model_format
+        from markdiffusion.utils.media_utils import transform_to_model_format
 
         frames = [Image.new("RGB", (8, 8), color=(i, i, i)) for i in range(3)]
         out = transform_to_model_format(frames)
@@ -3082,7 +3082,7 @@ class TestEdgeCases:
     def test_transform_to_model_format_list_numpy(self):
         import numpy as np
         import torch
-        from utils.media_utils import transform_to_model_format
+        from markdiffusion.utils.media_utils import transform_to_model_format
 
         frames = [np.ones((8, 8, 3), dtype=np.float32) for _ in range(2)]
         out = transform_to_model_format(frames)
@@ -3093,7 +3093,7 @@ class TestEdgeCases:
         import numpy as np
         from PIL import Image
         import pytest
-        from utils.media_utils import transform_to_model_format
+        from markdiffusion.utils.media_utils import transform_to_model_format
 
         frames = [Image.new("RGB", (8, 8)), np.ones((8, 8, 3), dtype=np.float32)]
         with pytest.raises(ValueError):
@@ -3101,13 +3101,13 @@ class TestEdgeCases:
 
     def test_transform_to_model_format_unsupported_media_error(self):
         import pytest
-        from utils.media_utils import transform_to_model_format
+        from markdiffusion.utils.media_utils import transform_to_model_format
         with pytest.raises(ValueError):
             transform_to_model_format(123)
 
     def test_numpy_to_pil_and_cv2_to_pil(self):
         import numpy as np
-        from utils.media_utils import numpy_to_pil, cv2_to_pil
+        from markdiffusion.utils.media_utils import numpy_to_pil, cv2_to_pil
 
         arr_float = np.random.rand(10, 12, 3).astype(np.float32)
         pil_img = numpy_to_pil(arr_float)
@@ -3120,7 +3120,7 @@ class TestEdgeCases:
     def test_pil_to_cv2(self):
         from PIL import Image
         import numpy as np
-        from utils.media_utils import pil_to_cv2
+        from markdiffusion.utils.media_utils import pil_to_cv2
 
         img = Image.new("RGB", (9, 7), color=(0, 128, 255))
         arr = pil_to_cv2(img)
@@ -3132,7 +3132,7 @@ class TestEdgeCases:
     def test_get_random_latents_image_path(self, monkeypatch):
         import torch
         from types import SimpleNamespace
-        from utils import media_utils
+        from markdiffusion.utils import media_utils
 
         # Force pipeline type to image
         monkeypatch.setattr(media_utils, "get_pipeline_type", lambda pipe: media_utils.PIPELINE_TYPE_IMAGE)
@@ -3160,7 +3160,7 @@ class TestEdgeCases:
     def test_get_random_latents_video_path(self, monkeypatch):
         import torch
         from types import SimpleNamespace
-        from utils import media_utils
+        from markdiffusion.utils import media_utils
 
         monkeypatch.setattr(media_utils, "get_pipeline_type", lambda pipe: media_utils.PIPELINE_TYPE_TEXT_TO_VIDEO)
 
@@ -3186,7 +3186,7 @@ class TestEdgeCases:
     def test_get_image_latents_sample_and_decoder_inv(self, monkeypatch):
         import torch
         from types import SimpleNamespace
-        from utils import media_utils
+        from markdiffusion.utils import media_utils
 
         # Stub decoder_inv_optimization to return latents * 2
         monkeypatch.setattr(media_utils, "decoder_inv_optimization", lambda pipe, latents, image, num_steps=100: latents * 2)
@@ -3210,7 +3210,7 @@ class TestEdgeCases:
     def test_decode_image_latents(self):
         import torch
         from types import SimpleNamespace
-        from utils import media_utils
+        from markdiffusion.utils import media_utils
 
         # Return a single tensor from decode
         pipe = SimpleNamespace(vae=SimpleNamespace(decode=lambda latents, return_dict=False: (torch.zeros(1, 3, 4, 4),)))
@@ -3222,7 +3222,7 @@ class TestEdgeCases:
     def test_get_video_latents_permute_true_false_and_decoder_inv_error(self):
         import torch
         from types import SimpleNamespace
-        from utils import media_utils
+        from markdiffusion.utils import media_utils
         import pytest
 
         class DummyLatentDist:
@@ -3251,7 +3251,7 @@ class TestEdgeCases:
         import torch
         import numpy as np
         from PIL import Image
-        from utils.media_utils import tensor2vid
+        from markdiffusion.utils.media_utils import tensor2vid
 
         # Video tensor [B, C, F, H, W]
         video = torch.zeros(2, 3, 4, 6, 5)
@@ -3291,7 +3291,7 @@ class TestEdgeCases:
     def test_decode_video_latents(self):
         import torch
         import numpy as np
-        from utils.media_utils import _decode_video_latents
+        from markdiffusion.utils.media_utils import _decode_video_latents
 
         class DummyProcessor:
             def postprocess(self, batch_vid, output_type):
@@ -3319,7 +3319,7 @@ class TestEdgeCases:
     def test_convert_video_frames_to_images_numpy_and_pil(self):
         import numpy as np
         from PIL import Image
-        from utils.media_utils import convert_video_frames_to_images
+        from markdiffusion.utils.media_utils import convert_video_frames_to_images
 
         frames_np = [np.random.rand(8, 8, 3).astype(np.float32) for _ in range(2)]
         pil_frames_np = convert_video_frames_to_images(frames_np)
@@ -3331,7 +3331,7 @@ class TestEdgeCases:
 
     def test_convert_video_frames_to_images_unsupported_type(self):
         import pytest
-        from utils.media_utils import convert_video_frames_to_images
+        from markdiffusion.utils.media_utils import convert_video_frames_to_images
         with pytest.raises(ValueError):
             convert_video_frames_to_images(["bad"])
 
@@ -3339,7 +3339,7 @@ class TestEdgeCases:
         import numpy as np
         from PIL import Image
         import os
-        from utils.media_utils import save_video_frames
+        from markdiffusion.utils.media_utils import save_video_frames
 
         save_dir1 = tmp_path / "np_frames"
         os.makedirs(save_dir1, exist_ok=True)
@@ -3358,7 +3358,7 @@ class TestEdgeCases:
     def test_get_media_latents_image_vs_video(self, monkeypatch):
         import torch
         from types import SimpleNamespace
-        from utils import media_utils
+        from markdiffusion.utils import media_utils
 
         # Image path
         monkeypatch.setattr(media_utils, "get_pipeline_type", lambda pipe: media_utils.PIPELINE_TYPE_IMAGE)
@@ -3389,7 +3389,7 @@ class TestEdgeCases:
         import torch
         import numpy as np
         from types import SimpleNamespace
-        from utils import media_utils
+        from markdiffusion.utils import media_utils
 
         # Image path
         monkeypatch.setattr(media_utils, "get_pipeline_type", lambda pipe: media_utils.PIPELINE_TYPE_IMAGE)
@@ -3423,7 +3423,7 @@ class TestEdgeCases:
     # base
     def test_baseconfig_raises_when_diffusion_config_none(self, monkeypatch):
         import pytest
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
 
         monkeypatch.setattr(base_mod, "load_config_file", lambda _: {})
 
@@ -3440,7 +3440,7 @@ class TestEdgeCases:
 
     def test_baseconfig_updates_config_dict_with_kwargs(self):
         import pytest
-        from watermark.base import BaseConfig
+        from markdiffusion.watermark.base import BaseConfig
 
         class DummyDiffusionConfig:
             def __init__(self):
@@ -3459,7 +3459,7 @@ class TestEdgeCases:
                 self.num_frames = -1
                 self.gen_kwargs = {}
 
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
 
         def fake_load_config_file(_):
             return {"a": 1}
@@ -3493,7 +3493,7 @@ class TestEdgeCases:
 
     def test_basewatermark_detect_pipeline_type_raises_when_unknown(self, monkeypatch):
         import pytest
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
 
         class DummyConfigObj:
             def __init__(self):
@@ -3511,7 +3511,7 @@ class TestEdgeCases:
 
     def test_validate_pipeline_config_raises_for_video_pipeline_num_frames_lt_1(self, monkeypatch):
         import pytest
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
 
         class DummyConfigObj:
             def __init__(self):
@@ -3529,7 +3529,7 @@ class TestEdgeCases:
 
     def test_validate_pipeline_config_raises_for_image_pipeline_num_frames_ge_1(sel, monkeypatch):
         import pytest
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
 
         class DummyConfigObj:
             def __init__(self):
@@ -3547,7 +3547,7 @@ class TestEdgeCases:
 
     def test_generate_watermarked_media_raises_if_image_pipeline_input_not_str(self, monkeypatch):
         import pytest
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
         from PIL import Image
 
         class DummyConfigObj:
@@ -3570,7 +3570,7 @@ class TestEdgeCases:
 
     def test_generate_unwatermarked_media_raises_if_image_pipeline_input_not_str(self, monkeypatch):
         import pytest
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
         from PIL import Image
 
         class DummyConfigObj:
@@ -3592,7 +3592,7 @@ class TestEdgeCases:
 
     def test_preprocess_media_image_pipeline_numpy_to_pil(self, monkeypatch):
         import numpy as np
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
         from PIL import Image
 
         class DummyConfigObj:
@@ -3619,7 +3619,7 @@ class TestEdgeCases:
     def test_preprocess_media_image_pipeline_tensor_to_pil_dim3(self, monkeypatch):
         import torch
         import numpy as np
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
         from PIL import Image
 
         class DummyConfigObj:
@@ -3655,7 +3655,7 @@ class TestEdgeCases:
 
     def test_preprocess_media_image_pipeline_unsupported_type_raises(self, monkeypatch):
         import pytest
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
 
         class DummyConfigObj:
             def __init__(self):
@@ -3679,7 +3679,7 @@ class TestEdgeCases:
 
     def test_preprocess_media_video_pipeline_list_numpy_frames_to_pil(self, monkeypatch):
         import numpy as np
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
         from PIL import Image
 
         class DummyConfigObj:
@@ -3710,7 +3710,7 @@ class TestEdgeCases:
     def test_preprocess_media_video_pipeline_list_mixed_types_raises(self, monkeypatch):
         import pytest
         import numpy as np
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
         from PIL import Image
 
         class DummyConfigObj:
@@ -3737,7 +3737,7 @@ class TestEdgeCases:
     def test_preprocess_media_video_pipeline_numpy_wrong_shape_raises(self, monkeypatch):
         import pytest
         import numpy as np
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
 
         class DummyConfigObj:
             def __init__(self):
@@ -3763,7 +3763,7 @@ class TestEdgeCases:
     def test_preprocess_media_video_pipeline_tensor_unsupported_shape_raises(self, monkeypatch):
         import pytest
         import torch
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
 
         class DummyConfigObj:
             def __init__(self):
@@ -3788,7 +3788,7 @@ class TestEdgeCases:
 
     def test_generate_watermarked_image_raises_when_pipeline_not_image(self, monkeypatch):
         import pytest
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
 
         class DummyConfigObj:
             def __init__(self):
@@ -3812,7 +3812,7 @@ class TestEdgeCases:
 
     def test_generate_watermarked_video_raises_when_pipeline_not_video(self, monkeypatch):
         import pytest
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
 
         class DummyConfigObj:
             def __init__(self):
@@ -3836,7 +3836,7 @@ class TestEdgeCases:
 
     def test_generate_unwatermarked_image_raises_when_not_image_pipeline(self, monkeypatch):
         import pytest
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
 
         class DummyConfigObj:
             def __init__(self):
@@ -3860,7 +3860,7 @@ class TestEdgeCases:
 
     def test_generate_unwatermarked_video_raises_when_not_video_pipeline(self, monkeypatch):
         import pytest
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
 
         class DummyConfigObj:
             def __init__(self):
@@ -3884,7 +3884,7 @@ class TestEdgeCases:
 
     def test_generate_unwatermarked_video_t2v_requires_prompt_string(self, monkeypatch):
         import pytest
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
         from PIL import Image
 
         class DummyConfigObj:
@@ -3919,7 +3919,7 @@ class TestEdgeCases:
 
     def test_generate_unwatermarked_video_t2v_output_videos_branch(self, monkeypatch):
         import numpy as np
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
         from PIL import Image
 
         class DummyPipe:
@@ -3968,7 +3968,7 @@ class TestEdgeCases:
 
     def test_generate_unwatermarked_video_i2v_requires_input_image(self, monkeypatch):
         import pytest
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
 
         class DummyConfigObj:
             def __init__(self):
@@ -4001,7 +4001,7 @@ class TestEdgeCases:
 
     def test_generate_unwatermarked_video_i2v_string_path_open_fail_raises(self, tmp_path, monkeypatch):
         import pytest
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
 
         bad_file = tmp_path / "bad.img"
         bad_file.write_text("not an image")
@@ -4037,7 +4037,7 @@ class TestEdgeCases:
 
     def test_generate_unwatermarked_video_t2v_gen_kwargs_merge_adds_missing_key(self, monkeypatch):
         import numpy as np
-        import watermark.base as base_mod
+        import markdiffusion.watermark.base as base_mod
         from PIL import Image
 
         captured = {}
@@ -4087,19 +4087,19 @@ class TestEdgeCases:
     # auto visualization
     def test_autovisualizer_init_raises_environment_error(self):
         import pytest
-        from visualize.auto_visualization import AutoVisualizer
+        from markdiffusion.visualize.auto_visualization import AutoVisualizer
 
         with pytest.raises(EnvironmentError, match="AutoVisualizer is designed"):
             AutoVisualizer()
 
     def test_get_visualization_class_name_returns_none_for_unknown_algorithm(self):
-        from visualize.auto_visualization import AutoVisualizer
+        from markdiffusion.visualize.auto_visualization import AutoVisualizer
 
         assert AutoVisualizer._get_visualization_class_name("UNKNOWN_ALG") is None
 
     def test_autovisualizer_load_raises_on_algorithm_name_mismatch(self):
         import pytest
-        from visualize.auto_visualization import AutoVisualizer
+        from markdiffusion.visualize.auto_visualization import AutoVisualizer
 
         class DummyData:
             def __init__(self):
@@ -4110,7 +4110,7 @@ class TestEdgeCases:
 
     def test_autovisualizer_load_raises_on_invalid_algorithm_name(self):
         import pytest
-        from visualize.auto_visualization import AutoVisualizer
+        from markdiffusion.visualize.auto_visualization import AutoVisualizer
 
         class DummyData:
             def __init__(self):
@@ -4121,7 +4121,7 @@ class TestEdgeCases:
 
     def test_autovisualizer_load_raises_importerror_when_module_not_found(self):
         import pytest
-        import visualize.auto_visualization as av
+        import markdiffusion.visualize.auto_visualization as av
 
         class DummyData:
             def __init__(self):
@@ -4137,7 +4137,7 @@ class TestEdgeCases:
 
     def test_autovisualizer_load_raises_importerror_when_class_missing_in_module(self):
         import pytest
-        import visualize.auto_visualization as av
+        import markdiffusion.visualize.auto_visualization as av
 
         class DummyData:
             def __init__(self):
@@ -4270,13 +4270,13 @@ class TestEdgeCases:
             pkg.__path__ = [os.path.join(os.getcwd(), "watermark")]
             monkeypatch.setitem(sys.modules, "watermark", pkg)
 
-        if "watermark.videoshield" not in sys.modules:
-            subpkg = types.ModuleType("watermark.videoshield")
+        if "markdiffusion.watermark.videoshield" not in sys.modules:
+            subpkg = types.ModuleType("markdiffusion.watermark.videoshield")
             subpkg.__path__ = [os.path.join(os.getcwd(), "watermark", "videoshield")]
-            monkeypatch.setitem(sys.modules, "watermark.videoshield", subpkg)
+            monkeypatch.setitem(sys.modules, "markdiffusion.watermark.videoshield", subpkg)
 
         # Load as real module name so "..base" works
-        mod_name = "watermark.videoshield.video_shield"
+        mod_name = "markdiffusion.watermark.videoshield.video_shield"
         path = os.path.join(os.getcwd(), "watermark", "videoshield", "video_shield.py")
         spec = importlib.util.spec_from_file_location(mod_name, path)
         mod = importlib.util.module_from_spec(spec)
@@ -4570,7 +4570,7 @@ class TestEdgeCases:
         import matplotlib
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt
-        from visualize.base import BaseVisualizer
+        from markdiffusion.visualize.base import BaseVisualizer
 
         class V(BaseVisualizer):
             pass
@@ -4591,7 +4591,7 @@ class TestEdgeCases:
         import torch
         import matplotlib
         matplotlib.use("Agg")
-        from visualize.base import BaseVisualizer
+        from markdiffusion.visualize.base import BaseVisualizer
 
         class V(BaseVisualizer):
             pass
@@ -4612,7 +4612,7 @@ class TestEdgeCases:
         import torch
         import matplotlib
         matplotlib.use("Agg")
-        from visualize.base import BaseVisualizer
+        from markdiffusion.visualize.base import BaseVisualizer
 
         class V(BaseVisualizer):
             pass
@@ -4633,7 +4633,7 @@ class TestEdgeCases:
         import torch
         import matplotlib
         matplotlib.use("Agg")
-        from visualize.base import BaseVisualizer
+        from markdiffusion.visualize.base import BaseVisualizer
 
         class V(BaseVisualizer):
             pass
@@ -4655,7 +4655,7 @@ class TestEdgeCases:
         import matplotlib
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt
-        from visualize.base import BaseVisualizer
+        from markdiffusion.visualize.base import BaseVisualizer
 
         class V(BaseVisualizer):
             pass
@@ -4681,7 +4681,7 @@ class TestEdgeCases:
         import matplotlib
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt
-        from visualize.base import BaseVisualizer
+        from markdiffusion.visualize.base import BaseVisualizer
 
         class V(BaseVisualizer):
             pass
@@ -4704,7 +4704,7 @@ class TestEdgeCases:
         import matplotlib
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt
-        from visualize.base import BaseVisualizer
+        from markdiffusion.visualize.base import BaseVisualizer
 
         class V(BaseVisualizer):
             pass
@@ -4727,7 +4727,7 @@ class TestEdgeCases:
         import matplotlib
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt
-        from visualize.base import BaseVisualizer
+        from markdiffusion.visualize.base import BaseVisualizer
 
         class V(BaseVisualizer):
             pass
@@ -4751,7 +4751,7 @@ class TestEdgeCases:
         import matplotlib
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt
-        from visualize.base import BaseVisualizer
+        from markdiffusion.visualize.base import BaseVisualizer
 
         class V(BaseVisualizer):
             pass
@@ -4785,7 +4785,7 @@ class TestEdgeCases:
         import matplotlib
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt
-        from visualize.base import BaseVisualizer
+        from markdiffusion.visualize.base import BaseVisualizer
 
         class V(BaseVisualizer):
             def m(self, ax=None):
@@ -4807,7 +4807,7 @@ class TestEdgeCases:
 
     # image quality analysis
     def test_silent_progress_bar_iter_and_description(self):
-        from evaluation.pipelines.image_quality_analysis import SilentProgressBar
+        from markdiffusion.evaluation.pipelines.image_quality_analysis import SilentProgressBar
 
         data = [1, 2, 3]
         bar = SilentProgressBar(data)
@@ -4817,8 +4817,8 @@ class TestEdgeCases:
 
 
     def test_init_invalid_unwatermarked_image_source_raises(self):
-        from evaluation.pipelines.image_quality_analysis import ImageQualityAnalysisPipeline
-        from evaluation.dataset import BaseDataset
+        from markdiffusion.evaluation.pipelines.image_quality_analysis import ImageQualityAnalysisPipeline
+        from markdiffusion.evaluation.dataset import BaseDataset
 
         class DummyDataset(BaseDataset):
             name = "dummy"
@@ -4842,7 +4842,7 @@ class TestEdgeCases:
 
 
     def test_get_progress_bar_returns_silent_when_disabled(self):
-        from evaluation.pipelines.image_quality_analysis import DirectImageQualityAnalysisPipeline
+        from markdiffusion.evaluation.pipelines.image_quality_analysis import DirectImageQualityAnalysisPipeline
 
         class DummyDataset:
             name = "dummy"
@@ -4866,7 +4866,7 @@ class TestEdgeCases:
 
     def test_get_unwatermarked_image_natural_source_uses_reference(self):
         from PIL import Image
-        from evaluation.pipelines.image_quality_analysis import DirectImageQualityAnalysisPipeline
+        from markdiffusion.evaluation.pipelines.image_quality_analysis import DirectImageQualityAnalysisPipeline
 
         class DummyDataset:
             name = "dummy"
@@ -4896,7 +4896,7 @@ class TestEdgeCases:
 
     def test_edit_watermarked_image_list_path_applies_editors(self):
         from PIL import Image
-        from evaluation.pipelines.image_quality_analysis import DirectImageQualityAnalysisPipeline
+        from markdiffusion.evaluation.pipelines.image_quality_analysis import DirectImageQualityAnalysisPipeline
 
         class DummyDataset:
             name = "dummy"
@@ -4933,7 +4933,7 @@ class TestEdgeCases:
 
     def test_edit_unwatermarked_image_list_path_applies_editors(self):
         from PIL import Image
-        from evaluation.pipelines.image_quality_analysis import DirectImageQualityAnalysisPipeline
+        from markdiffusion.evaluation.pipelines.image_quality_analysis import DirectImageQualityAnalysisPipeline
 
         class DummyDataset:
             name = "dummy"
@@ -4966,7 +4966,7 @@ class TestEdgeCases:
 
     def test_prepare_dataset_reference_none_when_no_references_and_natural_ref_source(self):
         from PIL import Image
-        from evaluation.pipelines.image_quality_analysis import ReferencedImageQualityAnalysisPipeline
+        from markdiffusion.evaluation.pipelines.image_quality_analysis import ReferencedImageQualityAnalysisPipeline
 
         class DummyDataset:
             name = "dummy"
@@ -4999,7 +4999,7 @@ class TestEdgeCases:
 
     def test_prepare_dataset_reference_from_unwatermarked_when_reference_source_generated(self):
         from PIL import Image
-        from evaluation.pipelines.image_quality_analysis import ReferencedImageQualityAnalysisPipeline
+        from markdiffusion.evaluation.pipelines.image_quality_analysis import ReferencedImageQualityAnalysisPipeline
 
         class DummyDataset:
             name = "dummy"
@@ -5030,7 +5030,7 @@ class TestEdgeCases:
     def test_prcutils_encode_message_when_message_is_none(self):
         import numpy as np
         import torch
-        from watermark.prc.prc import PRCUtils
+        from markdiffusion.watermark.prc.prc import PRCUtils
 
         class DummyGF:
             def Random(self, *args, **kwargs):
@@ -5078,8 +5078,8 @@ class TestEdgeCases:
         import types
         import torch
         from PIL import Image
-        import watermark.prc.prc as prc_mod
-        from watermark.prc.prc import PRC
+        import markdiffusion.watermark.prc.prc as prc_mod
+        from markdiffusion.watermark.prc.prc import PRC
 
         class DummyUtils:
             def __init__(self, config):
@@ -5158,8 +5158,8 @@ class TestEdgeCases:
     def test_prc_detect_watermark_no_cfg_guidance_branch_and_detector_type(self, monkeypatch):
         import torch
         from PIL import Image
-        import watermark.prc.prc as prc_mod
-        from watermark.prc.prc import PRC
+        import markdiffusion.watermark.prc.prc as prc_mod
+        from markdiffusion.watermark.prc.prc import PRC
 
         class DummyUtils:
             def __init__(self, config):
@@ -5235,8 +5235,8 @@ class TestEdgeCases:
         import types
         import torch
         from PIL import Image
-        import watermark.prc.prc as prc_mod
-        from watermark.prc.prc import PRC
+        import markdiffusion.watermark.prc.prc as prc_mod
+        from markdiffusion.watermark.prc.prc import PRC
 
         class DummyUtils:
             def __init__(self, config):
@@ -5338,7 +5338,7 @@ class TestEdgeCases:
         import numpy as np
         import torch
         from scipy.sparse import csr_matrix
-        from detection.videomark.videomark_detection import VideoMarkDetector
+        from markdiffusion.detection.videomark.videomark_detection import VideoMarkDetector
 
         class DummyGF:
             def __call__(self, x):
@@ -5373,7 +5373,7 @@ class TestEdgeCases:
         import numpy as np
         import torch
         from scipy.sparse import csr_matrix
-        from detection.videomark.videomark_detection import VideoMarkDetector
+        from markdiffusion.detection.videomark.videomark_detection import VideoMarkDetector
 
         class DummyGF:
             def __call__(self, x):
@@ -5405,7 +5405,7 @@ class TestEdgeCases:
         import numpy as np
         import torch
         from scipy.sparse import csr_matrix
-        from detection.videomark.videomark_detection import VideoMarkDetector
+        from markdiffusion.detection.videomark.videomark_detection import VideoMarkDetector
 
         class DummyGF:
             def __call__(self, x):
@@ -5442,7 +5442,7 @@ class TestEdgeCases:
         import numpy as np
         import torch
         from scipy.sparse import csr_matrix
-        from detection.videomark.videomark_detection import VideoMarkDetector
+        from markdiffusion.detection.videomark.videomark_detection import VideoMarkDetector
 
         class DummyGF:
             def __call__(self, x):
@@ -5474,7 +5474,7 @@ class TestEdgeCases:
         import numpy as np
         import torch
         from scipy.sparse import csr_matrix
-        from detection.videomark.videomark_detection import VideoMarkDetector
+        from markdiffusion.detection.videomark.videomark_detection import VideoMarkDetector
 
         class DummyGF:
             def __call__(self, x):
@@ -5506,7 +5506,7 @@ class TestEdgeCases:
         import numpy as np
         import torch
         from scipy.sparse import csr_matrix
-        from detection.videomark.videomark_detection import VideoMarkDetector
+        from markdiffusion.detection.videomark.videomark_detection import VideoMarkDetector
 
         class DummyGF:
             def __call__(self, x):
@@ -5545,7 +5545,7 @@ class TestEdgeCases:
         import numpy as np
         import torch
         from scipy.sparse import csr_matrix
-        from detection.videomark.videomark_detection import VideoMarkDetector
+        from markdiffusion.detection.videomark.videomark_detection import VideoMarkDetector
 
         class DummyGF:
             def __call__(self, x):
@@ -5591,7 +5591,7 @@ class TestEdgeCases:
         import numpy as np
         import torch
         from scipy.sparse import csr_matrix
-        from detection.videomark.videomark_detection import VideoMarkDetector
+        from markdiffusion.detection.videomark.videomark_detection import VideoMarkDetector
 
         class DummyGF:
             def __call__(self, x):
@@ -5622,7 +5622,7 @@ class TestEdgeCases:
     # video quality analyzer
     def test_video_quality_analyzer_base_init_and_analyze_raises(self):
         from PIL import Image
-        from evaluation.tools.video_quality_analyzer import VideoQualityAnalyzer
+        from markdiffusion.evaluation.tools.video_quality_analyzer import VideoQualityAnalyzer
 
         analyzer = VideoQualityAnalyzer()  # __init__ pass branch
         try:
@@ -5646,8 +5646,8 @@ class TestEdgeCases:
 
         monkeypatch.setattr(builtins, "__import__", fake_import)
 
-        sys.modules.pop("evaluation.tools.video_quality_analyzer", None)
-        m = importlib.import_module("evaluation.tools.video_quality_analyzer")
+        sys.modules.pop("markdiffusion.evaluation.tools.video_quality_analyzer", None)
+        m = importlib.import_module("markdiffusion.evaluation.tools.video_quality_analyzer")
 
         assert hasattr(m, "BICUBIC")
         assert m.BICUBIC is not None
@@ -5655,7 +5655,7 @@ class TestEdgeCases:
 
     def test_subject_consistency_single_frame_returns_1(self):
         from PIL import Image
-        from evaluation.tools.video_quality_analyzer import SubjectConsistencyAnalyzer
+        from markdiffusion.evaluation.tools.video_quality_analyzer import SubjectConsistencyAnalyzer
 
         # bypass heavy init by constructing without __init__
         analyzer = SubjectConsistencyAnalyzer.__new__(SubjectConsistencyAnalyzer)
@@ -5668,7 +5668,7 @@ class TestEdgeCases:
     def test_subject_consistency_two_frames_cosine_path(self, monkeypatch):
         import torch
         from PIL import Image
-        from evaluation.tools.video_quality_analyzer import SubjectConsistencyAnalyzer
+        from markdiffusion.evaluation.tools.video_quality_analyzer import SubjectConsistencyAnalyzer
 
         analyzer = SubjectConsistencyAnalyzer.__new__(SubjectConsistencyAnalyzer)
         analyzer.device = torch.device("cpu")
@@ -5699,7 +5699,7 @@ class TestEdgeCases:
 
     def test_motion_smoothness_cpu_initialize_params_branch(self):
         import torch
-        from evaluation.tools.video_quality_analyzer import MotionSmoothnessAnalyzer
+        from markdiffusion.evaluation.tools.video_quality_analyzer import MotionSmoothnessAnalyzer
 
         analyzer = MotionSmoothnessAnalyzer.__new__(MotionSmoothnessAnalyzer)
         analyzer.device = torch.device("cpu")
@@ -5716,7 +5716,7 @@ class TestEdgeCases:
     def test_motion_smoothness_extract_frames_even_indices(self):
         from PIL import Image
         import numpy as np
-        from evaluation.tools.video_quality_analyzer import MotionSmoothnessAnalyzer
+        from markdiffusion.evaluation.tools.video_quality_analyzer import MotionSmoothnessAnalyzer
 
         analyzer = MotionSmoothnessAnalyzer.__new__(MotionSmoothnessAnalyzer)
 
@@ -5733,7 +5733,7 @@ class TestEdgeCases:
 
 
     def test_motion_smoothness_compute_vfi_score_empty_returns_0(self):
-        from evaluation.tools.video_quality_analyzer import MotionSmoothnessAnalyzer
+        from markdiffusion.evaluation.tools.video_quality_analyzer import MotionSmoothnessAnalyzer
 
         analyzer = MotionSmoothnessAnalyzer.__new__(MotionSmoothnessAnalyzer)
         score = MotionSmoothnessAnalyzer._compute_vfi_score(analyzer, [], [])
@@ -5741,7 +5741,7 @@ class TestEdgeCases:
 
 
     def test_dynamic_degree_check_dynamic_motion_true_and_false(self):
-        from evaluation.tools.video_quality_analyzer import DynamicDegreeAnalyzer
+        from markdiffusion.evaluation.tools.video_quality_analyzer import DynamicDegreeAnalyzer
 
         analyzer = DynamicDegreeAnalyzer.__new__(DynamicDegreeAnalyzer)
 
@@ -5753,13 +5753,13 @@ class TestEdgeCases:
     def test_imaging_quality_preprocess_frames_resize_branch(self):
         import torch
         from PIL import Image
-        from evaluation.tools.video_quality_analyzer import ImagingQualityAnalyzer
+        from markdiffusion.evaluation.tools.video_quality_analyzer import ImagingQualityAnalyzer
 
         analyzer = ImagingQualityAnalyzer.__new__(ImagingQualityAnalyzer)
         analyzer.device = torch.device("cpu")
 
         # make pil_to_torch produce large tensors so resize branch triggers
-        import evaluation.tools.video_quality_analyzer as vqa_mod
+        import markdiffusion.evaluation.tools.video_quality_analyzer as vqa_mod
 
         def fake_pil_to_torch(img, normalize=False):
             # (C,H,W) with max(h,w)>512

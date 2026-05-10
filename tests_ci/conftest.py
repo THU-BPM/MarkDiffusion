@@ -11,15 +11,15 @@ from pathlib import Path
 from typing import Dict, Any, List
 from PIL import Image
 import gc
-from watermark.auto_watermark import AutoWatermark, PIPELINE_SUPPORTED_WATERMARKS
-from utils.diffusion_config import DiffusionConfig
+from markdiffusion.watermark.auto_watermark import AutoWatermark, PIPELINE_SUPPORTED_WATERMARKS
+from markdiffusion.utils.diffusion_config import DiffusionConfig
 from diffusers import (
     StableDiffusionPipeline,
     TextToVideoSDPipeline,
     DPMSolverMultistepScheduler,
     DDIMScheduler
 )
-from utils.pipeline_utils import (
+from markdiffusion.utils.pipeline_utils import (
     PIPELINE_TYPE_IMAGE,
     PIPELINE_TYPE_TEXT_TO_VIDEO,
     PIPELINE_TYPE_IMAGE_TO_VIDEO
@@ -265,7 +265,7 @@ def video_diffusion_config(device, video_pipeline):
 @pytest.fixture
 def test_image_dataset():
     """Create test dataset for image pipelines."""
-    from evaluation.dataset import MSCOCODataset
+    from markdiffusion.evaluation.dataset import MSCOCODataset
     return MSCOCODataset(
         max_samples=TEST_DATASET_MAX_SAMPLES,
         shuffle=False
@@ -275,7 +275,7 @@ def test_image_dataset():
 @pytest.fixture
 def test_video_dataset():
     """Create test dataset for video pipelines."""
-    from evaluation.dataset import VBenchDataset
+    from markdiffusion.evaluation.dataset import VBenchDataset
     return VBenchDataset(
         max_samples=TEST_DATASET_MAX_SAMPLES,
         dimension="subject_consistency",
@@ -286,7 +286,7 @@ def test_video_dataset():
 @pytest.fixture
 def all_image_editors():
     """Get all image editor tools for saturation testing."""
-    from evaluation.tools.image_editor import (
+    from markdiffusion.evaluation.tools.image_editor import (
         JPEGCompression,
         Rotation,
         CrSc,
@@ -314,7 +314,7 @@ def all_image_editors():
 @pytest.fixture
 def all_video_editors():
     """Get all video editor tools for saturation testing."""
-    from evaluation.tools.video_editor import (
+    from markdiffusion.evaluation.tools.video_editor import (
         MPEG4Compression,
         FrameAverage,
         FrameRateAdapter,
@@ -334,7 +334,7 @@ def all_video_editors():
 @pytest.fixture
 def all_image_quality_analyzers():
     """Get all image quality analyzers for testing."""
-    from evaluation.tools.image_quality_analyzer import (
+    from markdiffusion.evaluation.tools.image_quality_analyzer import (
         NIQECalculator,
         CLIPScoreCalculator,
         FIDCalculator,
@@ -359,7 +359,7 @@ def all_image_quality_analyzers():
 @pytest.fixture
 def all_video_quality_analyzers():
     """Get all video quality analyzers for testing."""
-    from evaluation.tools.video_quality_analyzer import (
+    from markdiffusion.evaluation.tools.video_quality_analyzer import (
         SubjectConsistencyAnalyzer,
         MotionSmoothnessAnalyzer,
         DynamicDegreeAnalyzer,
@@ -412,7 +412,7 @@ def cleanup_memory():
 @pytest.fixture
 def test_image_dataset_group():
     """Create test dataset for image pipelines requiring multiple samples (e.g. FID)."""
-    from evaluation.dataset import MSCOCODataset
+    from markdiffusion.evaluation.dataset import MSCOCODataset
     return MSCOCODataset(
         max_samples=2,  # Minimum for FID
         shuffle=False

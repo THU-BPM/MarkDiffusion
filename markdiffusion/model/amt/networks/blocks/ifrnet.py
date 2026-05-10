@@ -16,7 +16,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from model.amt.utils.flow_utils import warp
+from markdiffusion.model.amt.utils.flow_utils import warp
 
 
 def resize(x, scale_factor):

@@ -32,9 +32,9 @@ import joblib
 from huggingface_hub import hf_hub_download
 
 
-from detection.base import BaseDetector
-from watermark.gm.gm import GaussianShadingChaCha, extract_complex_sign
-from watermark.gm.gnr import GNRRestorer
+from markdiffusion.detection.base import BaseDetector
+from markdiffusion.watermark.gm.gm import GaussianShadingChaCha, extract_complex_sign
+from markdiffusion.watermark.gm.gnr import GNRRestorer
 
 
 class GMDetector(BaseDetector):

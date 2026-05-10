@@ -25,5 +25,6 @@ watermark/gm/ckpts/model_final.pth
 model_from_hf/
 assets
 .coverage
+*egg-info/
 !ToReviewers/htmlcov/
 !ToReviewers/htmlcov/**

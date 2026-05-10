@@ -17,9 +17,9 @@ from scipy.stats import norm, truncnorm
 from huggingface_hub import hf_hub_download
 
 from ..base import BaseConfig, BaseWatermark
-from utils.media_utils import get_random_latents, get_media_latents, transform_to_model_format
-from utils.utils import set_random_seed
-from visualize.data_for_visualization import DataForVisualization
+from markdiffusion.utils.media_utils import get_random_latents, get_media_latents, transform_to_model_format
+from markdiffusion.utils.utils import set_random_seed
+from markdiffusion.visualize.data_for_visualization import DataForVisualization
 from .gnr import GNRRestorer
 
 # -----------------------------------------------------------------------------
@@ -269,7 +269,7 @@ class GMUtils:
 		self.watermarking_mask = self._build_watermarking_mask()
 
 		# 延迟导入 GMDetector，避免循环导入
-		from detection.gm.gm_detection import GMDetector
+		from markdiffusion.detection.gm.gm_detection import GMDetector
 		
 		# Build detector (delegates all detection work)
 		self.detector = GMDetector(

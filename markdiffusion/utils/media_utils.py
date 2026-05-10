@@ -9,7 +9,7 @@ from transformers import get_cosine_schedule_with_warmup
 from typing import Optional, Callable, Union, List, Tuple, Dict, Any
 from tqdm import tqdm
 import copy
-from utils.pipeline_utils import (
+from markdiffusion.utils.pipeline_utils import (
     get_pipeline_type, 
     PIPELINE_TYPE_IMAGE, 
     PIPELINE_TYPE_TEXT_TO_VIDEO, 
@@ -102,7 +102,7 @@ def transform_to_model_format(media: Union[Image.Image, List[Image.Image], np.nd
 
 def set_inversion(pipe: Union[StableDiffusionPipeline, TextToVideoSDPipeline, StableVideoDiffusionPipeline], inversion_type: str):
     """Set the inversion for the given pipe."""
-    from inversions import DDIMInversion, ExactInversion
+    from markdiffusion.inversions import DDIMInversion, ExactInversion
     
     if inversion_type == "ddim":
         return DDIMInversion(pipe.scheduler, pipe.unet, pipe.device)

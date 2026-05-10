@@ -8,12 +8,12 @@ from scipy.sparse import csr_matrix
 from scipy.special import binom
 import logging
 from functools import reduce
-from visualize.data_for_visualization import DataForVisualization
-from detection.videomark.videomark_detection import VideoMarkDetector
-from utils.media_utils import *
-from utils.utils import set_random_seed
-from utils.pipeline_utils import is_video_pipeline, is_t2v_pipeline, is_i2v_pipeline
-from utils.callbacks import DenoisingLatentsCollector
+from markdiffusion.visualize.data_for_visualization import DataForVisualization
+from markdiffusion.detection.videomark.videomark_detection import VideoMarkDetector
+from markdiffusion.utils.media_utils import *
+from markdiffusion.utils.utils import set_random_seed
+from markdiffusion.utils.pipeline_utils import is_video_pipeline, is_t2v_pipeline, is_i2v_pipeline
+from markdiffusion.utils.callbacks import DenoisingLatentsCollector
 import random
 
 # Setup logging

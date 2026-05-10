@@ -27,7 +27,7 @@ from unittest.mock import Mock, MagicMock, patch
 from PIL import Image
 import pandas as pd
 
-from evaluation.dataset import (
+from markdiffusion.evaluation.dataset import (
     BaseDataset,
     StableDiffusionPromptsDataset,
     MSCOCODataset,
@@ -145,7 +145,7 @@ class TestBaseDataset:
 class TestStableDiffusionPromptsDataset:
     """Tests for StableDiffusionPromptsDataset class."""
 
-    @patch('evaluation.dataset.load_dataset')
+    @patch('markdiffusion.evaluation.dataset.load_dataset')
     def test_initialization(self, mock_load_dataset):
         """Test dataset initializes correctly."""
         # Setup mock
@@ -159,14 +159,14 @@ class TestStableDiffusionPromptsDataset:
         assert dataset.shuffle is False
         mock_load_dataset.assert_called_once()
 
-    @patch('evaluation.dataset.load_dataset')
+    @patch('markdiffusion.evaluation.dataset.load_dataset')
     def test_name_property(self, mock_load_dataset):
         """Test name property returns correct name."""
         mock_load_dataset.return_value = {"Prompt": []}
         dataset = StableDiffusionPromptsDataset(max_samples=1)
         assert dataset.name == "Stable Diffusion Prompts"
 
-    @patch('evaluation.dataset.load_dataset')
+    @patch('markdiffusion.evaluation.dataset.load_dataset')
     def test_prompts_loaded(self, mock_load_dataset):
         """Test prompts are loaded from dataset."""
         test_prompts = ["A cat sitting on a mat", "A dog running in park", "A bird flying"]
@@ -177,7 +177,7 @@ class TestStableDiffusionPromptsDataset:
         assert len(dataset.prompts) == 3
         assert dataset.prompts == test_prompts
 
-    @patch('evaluation.dataset.load_dataset')
+    @patch('markdiffusion.evaluation.dataset.load_dataset')
     def test_max_samples_limit(self, mock_load_dataset):
         """Test max_samples limits the number of prompts loaded."""
         test_prompts = ["p1", "p2", "p3", "p4", "p5"]
@@ -188,7 +188,7 @@ class TestStableDiffusionPromptsDataset:
         assert len(dataset.prompts) == 2
         assert dataset.prompts == ["p1", "p2"]
 
-    @patch('evaluation.dataset.load_dataset')
+    @patch('markdiffusion.evaluation.dataset.load_dataset')
     def test_shuffle_option(self, mock_load_dataset):
         """Test shuffle option is passed to dataset."""
         mock_dataset = MagicMock()
@@ -201,7 +201,7 @@ class TestStableDiffusionPromptsDataset:
         assert dataset.shuffle is True
         mock_dataset.shuffle.assert_called_once()
 
-    @patch('evaluation.dataset.load_dataset')
+    @patch('markdiffusion.evaluation.dataset.load_dataset')
     def test_custom_split(self, mock_load_dataset):
         """Test custom split option."""
         mock_load_dataset.return_value = {"Prompt": ["p1"]}
@@ -213,7 +213,7 @@ class TestStableDiffusionPromptsDataset:
             "dataset/stable_diffusion_prompts", split="train"
         )
 
-    @patch('evaluation.dataset.load_dataset')
+    @patch('markdiffusion.evaluation.dataset.load_dataset')
     def test_no_references(self, mock_load_dataset):
         """Test that StableDiffusionPromptsDataset has no references."""
         mock_load_dataset.return_value = {"Prompt": ["p1", "p2"]}
@@ -231,8 +231,8 @@ class TestStableDiffusionPromptsDataset:
 class TestMSCOCODataset:
     """Tests for MSCOCODataset class."""
 
-    @patch('evaluation.dataset.pd.read_parquet')
-    @patch('evaluation.dataset.tqdm')
+    @patch('markdiffusion.evaluation.dataset.pd.read_parquet')
+    @patch('markdiffusion.evaluation.dataset.tqdm')
     def test_initialization(self, mock_tqdm, mock_read_parquet):
         """Test dataset initializes correctly."""
         # Setup mock DataFrame
@@ -249,7 +249,7 @@ class TestMSCOCODataset:
         assert dataset.max_samples == 2
         assert dataset.shuffle is False
 
-    @patch('evaluation.dataset.pd.read_parquet')
+    @patch('markdiffusion.evaluation.dataset.pd.read_parquet')
     def test_name_property(self, mock_read_parquet):
         """Test name property returns correct name."""
         mock_read_parquet.return_value = pd.DataFrame({'TEXT': [], 'URL': []})
@@ -263,7 +263,7 @@ class TestMSCOCODataset:
 
         assert dataset.name == "MS-COCO 2017"
 
-    @patch('evaluation.dataset.requests.get')
+    @patch('markdiffusion.evaluation.dataset.requests.get')
     def test_load_image_from_url_success(self, mock_get):
         """Test _load_image_from_url successfully loads an image."""
         # Create a mock response with image data
@@ -284,7 +284,7 @@ class TestMSCOCODataset:
         assert isinstance(result, Image.Image)
         mock_get.assert_called_once_with("http://example.com/image.jpg")
 
-    @patch('evaluation.dataset.requests.get')
+    @patch('markdiffusion.evaluation.dataset.requests.get')
     def test_load_image_from_url_failure(self, mock_get, capsys):
         """Test _load_image_from_url returns None on failure."""
         mock_get.side_effect = Exception("Connection error")
@@ -296,8 +296,8 @@ class TestMSCOCODataset:
         captured = capsys.readouterr()
         assert "Load image from url failed" in captured.out
 
-    @patch('evaluation.dataset.pd.read_parquet')
-    @patch('evaluation.dataset.tqdm')
+    @patch('markdiffusion.evaluation.dataset.pd.read_parquet')
+    @patch('markdiffusion.evaluation.dataset.tqdm')
     def test_shuffle_option(self, mock_tqdm, mock_read_parquet):
         """Test shuffle option shuffles the DataFrame."""
         mock_df = MagicMock(spec=pd.DataFrame)
@@ -378,7 +378,7 @@ class TestVBenchDataset:
         assert len(dataset.prompts) == 2
 
     @patch('builtins.open')
-    @patch('evaluation.dataset.random.shuffle')
+    @patch('markdiffusion.evaluation.dataset.random.shuffle')
     def test_shuffle_option(self, mock_shuffle, mock_open):
         """Test shuffle option shuffles the prompts."""
         test_prompts = ["p1\n", "p2\n", "p3\n"]
@@ -457,7 +457,7 @@ class TestDatasetIntegration:
             assert prompt == dataset.prompts[i]
             assert ref == mock_images[i]
 
-    @patch('evaluation.dataset.load_dataset')
+    @patch('markdiffusion.evaluation.dataset.load_dataset')
     def test_stable_diffusion_dataset_as_base_dataset(self, mock_load_dataset):
         """Test StableDiffusionPromptsDataset works as BaseDataset."""
         mock_load_dataset.return_value = {"Prompt": ["test_prompt"]}
@@ -507,7 +507,7 @@ class TestDatasetEdgeCases:
         assert dataset[-1] == "third"
         assert dataset[-2] == "second"
 
-    @patch('evaluation.dataset.load_dataset')
+    @patch('markdiffusion.evaluation.dataset.load_dataset')
     def test_unicode_prompts(self, mock_load_dataset):
         """Test handling of unicode prompts."""
         unicode_prompts = ["日本語プロンプト", "中文提示", "🎨 emoji art"]

@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
-from model.amt.utils.flow_utils import warp
-from model.amt.networks.blocks.ifrnet import (
+from markdiffusion.model.amt.utils.flow_utils import warp
+from markdiffusion.model.amt.networks.blocks.ifrnet import (
     convrelu, resize,
     ResBlock,
 )

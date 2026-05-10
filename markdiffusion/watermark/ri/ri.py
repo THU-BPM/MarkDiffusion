@@ -23,10 +23,10 @@ from torchvision import transforms
 from torchvision.transforms import functional as F
 from PIL import Image
 import random
-from detection.ri.ri_detection import RIDetector
-from utils.media_utils import *
-from utils.utils import set_random_seed
-from visualize.data_for_visualization import DataForVisualization
+from markdiffusion.detection.ri.ri_detection import RIDetector
+from markdiffusion.utils.media_utils import *
+from markdiffusion.utils.utils import set_random_seed
+from markdiffusion.visualize.data_for_visualization import DataForVisualization
 
 class RIConfig(BaseConfig):
     """Configuration class for the RI algorithm."""

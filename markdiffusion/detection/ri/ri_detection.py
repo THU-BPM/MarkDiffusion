@@ -14,7 +14,7 @@
 
 
 import torch
-from detection.base import BaseDetector
+from markdiffusion.detection.base import BaseDetector
 import numpy as np
 
 class RIDetector(BaseDetector):

@@ -4,8 +4,8 @@ from matplotlib.axes import Axes
 from matplotlib.gridspec import GridSpecFromSubplotSpec
 from typing import Optional
 import numpy as np
-from visualize.base import BaseVisualizer
-from visualize.data_for_visualization import DataForVisualization
+from markdiffusion.visualize.base import BaseVisualizer
+from markdiffusion.visualize.data_for_visualization import DataForVisualization
 from Crypto.Cipher import ChaCha20
 
 class GaussianShadingVisualizer(BaseVisualizer):

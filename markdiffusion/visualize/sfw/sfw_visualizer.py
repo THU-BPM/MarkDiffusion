@@ -2,8 +2,8 @@ from typing import Optional
 import torch
 from matplotlib.axes import Axes
 import numpy as np
-from visualize.base import BaseVisualizer
-from visualize.data_for_visualization import DataForVisualization
+from markdiffusion.visualize.base import BaseVisualizer
+from markdiffusion.visualize.data_for_visualization import DataForVisualization
 
 class SFWVisualizer(BaseVisualizer):
     """SFW watermark visualization class"""

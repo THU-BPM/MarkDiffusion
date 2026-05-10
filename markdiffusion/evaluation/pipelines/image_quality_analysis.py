@@ -13,18 +13,18 @@
 # limitations under the License.
 
 
-from watermark.base import BaseWatermark
-from evaluation.dataset import BaseDataset
+from markdiffusion.watermark.base import BaseWatermark
+from markdiffusion.evaluation.dataset import BaseDataset
 from tqdm import tqdm
 from enum import Enum, auto
 from PIL import Image
-from evaluation.tools.image_editor import ImageEditor
+from markdiffusion.evaluation.tools.image_editor import ImageEditor
 from typing import List, Dict, Union, Tuple, Any, Optional
 import numpy as np
 from dataclasses import dataclass, field
 import os
 import random
-from evaluation.tools.image_quality_analyzer import (
+from markdiffusion.evaluation.tools.image_quality_analyzer import (
     ImageQualityAnalyzer
 )
 import lpips

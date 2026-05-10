@@ -1,14 +1,14 @@
 from ..base import BaseWatermark, BaseConfig
-from utils.media_utils import *
+from markdiffusion.utils.media_utils import *
 import torch
 from typing import Dict, Union, List, Optional
-from utils.utils import set_random_seed, inherit_docstring
-from utils.diffusion_config import DiffusionConfig
+from markdiffusion.utils.utils import set_random_seed, inherit_docstring
+from markdiffusion.utils.diffusion_config import DiffusionConfig
 import copy
 import numpy as np
 from PIL import Image
-from visualize.data_for_visualization import DataForVisualization
-from detection.tr.tr_detection import TRDetector
+from markdiffusion.visualize.data_for_visualization import DataForVisualization
+from markdiffusion.detection.tr.tr_detection import TRDetector
 
 class TRConfig(BaseConfig):
     """Config class for TR algorithm, load config file and initialize parameters."""

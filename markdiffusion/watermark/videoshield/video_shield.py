@@ -8,12 +8,12 @@ from Crypto.Random import get_random_bytes
 import logging
 from scipy.stats import norm, truncnorm
 from functools import reduce
-from visualize.data_for_visualization import DataForVisualization
-from detection.videoshield.videoshield_detection import VideoShieldDetector
-from utils.media_utils import *
-from utils.utils import set_random_seed
-from utils.pipeline_utils import is_video_pipeline, is_t2v_pipeline, is_i2v_pipeline
-from utils.callbacks import DenoisingLatentsCollector
+from markdiffusion.visualize.data_for_visualization import DataForVisualization
+from markdiffusion.detection.videoshield.videoshield_detection import VideoShieldDetector
+from markdiffusion.utils.media_utils import *
+from markdiffusion.utils.utils import set_random_seed
+from markdiffusion.utils.pipeline_utils import is_video_pipeline, is_t2v_pipeline, is_i2v_pipeline
+from markdiffusion.utils.callbacks import DenoisingLatentsCollector
 import random
 
 # Setup logging

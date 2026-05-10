@@ -30,7 +30,7 @@ from PIL import Image
 from unittest.mock import patch, MagicMock
 import shutil
 
-from evaluation.tools.video_editor import (
+from markdiffusion.evaluation.tools.video_editor import (
     VideoEditor,
     MPEG4Compression,
     FrameAverage,

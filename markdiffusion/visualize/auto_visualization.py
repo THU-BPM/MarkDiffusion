@@ -2,23 +2,23 @@ import torch
 from PIL import Image
 from typing import List, Optional, Dict, Any, Union
 from abc import ABC, abstractmethod
-from visualize.data_for_visualization import DataForVisualization
+from markdiffusion.visualize.data_for_visualization import DataForVisualization
 import importlib
-from visualize.base import BaseVisualizer
+from markdiffusion.visualize.base import BaseVisualizer
 
 # Mapping of algorithm names to visualization data classes
 VISUALIZATION_DATA_MAPPING = {
-    'TR': 'visualize.tr.TreeRingVisualizer',
-    'GS': 'visualize.gs.GaussianShadingVisualizer', 
-    'PRC': 'visualize.prc.PRCVisualizer',
-    'RI': 'visualize.ri.RingIDVisualizer',
-    'WIND': 'visualize.wind.WINDVisualizer',
-    'SEAL': 'visualize.seal.SEALVisualizer',
-    'ROBIN': 'visualize.robin.ROBINVisualizer',
-    'VideoShield': 'visualize.videoshield.VideoShieldVisualizer',
-    'SFW': 'visualize.sfw.SFWVisualizer',
-    'VideoMark': 'visualize.videomark.VideoMarkVisualizer',
-    'GM': 'visualize.gm.GaussMarkerVisualizer',
+    'TR': 'markdiffusion.visualize.tr.TreeRingVisualizer',
+    'GS': 'markdiffusion.visualize.gs.GaussianShadingVisualizer', 
+    'PRC': 'markdiffusion.visualize.prc.PRCVisualizer',
+    'RI': 'markdiffusion.visualize.ri.RingIDVisualizer',
+    'WIND': 'markdiffusion.visualize.wind.WINDVisualizer',
+    'SEAL': 'markdiffusion.visualize.seal.SEALVisualizer',
+    'ROBIN': 'markdiffusion.visualize.robin.ROBINVisualizer',
+    'VideoShield': 'markdiffusion.visualize.videoshield.VideoShieldVisualizer',
+    'SFW': 'markdiffusion.visualize.sfw.SFWVisualizer',
+    'VideoMark': 'markdiffusion.visualize.videomark.VideoMarkVisualizer',
+    'GM': 'markdiffusion.visualize.gm.GaussMarkerVisualizer',
 }
 
 class AutoVisualizer:

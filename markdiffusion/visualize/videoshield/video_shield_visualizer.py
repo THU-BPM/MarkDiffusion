@@ -19,8 +19,8 @@ from matplotlib.axes import Axes
 from matplotlib.gridspec import GridSpecFromSubplotSpec
 import numpy as np
 from typing import Optional
-from visualize.base import BaseVisualizer
-from visualize.data_for_visualization import DataForVisualization
+from markdiffusion.visualize.base import BaseVisualizer
+from markdiffusion.visualize.data_for_visualization import DataForVisualization
 from Crypto.Cipher import ChaCha20
 
 

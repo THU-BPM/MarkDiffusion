@@ -49,18 +49,18 @@ jobs:
           
           echo "${{ steps.changes.outputs.all_changed_files }}" | tr ' ' '\n' > changed.txt
 
-          if grep -E -q '^watermark/(auto_watermark|base|auto_config|__init__)\.py$' changed.txt; then
+          if grep -E -q '^markdiffusion/watermark/(auto_watermark|base|auto_config|__init__)\.py$' changed.txt; then
             RUN_AUTO="true"
             echo "Detected core framework changes."
           fi
 
-          if grep -E -q '^test/|^evaluation/' changed.txt; then
+          if grep -E -q '^test/|^markdiffusion/evaluation/' changed.txt; then
             RUN_EVAL="true"
             echo "Detected evaluation/test changes."
           fi
 
-          ALGOS_FROM_CONFIG=$(awk -F'/' '/^config\/[^\/]+\.json$/ {gsub(/^config\//,"",$1); gsub(/\.json$/,"",$1); print $1}' changed.txt | sort -u)
-          ALGOS_FROM_DIR=$(awk -F'/' '$1=="watermark" && $2 !~ /\./ {print $2}' changed.txt | sort -u)
+          ALGOS_FROM_CONFIG=$(awk -F'/' '$1=="markdiffusion" && $2=="config" && $3 ~ /\.json$/ {n=$3; sub(/\.json$/,"",n); print n}' changed.txt | sort -u)
+          ALGOS_FROM_DIR=$(awk -F'/' '$1=="markdiffusion" && $2=="watermark" && $3!="" && $3 !~ /\./ {print $3}' changed.txt | sort -u)
           ALGORITHMS=$(printf "%s\n%s\n" "$ALGOS_FROM_CONFIG" "$ALGOS_FROM_DIR" | grep -v '^$' | sort -u | paste -sd, -)
 
           if [ -n "$ALGORITHMS" ]; then
@@ -101,11 +101,9 @@ jobs:
 
       - name: Install local package and deps
         run: |
-          micromamba run -n markdiffusion conda install -y markdiffusion || echo "Conda package not found, proceeding to pip..."
           micromamba run -n markdiffusion python -m pip install -U pip
           micromamba run -n markdiffusion pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
           micromamba run -n markdiffusion pip install -e '.[optional]' --no-cache-dir
-          micromamba run -n markdiffusion pip install qrcode easydict --no-cache-dir
 
       - name: Run evaluation fast tests
         if: steps.decide.outputs.run_eval == 'true'

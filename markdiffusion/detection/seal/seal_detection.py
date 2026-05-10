@@ -14,7 +14,7 @@
 
 
 import torch
-from detection.base import BaseDetector
+from markdiffusion.detection.base import BaseDetector
 from transformers import Blip2Processor, Blip2ForConditionalGeneration
 from sentence_transformers import SentenceTransformer
 from PIL import Image

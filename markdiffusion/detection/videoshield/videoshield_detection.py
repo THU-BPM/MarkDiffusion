@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 from typing import Dict, Optional, Tuple, Union
-from detection.base import BaseDetector
+from markdiffusion.detection.base import BaseDetector
 from Crypto.Cipher import ChaCha20
 from scipy.stats import truncnorm, norm
 from functools import reduce

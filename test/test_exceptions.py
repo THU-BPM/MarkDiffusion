@@ -20,7 +20,7 @@ Tests cover all exception classes defined in exceptions/exceptions.py.
 
 import pytest
 
-from exceptions.exceptions import (
+from markdiffusion.exceptions.exceptions import (
     LengthMismatchError,
     InvalidTextSourceModeError,
     AlgorithmNameMismatchError,

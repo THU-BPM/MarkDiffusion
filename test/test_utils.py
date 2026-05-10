@@ -39,7 +39,7 @@ from diffusers import (
     StableVideoDiffusionPipeline,
     DPMSolverMultistepScheduler
 )
-from inversions.exact_inversion import ExactInversion
+from markdiffusion.inversions.exact_inversion import ExactInversion
 
 
 # ============================================================================
@@ -51,7 +51,7 @@ class TestInheritDocstring:
 
     def test_inherit_docstring_from_base_class(self):
         """Test that docstrings are inherited from base classes."""
-        from utils.utils import inherit_docstring
+        from markdiffusion.utils.utils import inherit_docstring
 
         class Base:
             def method(self):
@@ -67,7 +67,7 @@ class TestInheritDocstring:
 
     def test_no_override_existing_docstring(self):
         """Test that existing docstrings are not overridden."""
-        from utils.utils import inherit_docstring
+        from markdiffusion.utils.utils import inherit_docstring
 
         class Base:
             def method(self):
@@ -84,7 +84,7 @@ class TestInheritDocstring:
 
     def test_no_docstring_in_base(self):
         """Test behavior when base class has no docstring."""
-        from utils.utils import inherit_docstring
+        from markdiffusion.utils.utils import inherit_docstring
 
         class Base:
             def method(self):
@@ -99,7 +99,7 @@ class TestInheritDocstring:
 
     def test_multiple_inheritance(self):
         """Test docstring inheritance with multiple base classes."""
-        from utils.utils import inherit_docstring
+        from markdiffusion.utils.utils import inherit_docstring
 
         class Base1:
             def method(self):
@@ -125,7 +125,7 @@ class TestLoadConfigFile:
 
     def test_load_valid_json(self, tmp_path):
         """Test loading a valid JSON configuration file."""
-        from utils.utils import load_config_file
+        from markdiffusion.utils.utils import load_config_file
 
         config_data = {"key": "value", "number": 42, "nested": {"a": 1}}
         config_file = tmp_path / "config.json"
@@ -136,7 +136,7 @@ class TestLoadConfigFile:
 
     def test_load_nonexistent_file(self, capsys):
         """Test loading a nonexistent file returns None."""
-        from utils.utils import load_config_file
+        from markdiffusion.utils.utils import load_config_file
 
         result = load_config_file("/nonexistent/path/config.json")
         assert result is None
@@ -146,7 +146,7 @@ class TestLoadConfigFile:
 
     def test_load_invalid_json(self, tmp_path, capsys):
         """Test loading an invalid JSON file returns None."""
-        from utils.utils import load_config_file
+        from markdiffusion.utils.utils import load_config_file
 
         config_file = tmp_path / "invalid.json"
         config_file.write_text("{invalid json content")
@@ -159,7 +159,7 @@ class TestLoadConfigFile:
 
     def test_load_empty_json(self, tmp_path):
         """Test loading an empty JSON object."""
-        from utils.utils import load_config_file
+        from markdiffusion.utils.utils import load_config_file
 
         config_file = tmp_path / "empty.json"
         config_file.write_text("{}")
@@ -173,7 +173,7 @@ class TestLoadJsonAsList:
 
     def test_load_jsonl_file(self, tmp_path):
         """Test loading a JSONL file (one JSON object per line)."""
-        from utils.utils import load_json_as_list
+        from markdiffusion.utils.utils import load_json_as_list
 
         data = [
             {"id": 1, "name": "first"},
@@ -190,7 +190,7 @@ class TestLoadJsonAsList:
 
     def test_load_empty_jsonl(self, tmp_path):
         """Test loading an empty JSONL file."""
-        from utils.utils import load_json_as_list
+        from markdiffusion.utils.utils import load_json_as_list
 
         jsonl_file = tmp_path / "empty.jsonl"
         jsonl_file.write_text("")
@@ -204,7 +204,7 @@ class TestCreateDirectoryForFile:
 
     def test_create_directory(self, tmp_path):
         """Test creating a directory for a file path."""
-        from utils.utils import create_directory_for_file
+        from markdiffusion.utils.utils import create_directory_for_file
 
         file_path = tmp_path / "new_dir" / "subdir" / "file.txt"
         create_directory_for_file(str(file_path))
@@ -214,7 +214,7 @@ class TestCreateDirectoryForFile:
 
     def test_existing_directory(self, tmp_path):
         """Test that existing directories don't cause errors."""
-        from utils.utils import create_directory_for_file
+        from markdiffusion.utils.utils import create_directory_for_file
 
         existing_dir = tmp_path / "existing"
         existing_dir.mkdir()
@@ -230,7 +230,7 @@ class TestSetRandomSeed:
 
     def test_reproducibility_torch(self):
         """Test that torch random is reproducible with same seed."""
-        from utils.utils import set_random_seed
+        from markdiffusion.utils.utils import set_random_seed
 
         set_random_seed(42)
         tensor1 = torch.randn(10)
@@ -242,7 +242,7 @@ class TestSetRandomSeed:
 
     def test_reproducibility_numpy(self):
         """Test that numpy random is reproducible with same seed."""
-        from utils.utils import set_random_seed
+        from markdiffusion.utils.utils import set_random_seed
 
         set_random_seed(42)
         arr1 = np.random.randn(10)
@@ -254,7 +254,7 @@ class TestSetRandomSeed:
 
     def test_reproducibility_python_random(self):
         """Test that Python random is reproducible with same seed."""
-        from utils.utils import set_random_seed
+        from markdiffusion.utils.utils import set_random_seed
         import random
 
         set_random_seed(42)
@@ -267,7 +267,7 @@ class TestSetRandomSeed:
 
     def test_different_seeds_produce_different_results(self):
         """Test that different seeds produce different results."""
-        from utils.utils import set_random_seed
+        from markdiffusion.utils.utils import set_random_seed
 
         set_random_seed(42)
         tensor1 = torch.randn(10)
@@ -287,7 +287,7 @@ class TestDenoisingLatentsCollector:
 
     def test_init_default_parameters(self):
         """Test default initialization parameters."""
-        from utils.callbacks import DenoisingLatentsCollector
+        from markdiffusion.utils.callbacks import DenoisingLatentsCollector
 
         collector = DenoisingLatentsCollector()
         assert collector.save_every_n_steps == 1
@@ -297,7 +297,7 @@ class TestDenoisingLatentsCollector:
 
     def test_init_custom_parameters(self):
         """Test custom initialization parameters."""
-        from utils.callbacks import DenoisingLatentsCollector
+        from markdiffusion.utils.callbacks import DenoisingLatentsCollector
 
         collector = DenoisingLatentsCollector(save_every_n_steps=5, to_cpu=False)
         assert collector.save_every_n_steps == 5
@@ -305,7 +305,7 @@ class TestDenoisingLatentsCollector:
 
     def test_call_saves_latents(self):
         """Test that __call__ saves latents correctly."""
-        from utils.callbacks import DenoisingLatentsCollector
+        from markdiffusion.utils.callbacks import DenoisingLatentsCollector
 
         collector = DenoisingLatentsCollector()
         latents = torch.randn(1, 4, 64, 64)
@@ -320,7 +320,7 @@ class TestDenoisingLatentsCollector:
 
     def test_call_respects_save_every_n_steps(self):
         """Test that latents are saved every n steps."""
-        from utils.callbacks import DenoisingLatentsCollector
+        from markdiffusion.utils.callbacks import DenoisingLatentsCollector
 
         collector = DenoisingLatentsCollector(save_every_n_steps=2)
         latents = torch.randn(1, 4, 64, 64)
@@ -335,7 +335,7 @@ class TestDenoisingLatentsCollector:
 
     def test_call_moves_to_cpu(self):
         """Test that latents are moved to CPU when to_cpu=True."""
-        from utils.callbacks import DenoisingLatentsCollector
+        from markdiffusion.utils.callbacks import DenoisingLatentsCollector
 
         collector = DenoisingLatentsCollector(to_cpu=True)
         latents = torch.randn(1, 4, 64, 64)
@@ -346,7 +346,7 @@ class TestDenoisingLatentsCollector:
 
     def test_latents_list_property(self):
         """Test latents_list property returns list of latents."""
-        from utils.callbacks import DenoisingLatentsCollector
+        from markdiffusion.utils.callbacks import DenoisingLatentsCollector
 
         collector = DenoisingLatentsCollector()
 
@@ -359,7 +359,7 @@ class TestDenoisingLatentsCollector:
 
     def test_timesteps_list_property(self):
         """Test timesteps_list property returns list of timesteps."""
-        from utils.callbacks import DenoisingLatentsCollector
+        from markdiffusion.utils.callbacks import DenoisingLatentsCollector
 
         collector = DenoisingLatentsCollector()
         timesteps = [1000, 800, 600]
@@ -371,7 +371,7 @@ class TestDenoisingLatentsCollector:
 
     def test_get_latents_at_step(self):
         """Test get_latents_at_step returns correct latents."""
-        from utils.callbacks import DenoisingLatentsCollector
+        from markdiffusion.utils.callbacks import DenoisingLatentsCollector
 
         collector = DenoisingLatentsCollector()
         latents_0 = torch.randn(1, 4, 64, 64)
@@ -385,7 +385,7 @@ class TestDenoisingLatentsCollector:
 
     def test_get_latents_at_step_not_found(self):
         """Test get_latents_at_step raises ValueError for missing step."""
-        from utils.callbacks import DenoisingLatentsCollector
+        from markdiffusion.utils.callbacks import DenoisingLatentsCollector
 
         collector = DenoisingLatentsCollector()
         collector(step=0, timestep=1000, latents=torch.randn(1, 4, 64, 64))
@@ -395,7 +395,7 @@ class TestDenoisingLatentsCollector:
 
     def test_clear(self):
         """Test clear method resets collector state."""
-        from utils.callbacks import DenoisingLatentsCollector
+        from markdiffusion.utils.callbacks import DenoisingLatentsCollector
 
         collector = DenoisingLatentsCollector()
 
@@ -417,7 +417,7 @@ class TestPipelineUtils:
 
     def test_pipeline_type_constants(self):
         """Test pipeline type constants are defined correctly."""
-        from utils.pipeline_utils import (
+        from markdiffusion.utils.pipeline_utils import (
             PIPELINE_TYPE_IMAGE,
             PIPELINE_TYPE_TEXT_TO_VIDEO,
             PIPELINE_TYPE_IMAGE_TO_VIDEO,
@@ -429,7 +429,7 @@ class TestPipelineUtils:
 
     def test_get_pipeline_type_unknown(self):
         """Test get_pipeline_type returns None for unknown pipeline."""
-        from utils.pipeline_utils import get_pipeline_type
+        from markdiffusion.utils.pipeline_utils import get_pipeline_type
 
         mock_pipeline = Mock()
         result = get_pipeline_type(mock_pipeline)
@@ -437,54 +437,54 @@ class TestPipelineUtils:
 
     def test_is_video_pipeline_with_mock(self):
         """Test is_video_pipeline with mocked pipelines."""
-        from utils.pipeline_utils import is_video_pipeline, get_pipeline_type
+        from markdiffusion.utils.pipeline_utils import is_video_pipeline, get_pipeline_type
 
         # Mock image pipeline
         mock_image_pipe = Mock()
-        with patch("utils.pipeline_utils.get_pipeline_type", return_value="image"):
+        with patch("markdiffusion.utils.pipeline_utils.get_pipeline_type", return_value="image"):
             assert is_video_pipeline(mock_image_pipe) is False
 
         # Mock video pipeline
         mock_video_pipe = Mock()
-        with patch("utils.pipeline_utils.get_pipeline_type", return_value="t2v"):
+        with patch("markdiffusion.utils.pipeline_utils.get_pipeline_type", return_value="t2v"):
             assert is_video_pipeline(mock_video_pipe) is True
 
     def test_is_image_pipeline_with_mock(self):
         """Test is_image_pipeline with mocked pipelines."""
-        from utils.pipeline_utils import is_image_pipeline
+        from markdiffusion.utils.pipeline_utils import is_image_pipeline
 
         mock_pipe = Mock()
-        with patch("utils.pipeline_utils.get_pipeline_type", return_value="image"):
+        with patch("markdiffusion.utils.pipeline_utils.get_pipeline_type", return_value="image"):
             assert is_image_pipeline(mock_pipe) is True
 
-        with patch("utils.pipeline_utils.get_pipeline_type", return_value="t2v"):
+        with patch("markdiffusion.utils.pipeline_utils.get_pipeline_type", return_value="t2v"):
             assert is_image_pipeline(mock_pipe) is False
 
     def test_is_t2v_pipeline_with_mock(self):
         """Test is_t2v_pipeline with mocked pipelines."""
-        from utils.pipeline_utils import is_t2v_pipeline
+        from markdiffusion.utils.pipeline_utils import is_t2v_pipeline
 
         mock_pipe = Mock()
-        with patch("utils.pipeline_utils.get_pipeline_type", return_value="t2v"):
+        with patch("markdiffusion.utils.pipeline_utils.get_pipeline_type", return_value="t2v"):
             assert is_t2v_pipeline(mock_pipe) is True
 
-        with patch("utils.pipeline_utils.get_pipeline_type", return_value="i2v"):
+        with patch("markdiffusion.utils.pipeline_utils.get_pipeline_type", return_value="i2v"):
             assert is_t2v_pipeline(mock_pipe) is False
 
     def test_is_i2v_pipeline_with_mock(self):
         """Test is_i2v_pipeline with mocked pipelines."""
-        from utils.pipeline_utils import is_i2v_pipeline
+        from markdiffusion.utils.pipeline_utils import is_i2v_pipeline
 
         mock_pipe = Mock()
-        with patch("utils.pipeline_utils.get_pipeline_type", return_value="i2v"):
+        with patch("markdiffusion.utils.pipeline_utils.get_pipeline_type", return_value="i2v"):
             assert is_i2v_pipeline(mock_pipe) is True
 
-        with patch("utils.pipeline_utils.get_pipeline_type", return_value="t2v"):
+        with patch("markdiffusion.utils.pipeline_utils.get_pipeline_type", return_value="t2v"):
             assert is_i2v_pipeline(mock_pipe) is False
 
     def test_get_pipeline_requirements_image(self):
         """Test get_pipeline_requirements for image pipeline."""
-        from utils.pipeline_utils import get_pipeline_requirements, PIPELINE_TYPE_IMAGE
+        from markdiffusion.utils.pipeline_utils import get_pipeline_requirements, PIPELINE_TYPE_IMAGE
 
         result = get_pipeline_requirements(PIPELINE_TYPE_IMAGE)
         assert result["required_params"] == []
@@ -493,7 +493,7 @@ class TestPipelineUtils:
 
     def test_get_pipeline_requirements_t2v(self):
         """Test get_pipeline_requirements for text-to-video pipeline."""
-        from utils.pipeline_utils import get_pipeline_requirements, PIPELINE_TYPE_TEXT_TO_VIDEO
+        from markdiffusion.utils.pipeline_utils import get_pipeline_requirements, PIPELINE_TYPE_TEXT_TO_VIDEO
 
         result = get_pipeline_requirements(PIPELINE_TYPE_TEXT_TO_VIDEO)
         assert "num_frames" in result["required_params"]
@@ -501,7 +501,7 @@ class TestPipelineUtils:
 
     def test_get_pipeline_requirements_i2v(self):
         """Test get_pipeline_requirements for image-to-video pipeline."""
-        from utils.pipeline_utils import get_pipeline_requirements, PIPELINE_TYPE_IMAGE_TO_VIDEO
+        from markdiffusion.utils.pipeline_utils import get_pipeline_requirements, PIPELINE_TYPE_IMAGE_TO_VIDEO
 
         result = get_pipeline_requirements(PIPELINE_TYPE_IMAGE_TO_VIDEO)
         assert "input_image" in result["required_params"]
@@ -509,7 +509,7 @@ class TestPipelineUtils:
 
     def test_get_pipeline_requirements_unknown(self):
         """Test get_pipeline_requirements for unknown pipeline type."""
-        from utils.pipeline_utils import get_pipeline_requirements
+        from markdiffusion.utils.pipeline_utils import get_pipeline_requirements
 
         result = get_pipeline_requirements("unknown")
         assert result["required_params"] == []
@@ -525,7 +525,7 @@ class TestTorchToNumpy:
 
     def test_image_tensor_conversion(self):
         """Test conversion of 4D image tensor."""
-        from utils.media_utils import torch_to_numpy
+        from markdiffusion.utils.media_utils import torch_to_numpy
 
         # Create tensor in range [-1, 1]
         tensor = torch.randn(1, 3, 64, 64).clamp(-1, 1)
@@ -537,7 +537,7 @@ class TestTorchToNumpy:
 
     def test_video_tensor_conversion(self):
         """Test conversion of 5D video tensor."""
-        from utils.media_utils import torch_to_numpy
+        from markdiffusion.utils.media_utils import torch_to_numpy
 
         # Create tensor in range [-1, 1]
         tensor = torch.randn(1, 3, 8, 64, 64).clamp(-1, 1)
@@ -548,7 +548,7 @@ class TestTorchToNumpy:
 
     def test_unsupported_dimension(self):
         """Test that unsupported dimensions raise ValueError."""
-        from utils.media_utils import torch_to_numpy
+        from markdiffusion.utils.media_utils import torch_to_numpy
 
         tensor = torch.randn(3, 64, 64)  # 3D tensor
         with pytest.raises(ValueError, match="Unsupported tensor dimension"):
@@ -560,7 +560,7 @@ class TestPilToTorch:
 
     def test_basic_conversion(self):
         """Test basic PIL to torch conversion."""
-        from utils.media_utils import pil_to_torch
+        from markdiffusion.utils.media_utils import pil_to_torch
 
         img = Image.new("RGB", (64, 64), color="red")
         tensor = pil_to_torch(img)
@@ -570,7 +570,7 @@ class TestPilToTorch:
 
     def test_normalized_range(self):
         """Test that normalized output is in [-1, 1] range."""
-        from utils.media_utils import pil_to_torch
+        from markdiffusion.utils.media_utils import pil_to_torch
 
         img = Image.new("RGB", (64, 64), color="white")
         tensor = pil_to_torch(img, normalize=True)
@@ -581,7 +581,7 @@ class TestPilToTorch:
 
     def test_unnormalized_range(self):
         """Test that unnormalized output is in [0, 1] range."""
-        from utils.media_utils import pil_to_torch
+        from markdiffusion.utils.media_utils import pil_to_torch
 
         img = Image.new("RGB", (64, 64), color="white")
         tensor = pil_to_torch(img, normalize=False)
@@ -595,7 +595,7 @@ class TestNumpyToPil:
 
     def test_uint8_array(self):
         """Test conversion of uint8 numpy array."""
-        from utils.media_utils import numpy_to_pil
+        from markdiffusion.utils.media_utils import numpy_to_pil
 
         arr = np.random.randint(0, 256, (64, 64, 3), dtype=np.uint8)
         img = numpy_to_pil(arr)
@@ -605,7 +605,7 @@ class TestNumpyToPil:
 
     def test_float_array(self):
         """Test conversion of float numpy array in [0, 1] range."""
-        from utils.media_utils import numpy_to_pil
+        from markdiffusion.utils.media_utils import numpy_to_pil
 
         arr = np.random.rand(64, 64, 3).astype(np.float32)
         img = numpy_to_pil(arr)
@@ -619,7 +619,7 @@ class TestCv2ToPil:
 
     def test_uint8_array(self):
         """Test conversion of uint8 cv2 array."""
-        from utils.media_utils import cv2_to_pil
+        from markdiffusion.utils.media_utils import cv2_to_pil
 
         arr = np.random.randint(0, 256, (64, 64, 3), dtype=np.uint8)
         img = cv2_to_pil(arr)
@@ -629,7 +629,7 @@ class TestCv2ToPil:
 
     def test_float_array(self):
         """Test conversion of float cv2 array."""
-        from utils.media_utils import cv2_to_pil
+        from markdiffusion.utils.media_utils import cv2_to_pil
 
         arr = np.random.rand(64, 64, 3).astype(np.float32)
         img = cv2_to_pil(arr)
@@ -642,7 +642,7 @@ class TestPilToCv2:
 
     def test_basic_conversion(self):
         """Test basic PIL to cv2 conversion."""
-        from utils.media_utils import pil_to_cv2
+        from markdiffusion.utils.media_utils import pil_to_cv2
 
         img = Image.new("RGB", (64, 64), color="red")
         arr = pil_to_cv2(img)
@@ -658,7 +658,7 @@ class TestTransformToModelFormat:
 
     def test_single_pil_image(self):
         """Test transformation of single PIL image."""
-        from utils.media_utils import transform_to_model_format
+        from markdiffusion.utils.media_utils import transform_to_model_format
 
         img = Image.new("RGB", (64, 64), color="blue")
         tensor = transform_to_model_format(img)
@@ -670,7 +670,7 @@ class TestTransformToModelFormat:
 
     def test_single_pil_image_with_resize(self):
         """Test transformation with resize."""
-        from utils.media_utils import transform_to_model_format
+        from markdiffusion.utils.media_utils import transform_to_model_format
 
         img = Image.new("RGB", (128, 128), color="blue")
         tensor = transform_to_model_format(img, target_size=64)
@@ -679,7 +679,7 @@ class TestTransformToModelFormat:
 
     def test_list_of_pil_images(self):
         """Test transformation of list of PIL images."""
-        from utils.media_utils import transform_to_model_format
+        from markdiffusion.utils.media_utils import transform_to_model_format
 
         frames = [Image.new("RGB", (64, 64), color="red") for _ in range(4)]
         tensor = transform_to_model_format(frames)
@@ -688,7 +688,7 @@ class TestTransformToModelFormat:
 
     def test_list_of_numpy_arrays(self):
         """Test transformation of list of numpy arrays."""
-        from utils.media_utils import transform_to_model_format
+        from markdiffusion.utils.media_utils import transform_to_model_format
 
         frames = [np.random.rand(64, 64, 3).astype(np.float32) for _ in range(4)]
         tensor = transform_to_model_format(frames)
@@ -697,7 +697,7 @@ class TestTransformToModelFormat:
 
     def test_single_numpy_frame(self):
         """Test transformation of single numpy frame (3D array)."""
-        from utils.media_utils import transform_to_model_format
+        from markdiffusion.utils.media_utils import transform_to_model_format
 
         frame = np.random.rand(64, 64, 3).astype(np.float32)
         tensor = transform_to_model_format(frame)
@@ -706,7 +706,7 @@ class TestTransformToModelFormat:
 
     def test_numpy_video_array(self):
         """Test transformation of numpy video array (4D)."""
-        from utils.media_utils import transform_to_model_format
+        from markdiffusion.utils.media_utils import transform_to_model_format
 
         video = np.random.rand(8, 64, 64, 3).astype(np.float32)
         tensor = transform_to_model_format(video)
@@ -715,14 +715,14 @@ class TestTransformToModelFormat:
 
     def test_unsupported_type(self):
         """Test that unsupported types raise ValueError."""
-        from utils.media_utils import transform_to_model_format
+        from markdiffusion.utils.media_utils import transform_to_model_format
 
         with pytest.raises(ValueError, match="Unsupported media type"):
             transform_to_model_format("not_valid_input")
 
     def test_mixed_frame_types_raises_error(self):
         """Test that mixed frame types raise ValueError."""
-        from utils.media_utils import transform_to_model_format
+        from markdiffusion.utils.media_utils import transform_to_model_format
 
         frames = [
             Image.new("RGB", (64, 64)),
@@ -737,7 +737,7 @@ class TestConvertVideoFramesToImages:
 
     def test_numpy_frames(self):
         """Test conversion of numpy frames to PIL images."""
-        from utils.media_utils import convert_video_frames_to_images
+        from markdiffusion.utils.media_utils import convert_video_frames_to_images
 
         frames = [np.random.rand(64, 64, 3).astype(np.float32) for _ in range(4)]
         result = convert_video_frames_to_images(frames)
@@ -747,7 +747,7 @@ class TestConvertVideoFramesToImages:
 
     def test_pil_frames(self):
         """Test that PIL frames pass through unchanged."""
-        from utils.media_utils import convert_video_frames_to_images
+        from markdiffusion.utils.media_utils import convert_video_frames_to_images
 
         frames = [Image.new("RGB", (64, 64)) for _ in range(4)]
         result = convert_video_frames_to_images(frames)
@@ -757,7 +757,7 @@ class TestConvertVideoFramesToImages:
 
     def test_unsupported_frame_type(self):
         """Test that unsupported frame types raise ValueError."""
-        from utils.media_utils import convert_video_frames_to_images
+        from markdiffusion.utils.media_utils import convert_video_frames_to_images
 
         frames = ["not_a_frame"]
         with pytest.raises(ValueError, match="Unsupported frame type"):
@@ -769,7 +769,7 @@ class TestSaveVideoFrames:
 
     def test_save_numpy_frames(self, tmp_path):
         """Test saving numpy frames to disk."""
-        from utils.media_utils import save_video_frames
+        from markdiffusion.utils.media_utils import save_video_frames
 
         frames = [np.random.rand(64, 64, 3).astype(np.float32) for _ in range(4)]
         save_dir = str(tmp_path)
@@ -780,7 +780,7 @@ class TestSaveVideoFrames:
 
     def test_save_pil_frames(self, tmp_path):
         """Test saving PIL frames to disk."""
-        from utils.media_utils import save_video_frames
+        from markdiffusion.utils.media_utils import save_video_frames
 
         frames = [Image.new("RGB", (64, 64), color="red") for _ in range(4)]
         save_dir = str(tmp_path)
@@ -791,7 +791,7 @@ class TestSaveVideoFrames:
 
     def test_frame_naming(self, tmp_path):
         """Test that frames are named with zero-padded indices."""
-        from utils.media_utils import save_video_frames
+        from markdiffusion.utils.media_utils import save_video_frames
 
         frames = [Image.new("RGB", (64, 64)) for _ in range(3)]
         save_dir = str(tmp_path)
@@ -827,7 +827,7 @@ class TestDiffusionConfig:
 
     def test_default_parameters(self, mock_image_pipeline, mock_scheduler):
         """Test DiffusionConfig with default parameters."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
         config = DiffusionConfig(
             scheduler=mock_scheduler,
@@ -845,7 +845,7 @@ class TestDiffusionConfig:
 
     def test_custom_parameters(self, mock_image_pipeline, mock_scheduler):
         """Test DiffusionConfig with custom parameters."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
         config = DiffusionConfig(
             scheduler=mock_scheduler,
@@ -864,7 +864,7 @@ class TestDiffusionConfig:
 
     def test_invalid_inversion_type(self, mock_image_pipeline, mock_scheduler):
         """Test that invalid inversion type raises AssertionError."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
         with pytest.raises(AssertionError, match="Invalid inversion type"):
             DiffusionConfig(
@@ -878,7 +878,7 @@ class TestDiffusionConfig:
         self, mock_image_pipeline, mock_scheduler
     ):
         """Test num_inversion_steps defaults to num_inference_steps."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
         config = DiffusionConfig(
             scheduler=mock_scheduler,
@@ -891,7 +891,7 @@ class TestDiffusionConfig:
 
     def test_explicit_num_inversion_steps(self, mock_image_pipeline, mock_scheduler):
         """Test explicit num_inversion_steps."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
         config = DiffusionConfig(
             scheduler=mock_scheduler,
@@ -905,7 +905,7 @@ class TestDiffusionConfig:
 
     def test_pipeline_type_property(self, mock_image_pipeline, mock_scheduler):
         """Test pipeline_type property."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
         config = DiffusionConfig(
             scheduler=mock_scheduler,
@@ -918,7 +918,7 @@ class TestDiffusionConfig:
 
     def test_is_image_pipeline_property(self, mock_image_pipeline, mock_scheduler):
         """Test is_image_pipeline property."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
         config = DiffusionConfig(
             scheduler=mock_scheduler,
@@ -931,7 +931,7 @@ class TestDiffusionConfig:
 
     def test_gen_kwargs_stored(self, mock_image_pipeline, mock_scheduler):
         """Test that extra kwargs are stored in gen_kwargs."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
         config = DiffusionConfig(
             scheduler=mock_scheduler,
@@ -954,7 +954,7 @@ class TestMediaConversionRoundTrip:
 
     def test_pil_torch_pil_roundtrip(self):
         """Test PIL -> Torch -> numpy -> PIL roundtrip."""
-        from utils.media_utils import pil_to_torch, torch_to_numpy, numpy_to_pil
+        from markdiffusion.utils.media_utils import pil_to_torch, torch_to_numpy, numpy_to_pil
 
         original = Image.new("RGB", (64, 64), color=(128, 64, 192))
         tensor = pil_to_torch(original, normalize=True)
@@ -967,7 +967,7 @@ class TestMediaConversionRoundTrip:
 
     def test_numpy_pil_numpy_roundtrip(self):
         """Test numpy -> PIL -> numpy roundtrip."""
-        from utils.media_utils import numpy_to_pil, pil_to_cv2
+        from markdiffusion.utils.media_utils import numpy_to_pil, pil_to_cv2
 
         original = np.random.rand(64, 64, 3).astype(np.float32)
         pil_img = numpy_to_pil(original)
@@ -986,14 +986,14 @@ class TestSetInversion:
 
     def test_set_inversion_ddim(self):
         """Test set_inversion with ddim type."""
-        from utils.media_utils import set_inversion
+        from markdiffusion.utils.media_utils import set_inversion
 
         mock_pipe = MagicMock()
         mock_pipe.scheduler = MagicMock()
         mock_pipe.unet = MagicMock()
         mock_pipe.device = "cpu"
 
-        with patch("inversions.DDIMInversion") as mock_ddim:
+        with patch("markdiffusion.inversions.DDIMInversion") as mock_ddim:
             mock_ddim.return_value = MagicMock()
             result = set_inversion(mock_pipe, "ddim")
             mock_ddim.assert_called_once_with(mock_pipe.scheduler, mock_pipe.unet, mock_pipe.device)
@@ -1001,14 +1001,14 @@ class TestSetInversion:
 
     def test_set_inversion_exact(self):
         """Test set_inversion with exact type."""
-        from utils.media_utils import set_inversion
+        from markdiffusion.utils.media_utils import set_inversion
 
         mock_pipe = MagicMock()
         mock_pipe.scheduler = MagicMock()
         mock_pipe.unet = MagicMock()
         mock_pipe.device = "cpu"
 
-        with patch("inversions.ExactInversion") as mock_exact:
+        with patch("markdiffusion.inversions.ExactInversion") as mock_exact:
             mock_exact.return_value = MagicMock()
             result = set_inversion(mock_pipe, "exact")
             mock_exact.assert_called_once_with(mock_pipe.scheduler, mock_pipe.unet, mock_pipe.device)
@@ -1016,7 +1016,7 @@ class TestSetInversion:
 
     def test_set_inversion_invalid_type(self):
         """Test set_inversion with invalid type raises ValueError."""
-        from utils.media_utils import set_inversion
+        from markdiffusion.utils.media_utils import set_inversion
 
         mock_pipe = MagicMock()
         with pytest.raises(ValueError, match="Invalid inversion type"):
@@ -1028,7 +1028,7 @@ class TestTensor2Vid:
 
     def test_tensor2vid_np_output(self):
         """Test tensor2vid with numpy output."""
-        from utils.media_utils import tensor2vid
+        from markdiffusion.utils.media_utils import tensor2vid
 
         # Create mock video tensor [B, C, F, H, W]
         video = torch.rand(1, 3, 4, 64, 64)
@@ -1043,7 +1043,7 @@ class TestTensor2Vid:
 
     def test_tensor2vid_pt_output(self):
         """Test tensor2vid with pytorch output."""
-        from utils.media_utils import tensor2vid
+        from markdiffusion.utils.media_utils import tensor2vid
 
         video = torch.rand(1, 3, 4, 64, 64)
         
@@ -1056,7 +1056,7 @@ class TestTensor2Vid:
 
     def test_tensor2vid_pil_output(self):
         """Test tensor2vid with PIL output."""
-        from utils.media_utils import tensor2vid
+        from markdiffusion.utils.media_utils import tensor2vid
 
         video = torch.rand(1, 3, 4, 64, 64)
         
@@ -1069,7 +1069,7 @@ class TestTensor2Vid:
 
     def test_tensor2vid_invalid_output_type(self):
         """Test tensor2vid with invalid output type raises ValueError."""
-        from utils.media_utils import tensor2vid
+        from markdiffusion.utils.media_utils import tensor2vid
 
         video = torch.rand(1, 3, 4, 64, 64)
         mock_processor = MagicMock()
@@ -1084,14 +1084,14 @@ class TestGetMediaLatents:
 
     def test_get_media_latents_image(self):
         """Test get_media_latents for image pipeline."""
-        from utils.media_utils import get_media_latents
+        from markdiffusion.utils.media_utils import get_media_latents
 
         mock_pipe = MagicMock()
         
         image = torch.rand(1, 3, 512, 512)
         
-        with patch("utils.media_utils.get_pipeline_type", return_value="image"):
-            with patch("utils.media_utils._get_image_latents") as mock_get:
+        with patch("markdiffusion.utils.media_utils.get_pipeline_type", return_value="image"):
+            with patch("markdiffusion.utils.media_utils._get_image_latents") as mock_get:
                 mock_get.return_value = torch.rand(1, 4, 64, 64)
                 result = get_media_latents(mock_pipe, image)
                 mock_get.assert_called_once()
@@ -1099,15 +1099,15 @@ class TestGetMediaLatents:
 
     def test_get_media_latents_t2v(self):
         """Test get_media_latents for text-to-video pipeline."""
-        from utils.media_utils import get_media_latents
+        from markdiffusion.utils.media_utils import get_media_latents
         from diffusers import TextToVideoSDPipeline
 
         mock_pipe = MagicMock(spec=TextToVideoSDPipeline)
         
         video = torch.rand(8, 3, 512, 512)
         
-        with patch("utils.media_utils.get_pipeline_type", return_value="t2v"):
-            with patch("utils.media_utils._get_video_latents") as mock_get:
+        with patch("markdiffusion.utils.media_utils.get_pipeline_type", return_value="t2v"):
+            with patch("markdiffusion.utils.media_utils._get_video_latents") as mock_get:
                 mock_get.return_value = torch.rand(1, 4, 8, 64, 64)
                 result = get_media_latents(mock_pipe, video)
                 mock_get.assert_called_once()
@@ -1115,12 +1115,12 @@ class TestGetMediaLatents:
 
     def test_get_media_latents_unsupported_pipeline(self):
         """Test get_media_latents with unsupported pipeline type."""
-        from utils.media_utils import get_media_latents
+        from markdiffusion.utils.media_utils import get_media_latents
 
         mock_pipe = MagicMock()
         image = torch.rand(1, 3, 512, 512)
         
-        with patch("utils.media_utils.get_pipeline_type", return_value=None):
+        with patch("markdiffusion.utils.media_utils.get_pipeline_type", return_value=None):
             with pytest.raises(ValueError, match="Unsupported pipeline type"):
                 get_media_latents(mock_pipe, image)
 
@@ -1130,15 +1130,15 @@ class TestDecodeMediaLatents:
 
     def test_decode_media_latents_image(self):
         """Test decode_media_latents for image pipeline."""
-        from utils.media_utils import decode_media_latents
+        from markdiffusion.utils.media_utils import decode_media_latents
         from diffusers import StableDiffusionPipeline
 
         mock_pipe = MagicMock(spec=StableDiffusionPipeline)
         
         latents = torch.rand(1, 4, 64, 64)
         
-        with patch("utils.media_utils.get_pipeline_type", return_value="image"):
-            with patch("utils.media_utils._decode_image_latents") as mock_decode:
+        with patch("markdiffusion.utils.media_utils.get_pipeline_type", return_value="image"):
+            with patch("markdiffusion.utils.media_utils._decode_image_latents") as mock_decode:
                 mock_decode.return_value = torch.rand(1, 3, 512, 512)
                 result = decode_media_latents(mock_pipe, latents)
                 mock_decode.assert_called_once()
@@ -1146,15 +1146,15 @@ class TestDecodeMediaLatents:
 
     def test_decode_media_latents_video(self):
         """Test decode_media_latents for video pipeline."""
-        from utils.media_utils import decode_media_latents
+        from markdiffusion.utils.media_utils import decode_media_latents
         from diffusers import TextToVideoSDPipeline
 
         mock_pipe = MagicMock(spec=TextToVideoSDPipeline)
         
         latents = torch.rand(1, 4, 8, 64, 64)
         
-        with patch("utils.media_utils.get_pipeline_type", return_value="t2v"):
-            with patch("utils.media_utils._decode_video_latents") as mock_decode:
+        with patch("markdiffusion.utils.media_utils.get_pipeline_type", return_value="t2v"):
+            with patch("markdiffusion.utils.media_utils._decode_video_latents") as mock_decode:
                 mock_decode.return_value = np.random.rand(1, 8, 512, 512, 3)
                 result = decode_media_latents(mock_pipe, latents)
                 mock_decode.assert_called_once()
@@ -1162,12 +1162,12 @@ class TestDecodeMediaLatents:
 
     def test_decode_media_latents_unsupported_pipeline(self):
         """Test decode_media_latents with unsupported pipeline type."""
-        from utils.media_utils import decode_media_latents
+        from markdiffusion.utils.media_utils import decode_media_latents
 
         mock_pipe = MagicMock()
         latents = torch.rand(1, 4, 64, 64)
         
-        with patch("utils.media_utils.get_pipeline_type", return_value=None):
+        with patch("markdiffusion.utils.media_utils.get_pipeline_type", return_value=None):
             with pytest.raises(ValueError, match="Unsupported pipeline type"):
                 decode_media_latents(mock_pipe, latents)
 
@@ -1177,7 +1177,7 @@ class TestGetVideoLatents:
 
     def test_get_video_latents_sample(self):
         """Test _get_video_latents with sampling."""
-        from utils.media_utils import _get_video_latents
+        from markdiffusion.utils.media_utils import _get_video_latents
 
         mock_pipe = MagicMock()
         mock_dist = MagicMock()
@@ -1193,7 +1193,7 @@ class TestGetVideoLatents:
 
     def test_get_video_latents_mode(self):
         """Test _get_video_latents with mode (no sampling)."""
-        from utils.media_utils import _get_video_latents
+        from markdiffusion.utils.media_utils import _get_video_latents
 
         mock_pipe = MagicMock()
         mock_dist = MagicMock()
@@ -1209,7 +1209,7 @@ class TestGetVideoLatents:
 
     def test_get_video_latents_decoder_inv_not_implemented(self):
         """Test _get_video_latents raises NotImplementedError for decoder_inv."""
-        from utils.media_utils import _get_video_latents
+        from markdiffusion.utils.media_utils import _get_video_latents
 
         mock_pipe = MagicMock()
         mock_dist = MagicMock()
@@ -1227,7 +1227,7 @@ class TestDecodeVideoLatents:
 
     def test_decode_video_latents_with_num_frames(self):
         """Test _decode_video_latents with num_frames specified."""
-        from utils.media_utils import _decode_video_latents
+        from markdiffusion.utils.media_utils import _decode_video_latents
 
         mock_pipe = MagicMock()
         mock_pipe.decode_latents.return_value = torch.rand(1, 3, 8, 64, 64)
@@ -1235,21 +1235,21 @@ class TestDecodeVideoLatents:
         
         latents = torch.rand(1, 4, 8, 64, 64)
         
-        with patch("utils.media_utils.tensor2vid") as mock_tensor2vid:
+        with patch("markdiffusion.utils.media_utils.tensor2vid") as mock_tensor2vid:
             mock_tensor2vid.return_value = np.random.rand(1, 8, 64, 64, 3)
             result = _decode_video_latents(mock_pipe, latents, num_frames=8)
             mock_pipe.decode_latents.assert_called_once_with(latents, 8)
 
     def test_decode_video_latents_without_num_frames(self):
         """Test _decode_video_latents without num_frames."""
-        from utils.media_utils import _decode_video_latents
+        from markdiffusion.utils.media_utils import _decode_video_latents
 
         mock_pipe = MagicMock()
         mock_pipe.decode_latents.return_value = torch.rand(1, 3, 8, 64, 64)
         
         latents = torch.rand(1, 4, 8, 64, 64)
         
-        with patch("utils.media_utils.tensor2vid") as mock_tensor2vid:
+        with patch("markdiffusion.utils.media_utils.tensor2vid") as mock_tensor2vid:
             mock_tensor2vid.return_value = np.random.rand(1, 8, 64, 64, 3)
             result = _decode_video_latents(mock_pipe, latents)
             mock_pipe.decode_latents.assert_called_once_with(latents)
@@ -1260,7 +1260,7 @@ class TestGetImageLatents:
 
     def test_get_image_latents_sample(self):
         """Test _get_image_latents with sampling."""
-        from utils.media_utils import _get_image_latents
+        from markdiffusion.utils.media_utils import _get_image_latents
 
         mock_pipe = MagicMock()
         mock_dist = MagicMock()
@@ -1276,7 +1276,7 @@ class TestGetImageLatents:
 
     def test_get_image_latents_mode(self):
         """Test _get_image_latents with mode (no sampling)."""
-        from utils.media_utils import _get_image_latents
+        from markdiffusion.utils.media_utils import _get_image_latents
 
         mock_pipe = MagicMock()
         mock_dist = MagicMock()
@@ -1296,7 +1296,7 @@ class TestDecodeImageLatents:
 
     def test_decode_image_latents(self):
         """Test _decode_image_latents basic functionality."""
-        from utils.media_utils import _decode_image_latents
+        from markdiffusion.utils.media_utils import _decode_image_latents
 
         mock_pipe = MagicMock()
         mock_pipe.vae.decode.return_value = [torch.rand(1, 3, 512, 512)]
@@ -1338,9 +1338,9 @@ class TestDiffusionConfig:
 
     def test_basic_initialization_with_defaults(self, mock_scheduler, mock_image_pipe):
         """Test basic initialization with default parameters."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
-        with patch('utils.diffusion_config.get_pipeline_type', return_value='image'):
+        with patch('markdiffusion.utils.diffusion_config.get_pipeline_type', return_value='image'):
             config = DiffusionConfig(
                 scheduler=mock_scheduler,
                 pipe=mock_image_pipe,
@@ -1363,9 +1363,9 @@ class TestDiffusionConfig:
 
     def test_initialization_with_custom_parameters(self, mock_scheduler, mock_image_pipe):
         """Test initialization with custom parameters."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
-        with patch('utils.diffusion_config.get_pipeline_type', return_value='image'):
+        with patch('markdiffusion.utils.diffusion_config.get_pipeline_type', return_value='image'):
             config = DiffusionConfig(
                 scheduler=mock_scheduler,
                 pipe=mock_image_pipe,
@@ -1396,9 +1396,9 @@ class TestDiffusionConfig:
 
     def test_initialization_with_kwargs(self, mock_scheduler, mock_image_pipe):
         """Test initialization with additional kwargs."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
-        with patch('utils.diffusion_config.get_pipeline_type', return_value='image'):
+        with patch('markdiffusion.utils.diffusion_config.get_pipeline_type', return_value='image'):
             config = DiffusionConfig(
                 scheduler=mock_scheduler,
                 pipe=mock_image_pipe,
@@ -1411,9 +1411,9 @@ class TestDiffusionConfig:
 
     def test_num_inversion_steps_defaults_to_num_inference_steps(self, mock_scheduler, mock_image_pipe):
         """Test that num_inversion_steps defaults to num_inference_steps when not provided."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
-        with patch('utils.diffusion_config.get_pipeline_type', return_value='image'):
+        with patch('markdiffusion.utils.diffusion_config.get_pipeline_type', return_value='image'):
             config = DiffusionConfig(
                 scheduler=mock_scheduler,
                 pipe=mock_image_pipe,
@@ -1425,9 +1425,9 @@ class TestDiffusionConfig:
 
     def test_invalid_inversion_type_raises_error(self, mock_scheduler, mock_image_pipe):
         """Test that invalid inversion type raises AssertionError."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
-        with patch('utils.diffusion_config.get_pipeline_type', return_value='image'):
+        with patch('markdiffusion.utils.diffusion_config.get_pipeline_type', return_value='image'):
             with pytest.raises(AssertionError, match="Invalid inversion type"):
                 DiffusionConfig(
                     scheduler=mock_scheduler,
@@ -1438,9 +1438,9 @@ class TestDiffusionConfig:
 
     def test_image_pipeline_properties(self, mock_scheduler, mock_image_pipe):
         """Test properties for image pipeline."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
-        with patch('utils.diffusion_config.get_pipeline_type', return_value='image'):
+        with patch('markdiffusion.utils.diffusion_config.get_pipeline_type', return_value='image'):
             config = DiffusionConfig(
                 scheduler=mock_scheduler,
                 pipe=mock_image_pipe,
@@ -1453,9 +1453,9 @@ class TestDiffusionConfig:
 
     def test_t2v_pipeline_properties(self, mock_scheduler, mock_t2v_pipe):
         """Test properties for text-to-video pipeline."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
-        with patch('utils.diffusion_config.get_pipeline_type', return_value='t2v'):
+        with patch('markdiffusion.utils.diffusion_config.get_pipeline_type', return_value='t2v'):
             config = DiffusionConfig(
                 scheduler=mock_scheduler,
                 pipe=mock_t2v_pipe,
@@ -1470,9 +1470,9 @@ class TestDiffusionConfig:
 
     def test_i2v_pipeline_properties(self, mock_scheduler, mock_i2v_pipe):
         """Test properties for image-to-video pipeline."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
-        with patch('utils.diffusion_config.get_pipeline_type', return_value='i2v'):
+        with patch('markdiffusion.utils.diffusion_config.get_pipeline_type', return_value='i2v'):
             config = DiffusionConfig(
                 scheduler=mock_scheduler,
                 pipe=mock_i2v_pipe,
@@ -1487,9 +1487,9 @@ class TestDiffusionConfig:
 
     def test_image_pipeline_auto_corrects_num_frames(self, mock_scheduler, mock_image_pipe):
         """Test that image pipeline auto-corrects num_frames to -1."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
-        with patch('utils.diffusion_config.get_pipeline_type', return_value='image'):
+        with patch('markdiffusion.utils.diffusion_config.get_pipeline_type', return_value='image'):
             config = DiffusionConfig(
                 scheduler=mock_scheduler,
                 pipe=mock_image_pipe,
@@ -1502,9 +1502,9 @@ class TestDiffusionConfig:
 
     def test_video_pipeline_requires_positive_num_frames(self, mock_scheduler, mock_t2v_pipe):
         """Test that video pipeline requires num_frames >= 1."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
-        with patch('utils.diffusion_config.get_pipeline_type', return_value='t2v'):
+        with patch('markdiffusion.utils.diffusion_config.get_pipeline_type', return_value='t2v'):
             with pytest.raises(ValueError, match="num_frames must be >= 1"):
                 DiffusionConfig(
                     scheduler=mock_scheduler,
@@ -1515,9 +1515,9 @@ class TestDiffusionConfig:
 
     def test_video_pipeline_with_zero_frames_raises_error(self, mock_scheduler, mock_t2v_pipe):
         """Test that video pipeline with num_frames=0 raises error."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
-        with patch('utils.diffusion_config.get_pipeline_type', return_value='t2v'):
+        with patch('markdiffusion.utils.diffusion_config.get_pipeline_type', return_value='t2v'):
             with pytest.raises(ValueError, match="num_frames must be >= 1"):
                 DiffusionConfig(
                     scheduler=mock_scheduler,
@@ -1528,11 +1528,11 @@ class TestDiffusionConfig:
 
     def test_unsupported_pipeline_type_raises_error(self, mock_scheduler):
         """Test that unsupported pipeline type raises ValueError."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
         unsupported_pipe = MagicMock()
 
-        with patch('utils.diffusion_config.get_pipeline_type', return_value=None):
+        with patch('markdiffusion.utils.diffusion_config.get_pipeline_type', return_value=None):
             with pytest.raises(ValueError, match="Unsupported pipeline type"):
                 DiffusionConfig(
                     scheduler=mock_scheduler,
@@ -1542,9 +1542,9 @@ class TestDiffusionConfig:
 
     def test_ddim_inversion_type(self, mock_scheduler, mock_image_pipe):
         """Test DDIM inversion type."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
-        with patch('utils.diffusion_config.get_pipeline_type', return_value='image'):
+        with patch('markdiffusion.utils.diffusion_config.get_pipeline_type', return_value='image'):
             config = DiffusionConfig(
                 scheduler=mock_scheduler,
                 pipe=mock_image_pipe,
@@ -1556,9 +1556,9 @@ class TestDiffusionConfig:
 
     def test_exact_inversion_type(self, mock_scheduler, mock_image_pipe):
         """Test exact inversion type."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
-        with patch('utils.diffusion_config.get_pipeline_type', return_value='image'):
+        with patch('markdiffusion.utils.diffusion_config.get_pipeline_type', return_value='image'):
             config = DiffusionConfig(
                 scheduler=mock_scheduler,
                 pipe=mock_image_pipe,
@@ -1570,9 +1570,9 @@ class TestDiffusionConfig:
 
     def test_different_devices(self, mock_scheduler, mock_image_pipe):
         """Test initialization with different device types."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
-        with patch('utils.diffusion_config.get_pipeline_type', return_value='image'):
+        with patch('markdiffusion.utils.diffusion_config.get_pipeline_type', return_value='image'):
             # Test CPU
             config_cpu = DiffusionConfig(
                 scheduler=mock_scheduler,
@@ -1599,9 +1599,9 @@ class TestDiffusionConfig:
 
     def test_different_dtypes(self, mock_scheduler, mock_image_pipe):
         """Test initialization with different dtypes."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
-        with patch('utils.diffusion_config.get_pipeline_type', return_value='image'):
+        with patch('markdiffusion.utils.diffusion_config.get_pipeline_type', return_value='image'):
             # Test float16
             config_fp16 = DiffusionConfig(
                 scheduler=mock_scheduler,
@@ -1631,7 +1631,7 @@ class TestDiffusionConfig:
 
     def test_various_image_sizes(self, mock_scheduler, mock_image_pipe):
         """Test initialization with various image sizes."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
         test_sizes = [
             (256, 256),
@@ -1641,7 +1641,7 @@ class TestDiffusionConfig:
             (512, 768),  # Non-square
         ]
 
-        with patch('utils.diffusion_config.get_pipeline_type', return_value='image'):
+        with patch('markdiffusion.utils.diffusion_config.get_pipeline_type', return_value='image'):
             for size in test_sizes:
                 config = DiffusionConfig(
                     scheduler=mock_scheduler,
@@ -1653,11 +1653,11 @@ class TestDiffusionConfig:
 
     def test_various_guidance_scales(self, mock_scheduler, mock_image_pipe):
         """Test initialization with various guidance scales."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
         test_scales = [1.0, 5.0, 7.5, 10.0, 15.0, 20.0]
 
-        with patch('utils.diffusion_config.get_pipeline_type', return_value='image'):
+        with patch('markdiffusion.utils.diffusion_config.get_pipeline_type', return_value='image'):
             for scale in test_scales:
                 config = DiffusionConfig(
                     scheduler=mock_scheduler,
@@ -1669,11 +1669,11 @@ class TestDiffusionConfig:
 
     def test_various_num_inference_steps(self, mock_scheduler, mock_image_pipe):
         """Test initialization with various num_inference_steps."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
         test_steps = [10, 25, 50, 100, 150]
 
-        with patch('utils.diffusion_config.get_pipeline_type', return_value='image'):
+        with patch('markdiffusion.utils.diffusion_config.get_pipeline_type', return_value='image'):
             for steps in test_steps:
                 config = DiffusionConfig(
                     scheduler=mock_scheduler,
@@ -1686,9 +1686,9 @@ class TestDiffusionConfig:
 
     def test_i2v_pipeline_validation(self, mock_scheduler, mock_i2v_pipe):
         """Test validation for image-to-video pipeline."""
-        from utils.diffusion_config import DiffusionConfig
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
 
-        with patch('utils.diffusion_config.get_pipeline_type', return_value='i2v'):
+        with patch('markdiffusion.utils.diffusion_config.get_pipeline_type', return_value='i2v'):
             # Valid configuration
             config = DiffusionConfig(
                 scheduler=mock_scheduler,
@@ -1708,7 +1708,7 @@ class TestLoadConfigFileAdditional:
 
     def test_load_config_file_unexpected_error(self, tmp_path, capsys):
         """Test load_config_file handles unexpected errors."""
-        from utils.utils import load_config_file
+        from markdiffusion.utils.utils import load_config_file
 
         # Create a file that will cause an unexpected error by making it a directory
         config_path = tmp_path / "config"
@@ -1726,7 +1726,7 @@ class TestCreateDirectoryForFileAdditional:
 
     def test_create_directory_for_file_with_relative_path(self, tmp_path):
         """Test create_directory_for_file with relative path in tmp directory."""
-        from utils.utils import create_directory_for_file
+        from markdiffusion.utils.utils import create_directory_for_file
         import os
         
         # Create a file path with a subdirectory in tmp_path

@@ -20,8 +20,8 @@ import pytest
 from PIL import Image
 from typing import Dict, Any
 
-from watermark.auto_watermark import AutoWatermark, PIPELINE_SUPPORTED_WATERMARKS
-from utils.pipeline_utils import (
+from markdiffusion.watermark.auto_watermark import AutoWatermark, PIPELINE_SUPPORTED_WATERMARKS
+from markdiffusion.utils.pipeline_utils import (
     get_pipeline_type,
     PIPELINE_TYPE_IMAGE,
     PIPELINE_TYPE_TEXT_TO_VIDEO,
@@ -56,7 +56,7 @@ def test_image_watermark_initialization(algorithm_name, image_diffusion_config):
 
         watermark = AutoWatermark.load(
             algorithm_name,
-            algorithm_config=f'config/{algorithm_name}.json',
+            algorithm_config=f'markdiffusion/config/{algorithm_name}.json',
             diffusion_config=image_diffusion_config,
             **kwargs
         )
@@ -85,7 +85,7 @@ def test_image_watermark_generation(algorithm_name, image_diffusion_config, skip
 
         watermark = AutoWatermark.load(
             algorithm_name,
-            algorithm_config=f'config/{algorithm_name}.json',
+            algorithm_config=f'markdiffusion/config/{algorithm_name}.json',
             diffusion_config=image_diffusion_config,
             **kwargs
         )
@@ -123,7 +123,7 @@ def test_image_unwatermarked_generation(algorithm_name, image_diffusion_config, 
 
         watermark = AutoWatermark.load(
             algorithm_name,
-            algorithm_config=f'config/{algorithm_name}.json',
+            algorithm_config=f'markdiffusion/config/{algorithm_name}.json',
             diffusion_config=image_diffusion_config,
             **kwargs
         )
@@ -159,7 +159,7 @@ def test_image_watermark_detection(algorithm_name, image_diffusion_config, skip_
 
         watermark = AutoWatermark.load(
             algorithm_name,
-            algorithm_config=f'config/{algorithm_name}.json',
+            algorithm_config=f'markdiffusion/config/{algorithm_name}.json',
             diffusion_config=image_diffusion_config,
             **kwargs
         )
@@ -219,7 +219,7 @@ def test_video_watermark_initialization(algorithm_name, video_diffusion_config):
 
         watermark = AutoWatermark.load(
             algorithm_name,
-            algorithm_config=f'config/{algorithm_name}.json',
+            algorithm_config=f'markdiffusion/config/{algorithm_name}.json',
             diffusion_config=video_diffusion_config,
             **kwargs
         )
@@ -247,7 +247,7 @@ def test_video_watermark_generation(algorithm_name, video_diffusion_config, skip
 
         watermark = AutoWatermark.load(
             algorithm_name,
-            algorithm_config=f'config/{algorithm_name}.json',
+            algorithm_config=f'markdiffusion/config/{algorithm_name}.json',
             diffusion_config=video_diffusion_config,
             **kwargs
         )
@@ -288,7 +288,7 @@ def test_video_unwatermarked_generation(algorithm_name, video_diffusion_config, 
 
         watermark = AutoWatermark.load(
             algorithm_name,
-            algorithm_config=f'config/{algorithm_name}.json',
+            algorithm_config=f'markdiffusion/config/{algorithm_name}.json',
             diffusion_config=video_diffusion_config,
             **kwargs
         )
@@ -327,7 +327,7 @@ def test_video_watermark_detection(algorithm_name, video_diffusion_config, skip_
 
         watermark = AutoWatermark.load(
             algorithm_name,
-            algorithm_config=f'config/{algorithm_name}.json',
+            algorithm_config=f'markdiffusion/config/{algorithm_name}.json',
             diffusion_config=video_diffusion_config,
             **kwargs
         )
@@ -415,7 +415,7 @@ def test_invalid_algorithm():
 def test_inversion_4d_image_input(inversion_type, device, image_pipeline):
     """Test inversion modules with 4D image input (batch_size, channels, height, width)."""
     import torch
-    from inversions import DDIMInversion, ExactInversion
+    from markdiffusion.inversions import DDIMInversion, ExactInversion
 
     pipe, scheduler = image_pipeline
 
@@ -481,7 +481,7 @@ def test_inversion_4d_image_input(inversion_type, device, image_pipeline):
 def test_inversion_5d_video_input(inversion_type, device, video_pipeline):
     """Test inversion modules with 5D video input (batch_size, num_frames, channels, height, width)."""
     import torch
-    from inversions import DDIMInversion, ExactInversion
+    from markdiffusion.inversions import DDIMInversion, ExactInversion
 
     pipe, scheduler = video_pipeline
 
@@ -546,7 +546,7 @@ def test_inversion_5d_video_input(inversion_type, device, video_pipeline):
 def test_inversion_reconstruction_accuracy(device, image_pipeline, inversion_type):
     """Test that inversion can accurately reconstruct the latent vector."""
     import torch
-    from inversions import DDIMInversion, ExactInversion
+    from markdiffusion.inversions import DDIMInversion, ExactInversion
 
     pipe, scheduler = image_pipeline
     if inversion_type == "ddim":
@@ -669,8 +669,8 @@ def test_watermark_visualization(algorithm_name, image_diffusion_config, video_d
     3. Tests all subclass-specific visualization methods
     4. Saves sample visualizations
     """
-    from visualize.auto_visualization import AutoVisualizer, VISUALIZATION_DATA_MAPPING
-    from visualize.data_for_visualization import DataForVisualization
+    from markdiffusion.visualize.auto_visualization import AutoVisualizer, VISUALIZATION_DATA_MAPPING
+    from markdiffusion.visualize.data_for_visualization import DataForVisualization
     import matplotlib.pyplot as plt
 
     # Skip if visualization not supported for this algorithm
@@ -686,7 +686,7 @@ def test_watermark_visualization(algorithm_name, image_diffusion_config, video_d
         # Step 1: Load watermark algorithm
         watermark = AutoWatermark.load(
             algorithm_name,
-            algorithm_config=f'config/{algorithm_name}.json',
+            algorithm_config=f'markdiffusion/config/{algorithm_name}.json',
             diffusion_config=diffusion_config
         )
 

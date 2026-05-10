@@ -1,20 +1,20 @@
 from ..base import BaseWatermark, BaseConfig
-from utils.media_utils import *
+from markdiffusion.utils.media_utils import *
 import os
 import types
 import torch
 from typing import Dict, Union, List, Optional
-from utils.utils import set_random_seed, inherit_docstring
-from utils.diffusion_config import DiffusionConfig
+from markdiffusion.utils.utils import set_random_seed, inherit_docstring
+from markdiffusion.utils.diffusion_config import DiffusionConfig
 import copy
 import numpy as np
 from PIL import Image
 from huggingface_hub import hf_hub_download
-from visualize.data_for_visualization import DataForVisualization
-from evaluation.dataset import StableDiffusionPromptsDataset
-from utils.media_utils import get_random_latents
+from markdiffusion.visualize.data_for_visualization import DataForVisualization
+from markdiffusion.evaluation.dataset import StableDiffusionPromptsDataset
+from markdiffusion.utils.media_utils import get_random_latents
 from .watermark_generator import get_watermarking_mask, inject_watermark, ROBINWatermarkedImageGeneration # OptimizedDataset, optimizer_wm_prompt
-from detection.robin.robin_detection import ROBINDetector
+from markdiffusion.detection.robin.robin_detection import ROBINDetector
 
 class ROBINConfig(BaseConfig):
     """Config class for ROBIN algorithm, load config file and initialize parameters."""

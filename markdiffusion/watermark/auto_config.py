@@ -1,19 +1,20 @@
 import importlib
 from typing import Dict, Optional, Any
-from utils.diffusion_config import DiffusionConfig
+from markdiffusion.utils.diffusion_config import DiffusionConfig
+from markdiffusion.utils.utils import default_algorithm_config_path
 
 CONFIG_MAPPING_NAMES = {
-    'TR': 'watermark.tr.TRConfig',
-    'GS': 'watermark.gs.GSConfig',
-    'PRC': 'watermark.prc.PRCConfig',
-    'VideoShield': 'watermark.videoshield.VideoShieldConfig',
-    "VideoMark": 'watermark.videomark.VideoMarkConfig',
-    'RI': 'watermark.ri.RIConfig',
-    'SEAL': 'watermark.seal.SEALConfig',
-    'ROBIN': 'watermark.robin.ROBINConfig',
-    'WIND': 'watermark.wind.WINDConfig',
-    'SFW': 'watermark.sfw.SFWConfig',
-    'GM': 'watermark.gm.GMConfig',
+    'TR': 'markdiffusion.watermark.tr.TRConfig',
+    'GS': 'markdiffusion.watermark.gs.GSConfig',
+    'PRC': 'markdiffusion.watermark.prc.PRCConfig',
+    'VideoShield': 'markdiffusion.watermark.videoshield.VideoShieldConfig',
+    "VideoMark": 'markdiffusion.watermark.videomark.VideoMarkConfig',
+    'RI': 'markdiffusion.watermark.ri.RIConfig',
+    'SEAL': 'markdiffusion.watermark.seal.SEALConfig',
+    'ROBIN': 'markdiffusion.watermark.robin.ROBINConfig',
+    'WIND': 'markdiffusion.watermark.wind.WINDConfig',
+    'SFW': 'markdiffusion.watermark.sfw.SFWConfig',
+    'GM': 'markdiffusion.watermark.gm.GMConfig',
 }
 
 def config_name_from_alg_name(name: str) -> Optional[str]:
@@ -59,6 +60,6 @@ class AutoConfig:
         module = importlib.import_module(module_name)
         config_class = getattr(module, class_name)
         if algorithm_config_path is None:
-            algorithm_config_path = f'config/{algorithm_name}.json'
+            algorithm_config_path = default_algorithm_config_path(algorithm_name)
         config_instance = config_class(algorithm_config_path, diffusion_config, **kwargs)
         return config_instance

@@ -1,13 +1,13 @@
 from ..base import BaseWatermark, BaseConfig
-from utils.media_utils import *
+from markdiffusion.utils.media_utils import *
 import torch
 from typing import Dict, Optional
-from utils.utils import set_random_seed, inherit_docstring
-from utils.diffusion_config import DiffusionConfig
+from markdiffusion.utils.utils import set_random_seed, inherit_docstring
+from markdiffusion.utils.diffusion_config import DiffusionConfig
 import numpy as np
 from PIL import Image
-from visualize.data_for_visualization import DataForVisualization
-from detection.sfw.sfw_detection import SFWDetector
+from markdiffusion.visualize.data_for_visualization import DataForVisualization
+from markdiffusion.detection.sfw.sfw_detection import SFWDetector
 import torchvision.transforms as tforms
 import qrcode
 import logging

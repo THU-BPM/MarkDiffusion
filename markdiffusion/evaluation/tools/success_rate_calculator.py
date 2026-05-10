@@ -1,5 +1,5 @@
 from typing import List, Dict, Union
-from exceptions.exceptions import TypeMismatchException, ConfigurationError
+from markdiffusion.exceptions.exceptions import TypeMismatchException, ConfigurationError
 from sklearn.metrics import roc_auc_score, roc_curve
 
 class DetectionResult:

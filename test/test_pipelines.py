@@ -29,23 +29,23 @@ from unittest.mock import MagicMock, patch
 from types import SimpleNamespace
 
 # Import dataset classes
-from evaluation.dataset import (
+from markdiffusion.evaluation.dataset import (
     BaseDataset,
     StableDiffusionPromptsDataset,
     MSCOCODataset,
     VBenchDataset
 )
 
-from watermark.base import BaseWatermark
+from markdiffusion.watermark.base import BaseWatermark
 
 # Import pipeline classes
-from evaluation.pipelines.detection import (
+from markdiffusion.evaluation.pipelines.detection import (
     WatermarkedMediaDetectionPipeline,
     UnWatermarkedMediaDetectionPipeline,
     DetectionPipelineReturnType
 )
 
-from evaluation.pipelines.image_quality_analysis import (
+from markdiffusion.evaluation.pipelines.image_quality_analysis import (
     DirectImageQualityAnalysisPipeline,
     ReferencedImageQualityAnalysisPipeline,
     GroupImageQualityAnalysisPipeline,
@@ -55,7 +55,7 @@ from evaluation.pipelines.image_quality_analysis import (
     QualityComparisonResult 
 )
 
-from evaluation.pipelines.video_quality_analysis import (
+from markdiffusion.evaluation.pipelines.video_quality_analysis import (
     DirectVideoQualityAnalysisPipeline,
     QualityPipelineReturnType as VideoQualityPipelineReturnType,
     QualityComparisonResult as VideoQualityComparisonResult
@@ -71,7 +71,7 @@ from evaluation.pipelines.video_quality_analysis import (
 @pytest.mark.slow
 def test_watermarked_detection_pipeline_with_all_image_editors(test_image_dataset, all_image_editors, image_diffusion_config):
     """Saturation test: WatermarkedMediaDetectionPipeline with all image editors."""
-    from watermark.auto_watermark import AutoWatermark
+    from markdiffusion.watermark.auto_watermark import AutoWatermark
 
     # Initialize pipeline
     pipeline = WatermarkedMediaDetectionPipeline(
@@ -87,7 +87,7 @@ def test_watermarked_detection_pipeline_with_all_image_editors(test_image_datase
     try:
         watermark = AutoWatermark.load(
             'TR',
-            algorithm_config='config/TR.json',
+            algorithm_config='markdiffusion/config/TR.json',
             diffusion_config=image_diffusion_config
         )
 
@@ -111,7 +111,7 @@ def test_watermarked_detection_pipeline_with_all_image_editors(test_image_datase
 @pytest.mark.slow
 def test_unwatermarked_detection_pipeline_with_all_image_editors(test_image_dataset, all_image_editors, image_diffusion_config):
     """Saturation test: UnWatermarkedMediaDetectionPipeline with all image editors."""
-    from watermark.auto_watermark import AutoWatermark
+    from markdiffusion.watermark.auto_watermark import AutoWatermark
 
     # Initialize pipeline
     pipeline = UnWatermarkedMediaDetectionPipeline(
@@ -127,7 +127,7 @@ def test_unwatermarked_detection_pipeline_with_all_image_editors(test_image_data
     try:
         watermark = AutoWatermark.load(
             'TR',
-            algorithm_config='config/TR.json',
+            algorithm_config='markdiffusion/config/TR.json',
             diffusion_config=image_diffusion_config
         )
 
@@ -152,7 +152,7 @@ def test_unwatermarked_detection_pipeline_with_all_image_editors(test_image_data
 @pytest.mark.slow
 def test_detection_pipeline_with_all_video_editors(test_video_dataset, all_video_editors, video_diffusion_config):
     """Saturation test: Detection pipeline with all video editors."""
-    from watermark.auto_watermark import AutoWatermark
+    from markdiffusion.watermark.auto_watermark import AutoWatermark
     
     pipeline = WatermarkedMediaDetectionPipeline(
         dataset=test_video_dataset,
@@ -165,10 +165,10 @@ def test_detection_pipeline_with_all_video_editors(test_video_dataset, all_video
     assert pipeline.dataset == test_video_dataset
 
     try:
-        from watermark.auto_watermark import AutoWatermark
+        from markdiffusion.watermark.auto_watermark import AutoWatermark
         watermark = AutoWatermark.load(
             'VideoShield',
-            algorithm_config='config/VideoShield.json',
+            algorithm_config='markdiffusion/config/VideoShield.json',
             diffusion_config=video_diffusion_config
         )
 
@@ -192,7 +192,7 @@ def test_detection_pipeline_with_all_video_editors(test_video_dataset, all_video
 # ============================================================================
 @pytest.mark.pipeline
 def test_base_generate_unwatermarked_video_i2v_branch(monkeypatch):
-    import watermark.base as base_mod
+    import markdiffusion.watermark.base as base_mod
     monkeypatch.setattr(base_mod, "get_pipeline_type", lambda pipe: base_mod.PIPELINE_TYPE_IMAGE_TO_VIDEO)
     monkeypatch.setattr(base_mod, "is_video_pipeline", lambda pipe: True)
     monkeypatch.setattr(base_mod, "is_i2v_pipeline", lambda pipe: True)
@@ -231,7 +231,7 @@ def test_base_generate_unwatermarked_video_i2v_branch(monkeypatch):
 
 @pytest.mark.pipeline
 def test_base_preprocess_media_video_numpy_and_torch(monkeypatch):
-    import watermark.base as base_mod
+    import markdiffusion.watermark.base as base_mod
     monkeypatch.setattr(base_mod, "get_pipeline_type", lambda pipe: base_mod.PIPELINE_TYPE_TEXT_TO_VIDEO)
     monkeypatch.setattr(base_mod, "is_image_pipeline", lambda pipe: False)
     monkeypatch.setattr(base_mod, "is_video_pipeline", lambda pipe: True)
@@ -293,10 +293,10 @@ def test_direct_image_quality_pipeline_saturation(test_image_dataset, all_image_
     assert len(pipeline.analyzers) == len(all_image_quality_analyzers['direct'])
     
     try:
-        from watermark.auto_watermark import AutoWatermark
+        from markdiffusion.watermark.auto_watermark import AutoWatermark
         watermark = AutoWatermark.load(
             'TR',
-            algorithm_config='config/TR.json',
+            algorithm_config='markdiffusion/config/TR.json',
             diffusion_config=image_diffusion_config
         )
 
@@ -338,10 +338,10 @@ def test_referenced_image_quality_pipeline_saturation(test_image_dataset, all_im
     assert len(pipeline.analyzers) == len(all_image_quality_analyzers['referenced'])
     
     try:
-        from watermark.auto_watermark import AutoWatermark
+        from markdiffusion.watermark.auto_watermark import AutoWatermark
         watermark = AutoWatermark.load(
             'TR',
-            algorithm_config='config/TR.json',
+            algorithm_config='markdiffusion/config/TR.json',
             diffusion_config=image_diffusion_config
         )
 
@@ -382,10 +382,10 @@ def test_group_image_quality_pipeline_saturation(test_image_dataset, all_image_e
     assert len(pipeline.analyzers) == len(all_image_quality_analyzers['group'])
 
     try:
-        from watermark.auto_watermark import AutoWatermark
+        from markdiffusion.watermark.auto_watermark import AutoWatermark
         watermark = AutoWatermark.load(
             'TR',
-            algorithm_config='config/TR.json',
+            algorithm_config='markdiffusion/config/TR.json',
             diffusion_config=image_diffusion_config
         )
 
@@ -426,10 +426,10 @@ def test_repeat_image_quality_pipeline_saturation(test_image_dataset, all_image_
     assert pipeline.prompt_per_image == 5
     
     try:
-        from watermark.auto_watermark import AutoWatermark
+        from markdiffusion.watermark.auto_watermark import AutoWatermark
         watermark = AutoWatermark.load(
             'TR',
-            algorithm_config='config/TR.json',
+            algorithm_config='markdiffusion/config/TR.json',
             diffusion_config=image_diffusion_config
         )
 
@@ -468,10 +468,10 @@ def test_compared_image_quality_pipeline_saturation(test_image_dataset, all_imag
     assert len(pipeline.analyzers) == len(all_image_quality_analyzers['compared'])
     
     try:
-        from watermark.auto_watermark import AutoWatermark
+        from markdiffusion.watermark.auto_watermark import AutoWatermark
         watermark = AutoWatermark.load(
             'TR',
-            algorithm_config='config/TR.json',
+            algorithm_config='markdiffusion/config/TR.json',
             diffusion_config=image_diffusion_config
         )
 
@@ -517,10 +517,10 @@ def test_video_quality_pipeline_saturation(test_video_dataset, all_video_editors
     assert len(pipeline.analyzers) == len(all_video_quality_analyzers)
     
     try:
-        from watermark.auto_watermark import AutoWatermark
+        from markdiffusion.watermark.auto_watermark import AutoWatermark
         watermark = AutoWatermark.load(
             'VideoShield',
-            algorithm_config='config/VideoShield.json',
+            algorithm_config='markdiffusion/config/VideoShield.json',
             diffusion_config=video_diffusion_config
         )
 
@@ -547,7 +547,7 @@ def test_video_quality_pipeline_saturation(test_video_dataset, all_video_editors
 @pytest.mark.calculator
 def test_fundamental_success_rate_calculator():
     """Test FundamentalSuccessRateCalculator basic functionality."""
-    from evaluation.tools.success_rate_calculator import (
+    from markdiffusion.evaluation.tools.success_rate_calculator import (
         FundamentalSuccessRateCalculator,
         DetectionResult
     )
@@ -579,8 +579,8 @@ def test_fundamental_success_rate_calculator():
 @pytest.mark.calculator
 def test_dynamic_threshold_calculator():
     """Test DynamicThresholdSuccessRateCalculator with different rules."""
-    from evaluation.tools.success_rate_calculator import DynamicThresholdSuccessRateCalculator
-    from exceptions.exceptions import ConfigurationError
+    from markdiffusion.evaluation.tools.success_rate_calculator import DynamicThresholdSuccessRateCalculator
+    from markdiffusion.exceptions.exceptions import ConfigurationError
     
     # Test 'best' rule
     calc_best = DynamicThresholdSuccessRateCalculator(rule='best')
@@ -800,7 +800,7 @@ def test_image_quality_pipeline_format_results_edge_cases():
 @pytest.mark.image
 def test_image_quality_pipeline_store_results(tmp_path):
     """Test _store_results functionality."""
-    from evaluation.pipelines.image_quality_analysis import DatasetForEvaluation
+    from markdiffusion.evaluation.pipelines.image_quality_analysis import DatasetForEvaluation
     
     mock_dataset = MagicMock()
     mock_dataset.name = "test_dataset"
@@ -946,7 +946,7 @@ def test_video_quality_pipeline_format_results_edge_cases():
 @pytest.mark.video
 def test_video_quality_pipeline_store_results(tmp_path):
     """Test _store_results method for coverage."""
-    from evaluation.pipelines.video_quality_analysis import (
+    from markdiffusion.evaluation.pipelines.video_quality_analysis import (
         DirectVideoQualityAnalysisPipeline,
         DatasetForEvaluation
     )
@@ -986,7 +986,7 @@ def test_video_quality_pipeline_store_results(tmp_path):
 @pytest.mark.video
 def test_video_quality_pipeline_store_results_with_references(tmp_path):
     """Test _store_results with references for coverage."""
-    from evaluation.pipelines.video_quality_analysis import (
+    from markdiffusion.evaluation.pipelines.video_quality_analysis import (
         DirectVideoQualityAnalysisPipeline,
         DatasetForEvaluation
     )

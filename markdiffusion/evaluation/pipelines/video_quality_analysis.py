@@ -2,11 +2,11 @@ from enum import Enum, auto
 from dataclasses import dataclass, field
 from typing import List, Union, Dict, Tuple
 from PIL import Image
-from evaluation.tools.image_editor import ImageEditor
-from evaluation.tools.video_editor import VideoEditor
-from evaluation.tools.video_quality_analyzer import VideoQualityAnalyzer
-from evaluation.dataset import BaseDataset
-from watermark.base import BaseWatermark
+from markdiffusion.evaluation.tools.image_editor import ImageEditor
+from markdiffusion.evaluation.tools.video_editor import VideoEditor
+from markdiffusion.evaluation.tools.video_quality_analyzer import VideoQualityAnalyzer
+from markdiffusion.evaluation.dataset import BaseDataset
+from markdiffusion.watermark.base import BaseWatermark
 import os
 import numpy as np
 from tqdm import tqdm

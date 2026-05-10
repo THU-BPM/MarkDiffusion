@@ -17,7 +17,7 @@ from abc import ABC, abstractmethod
 from typing import Optional, Dict, Any, List
 import torch
 from PIL import Image
-from visualize.data_for_visualization import DataForVisualization
+from markdiffusion.visualize.data_for_visualization import DataForVisualization
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 import numpy as np

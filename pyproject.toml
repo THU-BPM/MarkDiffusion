@@ -12,7 +12,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "markdiffusion"
-version = "1.0.1"
+version = "1.0.2"
 description = "An Open-Source Toolkit for Generative Watermarking of Latent Diffusion Models"
 readme = {file = "README.md", content-type = "text/markdown"}
 license = {text = "Apache-2.0"}
@@ -99,7 +99,10 @@ Changelog = "https://github.com/THU-BPM/markdiffusion/releases"
 # ============================================================================
 
 [project.optional-dependencies]
-# Optional dependencies that cannot be installed via conda
+# Optional dependencies that cannot be installed via conda.
+# Picking up the full optional set (the "supports all features" install) also
+# transitively pulls torch / torchvision / scikit-learn / imageio via
+# lpips / piq / pyiqa / timm / scikit-image, so we don't redeclare those here.
 optional = [
     "ldpc>=2.3.8",
     "lpips>=0.1.4",
@@ -109,6 +112,7 @@ optional = [
     "easydict>=1.9",
     "galois>=0.4.7",
     "Levenshtein>=0.27.1",
+    "qrcode>=7.4.2",
 ]
 
 # Testing dependencies
@@ -167,7 +171,12 @@ exclude = [
 ]
 
 [tool.setuptools.package-data]
-"*" = ["*.yaml", "*.json", "*.txt", "*.parquet", "*.arrow"]
+markdiffusion = [
+    "config/*.json",
+    "**/*.yaml",
+    "**/*.json",
+    "**/*.txt",
+]
 
 # ============================================================================
 # Tool Configurations
@@ -207,7 +216,7 @@ ignore_missing_imports = true
 exclude = ["VBench", "backup", "test"]
 
 [tool.pytest.ini_options]
-testpaths = ["markdiffusion/test"]
+testpaths = ["test"]
 python_files = ["test_*.py", "*_test.py"]
 python_functions = ["test_*"]
 addopts = "-v --tb=short --ignore=tests_ci"

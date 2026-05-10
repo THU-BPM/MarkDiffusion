@@ -17,7 +17,7 @@ import torch
 import numpy as np
 from typing import Tuple, Type
 from scipy.special import erf
-from detection.base import BaseDetector
+from markdiffusion.detection.base import BaseDetector
 from ldpc import bp_decoder
 from galois import FieldArray
 import sys        

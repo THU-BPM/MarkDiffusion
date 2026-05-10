@@ -16,15 +16,15 @@
 from ..base import BaseWatermark, BaseConfig
 import torch
 from typing import List
-from utils.utils import set_random_seed
-from utils.diffusion_config import DiffusionConfig
-from visualize.data_for_visualization import DataForVisualization
+from markdiffusion.utils.utils import set_random_seed
+from markdiffusion.utils.diffusion_config import DiffusionConfig
+from markdiffusion.visualize.data_for_visualization import DataForVisualization
 from transformers import Blip2Processor, Blip2ForConditionalGeneration
 from sentence_transformers import SentenceTransformer
 from PIL import Image
 import math
-from detection.seal.seal_detection import SEALDetector
-from utils.media_utils import *
+from markdiffusion.detection.seal.seal_detection import SEALDetector
+from markdiffusion.utils.media_utils import *
 
 class SEALConfig(BaseConfig):
     """Config class for SEAL algorithm."""

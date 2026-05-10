@@ -2,16 +2,16 @@ from ..base import BaseWatermark, BaseConfig
 import torch
 from typing import Dict
 from PIL import Image
-from utils.diffusion_config import DiffusionConfig
+from markdiffusion.utils.diffusion_config import DiffusionConfig
 import numpy as np
 from Crypto.Cipher import ChaCha20
 import random
 from scipy.stats import norm,truncnorm
 from functools import reduce
-from visualize.data_for_visualization import DataForVisualization
-from detection.gs.gs_detection import GSDetector
-from utils.media_utils import *
-from utils.utils import set_random_seed
+from markdiffusion.visualize.data_for_visualization import DataForVisualization
+from markdiffusion.detection.gs.gs_detection import GSDetector
+from markdiffusion.utils.media_utils import *
+from markdiffusion.utils.utils import set_random_seed
 
 class GSConfig(BaseConfig):
     """Config class for Gaussian Shading algorithm."""

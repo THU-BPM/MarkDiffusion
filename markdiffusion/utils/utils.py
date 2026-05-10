@@ -4,6 +4,21 @@ import torch
 import numpy as np
 import random
 
+
+_PACKAGE_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def default_algorithm_config_path(algorithm_name: str) -> str:
+    """Resolve the default `config/{algorithm}.json` shipped with the package.
+
+    Falls back to the legacy CWD-relative `config/{algorithm}.json` if the
+    bundled file is missing, so existing scripts that pass that path keep working.
+    """
+    bundled = os.path.join(_PACKAGE_ROOT, "config", f"{algorithm_name}.json")
+    if os.path.isfile(bundled):
+        return bundled
+    return os.path.join("config", f"{algorithm_name}.json")
+
 def inherit_docstring(cls):
     """
     Inherit docstrings from base classes to methods without docstrings.

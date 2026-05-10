@@ -16,10 +16,10 @@
 from abc import ABC, abstractmethod
 import torch
 from typing import Dict, List, Union, Optional, Any, Tuple
-from utils.diffusion_config import DiffusionConfig
-from utils.utils import load_config_file, set_random_seed
-from utils.media_utils import *
-from utils.pipeline_utils import (
+from markdiffusion.utils.diffusion_config import DiffusionConfig
+from markdiffusion.utils.utils import load_config_file, set_random_seed, default_algorithm_config_path
+from markdiffusion.utils.media_utils import *
+from markdiffusion.utils.pipeline_utils import (
     get_pipeline_type,
     is_image_pipeline, 
     is_video_pipeline,
@@ -44,7 +44,7 @@ class BaseConfig(ABC):
         """Initialize base configuration with common parameters."""
         
         # Load config file
-        self.config_dict = load_config_file(f'config/{self.algorithm_name()}.json') if algorithm_config is None else load_config_file(algorithm_config)
+        self.config_dict = load_config_file(default_algorithm_config_path(self.algorithm_name())) if algorithm_config is None else load_config_file(algorithm_config)
         
         # Diffusion model parameters
         if diffusion_config is None:

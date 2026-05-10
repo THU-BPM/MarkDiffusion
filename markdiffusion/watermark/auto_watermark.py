@@ -1,26 +1,26 @@
 import importlib
-from watermark.base import BaseWatermark
+from markdiffusion.watermark.base import BaseWatermark
 from typing import Union, Optional
-from utils.pipeline_utils import (
+from markdiffusion.utils.pipeline_utils import (
     get_pipeline_type, 
     PIPELINE_TYPE_IMAGE, 
     PIPELINE_TYPE_TEXT_TO_VIDEO, 
     PIPELINE_TYPE_IMAGE_TO_VIDEO
 )
-from watermark.auto_config import AutoConfig
+from markdiffusion.watermark.auto_config import AutoConfig
 
 WATERMARK_MAPPING_NAMES={
-    'TR': 'watermark.tr.TR',
-    'GS': 'watermark.gs.GS',
-    'PRC': 'watermark.prc.PRC',
-    'VideoShield': 'watermark.videoshield.VideoShieldWatermark',
-    "VideoMark": 'watermark.videomark.VideoMarkWatermark',
-    'RI': 'watermark.ri.RI',
-    'SEAL': 'watermark.seal.SEAL',
-    'ROBIN': 'watermark.robin.ROBIN',
-    'WIND': 'watermark.wind.WIND',
-    'SFW': 'watermark.sfw.SFW',
-    'GM': 'watermark.gm.GM'
+    'TR': 'markdiffusion.watermark.tr.TR',
+    'GS': 'markdiffusion.watermark.gs.GS',
+    'PRC': 'markdiffusion.watermark.prc.PRC',
+    'VideoShield': 'markdiffusion.watermark.videoshield.VideoShieldWatermark',
+    "VideoMark": 'markdiffusion.watermark.videomark.VideoMarkWatermark',
+    'RI': 'markdiffusion.watermark.ri.RI',
+    'SEAL': 'markdiffusion.watermark.seal.SEAL',
+    'ROBIN': 'markdiffusion.watermark.robin.ROBIN',
+    'WIND': 'markdiffusion.watermark.wind.WIND',
+    'SFW': 'markdiffusion.watermark.sfw.SFW',
+    'GM': 'markdiffusion.watermark.gm.GM'
 }
 
 # Dictionary mapping pipeline types to supported watermarking algorithms

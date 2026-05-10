@@ -19,8 +19,8 @@ import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 from matplotlib.gridspec import GridSpec
 import numpy as np
-from visualize.base import BaseVisualizer
-from visualize.data_for_visualization import DataForVisualization
+from markdiffusion.visualize.base import BaseVisualizer
+from markdiffusion.visualize.data_for_visualization import DataForVisualization
 
 class PRCVisualizer(BaseVisualizer):
     """PRC (Pseudorandom Codes) watermark visualizer"""

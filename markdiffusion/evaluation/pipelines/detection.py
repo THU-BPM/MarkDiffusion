@@ -1,10 +1,10 @@
-from watermark.base import BaseWatermark
-from evaluation.dataset import BaseDataset
+from markdiffusion.watermark.base import BaseWatermark
+from markdiffusion.evaluation.dataset import BaseDataset
 from tqdm import tqdm
 from enum import Enum, auto
 from PIL import Image
-from evaluation.tools.image_editor import ImageEditor
-from evaluation.tools.video_editor import VideoEditor
+from markdiffusion.evaluation.tools.image_editor import ImageEditor
+from markdiffusion.evaluation.tools.video_editor import VideoEditor
 from typing import List, Union
 
 class DetectionPipelineReturnType(Enum):

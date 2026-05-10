@@ -2,7 +2,7 @@ from torch.utils.data import Dataset
 import os
 import numpy as np
 from PIL import Image
-from evaluation.dataset import BaseDataset
+from markdiffusion.evaluation.dataset import BaseDataset
 from typing import Optional, Union, List, Callable, Tuple
 import torch
 import math
@@ -17,8 +17,8 @@ from diffusers.models.unets.unet_2d_condition import UNet2DConditionModel
 from diffusers.models.autoencoders.autoencoder_kl import AutoencoderKL
 from diffusers.schedulers import DPMSolverMultistepScheduler
 import logging
-from utils.utils import set_random_seed
-from utils.media_utils import *
+from markdiffusion.utils.utils import set_random_seed
+from markdiffusion.utils.media_utils import *
 import copy
 from diffusers.utils import BaseOutput
 import PIL

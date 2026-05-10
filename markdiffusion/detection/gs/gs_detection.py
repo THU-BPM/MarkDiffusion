@@ -19,7 +19,7 @@ from Crypto.Random import get_random_bytes
 from Crypto.Cipher import ChaCha20
 from scipy.stats import truncnorm, norm
 from functools import reduce
-from detection.base import BaseDetector
+from markdiffusion.detection.base import BaseDetector
 from typing import Union
 
 class GSDetector(BaseDetector):

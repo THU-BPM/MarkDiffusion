@@ -10,7 +10,7 @@ from tqdm import tqdm
 import cv2
 import os
 import subprocess
-from utils.media_utils import pil_to_torch
+from markdiffusion.utils.media_utils import pil_to_torch
 
 try:
     from torchvision.transforms import InterpolationMode
@@ -328,7 +328,7 @@ class MotionSmoothnessAnalyzer(VideoQualityAnalyzer):
         Returns:
             Image tensor (1, C, H, W)
         """
-        from model.amt.utils.utils import img2tensor
+        from markdiffusion.model.amt.utils.utils import img2tensor
         return img2tensor(img)
 
     def _tensor2img(self, tensor: torch.Tensor) -> np.ndarray:
@@ -340,7 +340,7 @@ class MotionSmoothnessAnalyzer(VideoQualityAnalyzer):
         Returns:
             Image as numpy array (H, W, C)
         """
-        from model.amt.utils.utils import tensor2img
+        from markdiffusion.model.amt.utils.utils import tensor2img
         return tensor2img(tensor)
 
     def _check_dim_and_resize(self, tensor_list: List[torch.Tensor]) -> List[torch.Tensor]:
@@ -352,7 +352,7 @@ class MotionSmoothnessAnalyzer(VideoQualityAnalyzer):
         Returns:
             List of resized tensors
         """
-        from model.amt.utils.utils import check_dim_and_resize
+        from markdiffusion.model.amt.utils.utils import check_dim_and_resize
         return check_dim_and_resize(tensor_list)
     
     def _calculate_scale(self, h: int, w: int) -> float:
@@ -381,7 +381,7 @@ class MotionSmoothnessAnalyzer(VideoQualityAnalyzer):
             List of interpolated frame tensors
         """
 
-        from model.amt.utils.utils import InputPadder
+        from markdiffusion.model.amt.utils.utils import InputPadder
         # Pad inputs
         padding = int(16 / scale)
         padder = InputPadder(inputs[0].shape, padding)
@@ -521,7 +521,7 @@ class DynamicDegreeAnalyzer(VideoQualityAnalyzer):
         Returns:
             Loaded RAFT model
         """
-        from model.raft.core.raft import RAFT
+        from markdiffusion.model.raft.core.raft import RAFT
         from easydict import EasyDict as edict
         
         # Configure RAFT arguments
@@ -675,7 +675,7 @@ class DynamicDegreeAnalyzer(VideoQualityAnalyzer):
         with torch.no_grad():
             for frame1, frame2 in zip(prepared_frames[:-1], prepared_frames[1:]):
                 # Pad frames if necessary
-                from model.raft.core.utils_core.utils import InputPadder
+                from markdiffusion.model.raft.core.utils_core.utils import InputPadder
                 padder = InputPadder(frame1.shape)
                 frame1_padded, frame2_padded = padder.pad(frame1, frame2)
 

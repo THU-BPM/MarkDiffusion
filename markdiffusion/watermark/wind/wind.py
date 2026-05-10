@@ -19,14 +19,14 @@ import numpy as np
 import logging
 from typing import Dict, Any, Union, List, Optional
 from PIL import Image
-from utils.media_utils import *
-from utils.utils import load_config_file, set_random_seed
-from utils.diffusion_config import DiffusionConfig
-from utils.media_utils import transform_to_model_format, get_media_latents
-from watermark.base import BaseConfig, BaseWatermark
-from exceptions.exceptions import AlgorithmNameMismatchError
-from detection.wind.wind_detection import WINDetector
-from visualize.data_for_visualization import DataForVisualization
+from markdiffusion.utils.media_utils import *
+from markdiffusion.utils.utils import load_config_file, set_random_seed
+from markdiffusion.utils.diffusion_config import DiffusionConfig
+from markdiffusion.utils.media_utils import transform_to_model_format, get_media_latents
+from markdiffusion.watermark.base import BaseConfig, BaseWatermark
+from markdiffusion.exceptions.exceptions import AlgorithmNameMismatchError
+from markdiffusion.detection.wind.wind_detection import WINDetector
+from markdiffusion.visualize.data_for_visualization import DataForVisualization
 
 logger = logging.getLogger(__name__)
 

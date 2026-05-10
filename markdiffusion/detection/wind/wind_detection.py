@@ -14,7 +14,7 @@
 
 
 import torch
-from detection.base import BaseDetector
+from markdiffusion.detection.base import BaseDetector
 import torch.nn.functional as F
 import numpy as np
 import logging

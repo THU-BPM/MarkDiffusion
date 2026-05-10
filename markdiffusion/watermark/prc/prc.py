@@ -1,15 +1,15 @@
 from ..base import BaseWatermark, BaseConfig
 import torch
 from typing import Dict, Tuple
-from utils.diffusion_config import DiffusionConfig
+from markdiffusion.utils.diffusion_config import DiffusionConfig
 import numpy as np
 import galois
 from scipy.sparse import csr_matrix
 from scipy.special import binom
-from visualize.data_for_visualization import DataForVisualization
-from detection.prc.prc_detection import PRCDetector
-from utils.media_utils import *
-from utils.utils import set_random_seed
+from markdiffusion.visualize.data_for_visualization import DataForVisualization
+from markdiffusion.detection.prc.prc_detection import PRCDetector
+from markdiffusion.utils.media_utils import *
+from markdiffusion.utils.utils import set_random_seed
 from PIL import Image
 
 class PRCConfig(BaseConfig):
