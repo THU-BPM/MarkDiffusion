@@ -45,6 +45,8 @@ from markdiffusion.evaluation.tools.image_editor import (
     Mask,
     Overlay,
     AdaptiveNoiseInjection,
+    DiffusionPurification,
+    NeuralCodecCompression,
 )
 
 
@@ -308,6 +310,32 @@ class TestCrSc:
 
         # Allow small differences due to resize
         assert np.allclose(original_arr, result_arr, atol=1)
+
+    def test_default_position_is_center(self):
+        """Default position is 'center' (backward compatible)."""
+        editor = CrSc()
+        assert editor.position == "center"
+
+    def test_position_random_produces_valid_image(self, sample_rgb_image):
+        """position='random' returns an image of original size."""
+        editor = CrSc(crop_ratio=0.5, position="random")
+        result = editor.edit(sample_rgb_image)
+        assert isinstance(result, Image.Image)
+        assert result.size == sample_rgb_image.size
+
+    def test_position_explicit_topleft_differs_from_center(self, sample_gradient_image):
+        """Explicit (0.0, 0.0) crop should differ from center crop on a non-uniform image."""
+        center_result = np.array(CrSc(crop_ratio=0.5, position="center").edit(sample_gradient_image))
+        topleft_result = np.array(CrSc(crop_ratio=0.5, position=(0.0, 0.0)).edit(sample_gradient_image))
+        assert not np.array_equal(center_result, topleft_result)
+
+    def test_position_invalid_string_raises(self):
+        with pytest.raises(ValueError):
+            CrSc(position="bottomleft")
+
+    def test_position_out_of_range_raises(self):
+        with pytest.raises(ValueError):
+            CrSc(position=(1.5, 0.5))
 
 
 # ============================================================================
@@ -755,6 +783,110 @@ class TestAdaptiveNoiseInjection:
         features = editor._analyze_image_features(gray_arr)
 
         assert 'brightness_mean' in features
+
+
+# ============================================================================
+# Tests for DiffusionPurification
+# ============================================================================
+
+class TestDiffusionPurification:
+    """Tests for DiffusionPurification editor.
+
+    These tests cover constructor argument handling. The end-to-end purification
+    path requires loading a Stable Diffusion pipeline (heavy / network-bound) and
+    is exercised by the @pytest.mark.slow integration test below.
+    """
+
+    class _DummyConfig:
+        device = "cpu"
+        image_size = (512, 512)
+        num_inference_steps = 50
+        pipe = object()
+
+    def test_default_strength(self):
+        editor = DiffusionPurification(self._DummyConfig())
+        assert editor.purification_strength == 0.3
+        assert editor.default_prompt == ""
+        assert editor.pipe is self._DummyConfig.pipe
+
+    def test_custom_strength(self):
+        editor = DiffusionPurification(self._DummyConfig(), purification_strength=0.5)
+        assert editor.purification_strength == 0.5
+
+    def test_strength_out_of_range_raises(self):
+        with pytest.raises(ValueError):
+            DiffusionPurification(self._DummyConfig(), purification_strength=0.0)
+        with pytest.raises(ValueError):
+            DiffusionPurification(self._DummyConfig(), purification_strength=1.5)
+
+    def test_purifier_pipe_override(self):
+        sentinel = object()
+        editor = DiffusionPurification(self._DummyConfig(), purifier_pipe=sentinel)
+        assert editor.pipe is sentinel
+
+    @pytest.mark.slow
+    def test_edit_smoke_with_real_pipe(self, sample_rgb_image):
+        """End-to-end smoke test. Requires network + GPU/CPU diffusion model load."""
+        pytest.importorskip("diffusers")
+        from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
+        from markdiffusion.utils.diffusion_config import DiffusionConfig
+        import torch
+
+        model_path = "huanzi05/stable-diffusion-2-1-base"
+        scheduler = DPMSolverMultistepScheduler.from_pretrained(model_path, subfolder="scheduler")
+        pipe = StableDiffusionPipeline.from_pretrained(
+            model_path, scheduler=scheduler, safety_checker=None,
+            torch_dtype=torch.float32,
+        ).to("cpu")
+        cfg = DiffusionConfig(
+            scheduler=scheduler, pipe=pipe, device="cpu",
+            image_size=(256, 256), num_inference_steps=10, guidance_scale=1.0,
+            gen_seed=0, inversion_type="ddim",
+        )
+        editor = DiffusionPurification(cfg, purification_strength=0.2)
+        out = editor.edit(sample_rgb_image)
+        assert isinstance(out, Image.Image)
+        assert out.size == sample_rgb_image.size
+
+
+# ============================================================================
+# Tests for NeuralCodecCompression
+# ============================================================================
+
+class TestNeuralCodecCompression:
+    """Tests for NeuralCodecCompression editor.
+
+    Constructor and validation are tested without loading a model. The model
+    download / encode-decode path is exercised by the slow integration test.
+    """
+
+    def test_default_parameters(self):
+        editor = NeuralCodecCompression()
+        assert editor.quality == 5
+        assert editor.model_name == "cheng2020-anchor"
+
+    def test_custom_quality(self):
+        editor = NeuralCodecCompression(quality=8)
+        assert editor.quality == 8
+
+    def test_invalid_model_name_raises_on_load(self):
+        editor = NeuralCodecCompression(model_name="nonexistent-codec")
+        # Validation is lazy: error occurs only when we try to materialize the model.
+        try:
+            import compressai  # noqa: F401
+        except ImportError:
+            pytest.skip("compressai not installed; cannot exercise lazy load path.")
+        with pytest.raises(ValueError):
+            editor._get_model()
+
+    @pytest.mark.slow
+    def test_edit_smoke_with_real_codec(self, sample_rgb_image):
+        """End-to-end: cheng2020-anchor encode/decode round-trip."""
+        pytest.importorskip("compressai")
+        editor = NeuralCodecCompression(quality=1, device="cpu")
+        out = editor.edit(sample_rgb_image)
+        assert isinstance(out, Image.Image)
+        assert out.size == sample_rgb_image.size
 
 
 # ============================================================================

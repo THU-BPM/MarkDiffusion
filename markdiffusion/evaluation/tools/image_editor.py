@@ -34,20 +34,52 @@ class Rotation(ImageEditor):
         return image.rotate(self.angle, expand=self.expand)
 
 class CrSc(ImageEditor):
-    def __init__(self, crop_ratio: float = 0.8):
+    """Crop-and-scale attack.
+
+    `position` controls where the crop window is placed:
+        - "center" (default): top-left corner at ((W-w)//2, (H-h)//2). Backward-compatible.
+        - "random": offsets are sampled uniformly each call from [0, W-w] x [0, H-h].
+        - tuple `(x_ratio, y_ratio)`: explicit normalized offsets in [0, 1] of the slack
+          (W-w, H-h). e.g. (0.0, 0.0) = top-left, (1.0, 1.0) = bottom-right, (0.5, 0.5) = center.
+    """
+
+    def __init__(self, crop_ratio: float = 0.8, position="center"):
         super().__init__()
-        self.crop_ratio = crop_ratio  
+        self.crop_ratio = crop_ratio
+        self.position = position
+        if isinstance(position, str):
+            if position not in {"center", "random"}:
+                raise ValueError(f"position must be 'center', 'random', or a (x, y) tuple; got {position!r}")
+        else:
+            try:
+                x_ratio, y_ratio = position
+            except (TypeError, ValueError) as e:
+                raise ValueError(f"position tuple must be (x_ratio, y_ratio); got {position!r}") from e
+            if not (0.0 <= float(x_ratio) <= 1.0 and 0.0 <= float(y_ratio) <= 1.0):
+                raise ValueError(f"position ratios must be in [0, 1]; got {position!r}")
 
     def edit(self, image: Image.Image, prompt: str = None) -> Image.Image:
         width, height = image.size
         new_w = int(width * self.crop_ratio)
         new_h = int(height * self.crop_ratio)
-        
-        left = (width - new_w) // 2
-        top = (height - new_h) // 2
+
+        slack_w = max(0, width - new_w)
+        slack_h = max(0, height - new_h)
+
+        if self.position == "center":
+            left = slack_w // 2
+            top = slack_h // 2
+        elif self.position == "random":
+            left = random.randint(0, slack_w) if slack_w > 0 else 0
+            top = random.randint(0, slack_h) if slack_h > 0 else 0
+        else:
+            x_ratio, y_ratio = self.position
+            left = int(round(slack_w * float(x_ratio)))
+            top = int(round(slack_h * float(y_ratio)))
+
         right = left + new_w
         bottom = top + new_h
-        
+
         return image.crop((left, top, right, bottom)).resize((width, height))
 
 class GaussianBlurring(ImageEditor):
@@ -266,7 +298,173 @@ class AdaptiveNoiseInjection(ImageEditor):
             
             speckle = self._add_speckle_noise(img_array, 0.4 * self.intensity)
             noisy_array = noisy_array * (1 - weight) + speckle * weight
-            
+
             noisy_array = np.clip(noisy_array, 0, 255).astype(np.uint8)
-        
+
         return Image.fromarray(noisy_array)
+
+
+class DiffusionPurification(ImageEditor):
+    """Diffusion-based purification (regeneration) attack.
+
+    Encodes the input image to latent space, injects Gaussian noise corresponding to
+    a fraction of the diffusion schedule, then runs reverse denoising to obtain a
+    regenerated image. Generative-watermark-friendly attack: the watermark survives
+    only if it is robust to a partial round-trip through a diffusion model.
+    Reference: Nie et al., "Diffusion Models for Adversarial Purification", ICML 2022.
+
+    Args:
+        diffusion_config: A `DiffusionConfig` providing `pipe`, `device`, and
+            `num_inference_steps`. By default the purifier reuses
+            `diffusion_config.pipe` (a `StableDiffusionPipeline`-like object).
+        purification_strength: Fraction in (0, 1] of the diffusion schedule to use.
+            Larger values inject more noise (stronger attack, lower fidelity).
+        prompt: Optional text prompt for classifier-free guidance during denoising.
+            Empty string by default (unconditional regeneration).
+        purifier_pipe: Optional override for the pipeline used to purify; useful
+            when the user wants the purifier to be a different model from the one
+            that produced the watermarked image.
+    """
+
+    def __init__(self, diffusion_config, purification_strength: float = 0.3,
+                 prompt: str = "", purifier_pipe=None):
+        super().__init__()
+        if not (0.0 < float(purification_strength) <= 1.0):
+            raise ValueError(
+                f"purification_strength must be in (0, 1]; got {purification_strength!r}"
+            )
+        self.diffusion_config = diffusion_config
+        self.purification_strength = float(purification_strength)
+        self.default_prompt = prompt
+        self.pipe = purifier_pipe if purifier_pipe is not None else diffusion_config.pipe
+
+    def edit(self, image: Image.Image, prompt: str = None) -> Image.Image:
+        import torch
+        from markdiffusion.utils.media_utils import transform_to_model_format
+
+        prompt = prompt if prompt is not None else self.default_prompt
+        device = self.diffusion_config.device
+        target_size = self.diffusion_config.image_size[0]
+
+        # 1. Image -> tensor in [-1, 1], shape [1, 3, H, W]
+        image_tensor = transform_to_model_format(image, target_size=target_size).unsqueeze(0).to(device)
+
+        # 2. Encode prompt (classifier-free guidance disabled by default for purification)
+        with torch.no_grad():
+            prompt_embeds, _ = self.pipe.encode_prompt(
+                prompt=prompt,
+                device=device,
+                do_classifier_free_guidance=False,
+                num_images_per_prompt=1,
+            )
+        image_tensor = image_tensor.to(prompt_embeds.dtype)
+
+        # 3. Encode image to latent (matches utils.media_utils scaling factor)
+        with torch.no_grad():
+            latent = self.pipe.vae.encode(image_tensor).latent_dist.sample() * 0.18215
+
+        # 4. Pick the timestep range and add noise
+        scheduler = self.pipe.scheduler
+        num_steps = self.diffusion_config.num_inference_steps
+        scheduler.set_timesteps(num_steps, device=device)
+        n_denoise = max(1, int(round(num_steps * self.purification_strength)))
+        timesteps_to_use = scheduler.timesteps[-n_denoise:]
+        t_start = timesteps_to_use[0]
+
+        noise = torch.randn_like(latent)
+        noisy_latent = scheduler.add_noise(latent, noise, t_start.unsqueeze(0))
+
+        # 5. Reverse denoising loop
+        x = noisy_latent
+        with torch.no_grad():
+            for t in timesteps_to_use:
+                noise_pred = self.pipe.unet(x, t, encoder_hidden_states=prompt_embeds).sample
+                x = scheduler.step(noise_pred, t, x).prev_sample
+
+        # 6. Decode back to image, then to PIL
+        with torch.no_grad():
+            decoded = self.pipe.vae.decode(x / 0.18215, return_dict=False)[0]
+        decoded = (decoded / 2 + 0.5).clamp(0, 1)
+        arr = (decoded[0].cpu().float().permute(1, 2, 0).numpy() * 255.0).round().astype(np.uint8)
+
+        out = Image.fromarray(arr)
+        if out.size != image.size:
+            out = out.resize(image.size)
+        return out
+
+
+class NeuralCodecCompression(ImageEditor):
+    """Learned-image-codec compression (regeneration) attack.
+
+    Re-encodes the image through a pretrained neural compression model, simulating
+    the kind of distortion a downstream encoder would introduce at a target bitrate.
+    Backed by `compressai` (an [optional] dependency).
+    Reference: Cheng et al., "Learned Image Compression with Discretized Gaussian
+    Mixture Likelihoods and Attention Modules", CVPR 2020.
+
+    Args:
+        quality: Quality level passed to compressai's pretrained zoo
+            (typically 1-8 for cheng2020-anchor; higher = better fidelity, more bits).
+        model_name: Any key from `compressai.zoo.image_models`. Defaults to
+            'cheng2020-anchor'. Other useful choices: 'bmshj2018-factorized',
+            'bmshj2018-hyperprior', 'mbt2018', 'cheng2020-attn'.
+        device: Override the device for the codec; defaults to CUDA if available else CPU.
+    """
+
+    _MODEL_CACHE = {}  # (model_name, quality, device) -> nn.Module
+
+    def __init__(self, quality: int = 5, model_name: str = "cheng2020-anchor",
+                 device: str = None):
+        super().__init__()
+        self.quality = int(quality)
+        self.model_name = model_name
+        self.device = device
+
+    def _get_model(self):
+        import torch
+        try:
+            from compressai.zoo import image_models
+        except ImportError as e:
+            raise ImportError(
+                "NeuralCodecCompression requires `compressai`. "
+                "Install with: pip install -e '.[optional]' (or `pip install compressai`)."
+            ) from e
+        if self.model_name not in image_models:
+            raise ValueError(
+                f"Unknown compressai model {self.model_name!r}; "
+                f"available: {sorted(image_models)}"
+            )
+        device = self.device or ("cuda" if torch.cuda.is_available() else "cpu")
+        cache_key = (self.model_name, self.quality, device)
+        net = self._MODEL_CACHE.get(cache_key)
+        if net is None:
+            net = image_models[self.model_name](quality=self.quality, pretrained=True)
+            net = net.eval().to(device)
+            self._MODEL_CACHE[cache_key] = net
+        return net, device
+
+    def edit(self, image: Image.Image, prompt: str = None) -> Image.Image:
+        import torch
+        from torchvision import transforms
+
+        net, device = self._get_model()
+        original_size = image.size
+
+        # compressai models expect input dimensions divisible by 64.
+        w, h = original_size
+        new_w = max(64, (w // 64) * 64)
+        new_h = max(64, (h // 64) * 64)
+        if (new_w, new_h) != (w, h):
+            input_image = image.resize((new_w, new_h))
+        else:
+            input_image = image
+
+        x = transforms.ToTensor()(input_image.convert("RGB")).unsqueeze(0).to(device)
+        with torch.no_grad():
+            out = net(x)
+            x_hat = out["x_hat"].clamp(0, 1)
+
+        out_pil = transforms.ToPILImage()(x_hat[0].cpu())
+        if out_pil.size != original_size:
+            out_pil = out_pil.resize(original_size)
+        return out_pil

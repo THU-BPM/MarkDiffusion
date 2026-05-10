@@ -113,6 +113,7 @@ optional = [
     "galois>=0.4.7",
     "Levenshtein>=0.27.1",
     "qrcode>=7.4.2",
+    "compressai>=1.2.6",
 ]
 
 # Testing dependencies

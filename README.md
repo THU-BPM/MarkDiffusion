@@ -110,7 +110,7 @@ MarkDiffusion supports eight pipelines, two for detection (WatermarkedMediaDetec
 | DynamicThresholdSuccessRateCalculator | Detectability | Calculate classification metrics for dynamic-threshold watermark detection | Various classification metrics |
 | **Image Attack Tools** | | | |
 | Rotation | Robustness (Image) | Image rotation attack, testing watermark resistance to rotation transforms | Rotated images/frames |
-| CrSc (Crop & Scale) | Robustness (Image) | Cropping and scaling attack, evaluating watermark robustness to size changes | Cropped/scaled images/frames |
+| CrSc (Crop & Scale) | Robustness (Image) | Cropping and scaling attack, evaluating watermark robustness to size changes (supports `position="center"`, `"random"`, or an explicit `(x_ratio, y_ratio)` offset) | Cropped/scaled images/frames |
 | GaussianNoise | Robustness (Image) | Gaussian noise attack, testing watermark resistance to noise interference | Noise-corrupted images/frames |
 | GaussianBlurring | Robustness (Image) | Gaussian blur attack, evaluating watermark resistance to blur processing | Blurred images/frames |
 | JPEGCompression | Robustness (Image) | JPEG compression attack, testing watermark robustness to lossy compression | Compressed images/frames |
@@ -118,6 +118,8 @@ MarkDiffusion supports eight pipelines, two for detection (WatermarkedMediaDetec
 | Mask | Robustness (Image) | Image masking attack, testing watermark resistance to partial occlusion by random black rectangles | Masked images/frames |
 | Overlay | Robustness (Image) | Image overlay attack, testing watermark resistance to graffiti-style strokes and annotations | Overlaid images/frames |
 | AdaptiveNoiseInjection | Robustness (Image) | Adaptive noise injection attack, testing watermark resistance to content-aware noise (Gaussian/Salt-pepper/Poisson/Speckle) | Noisy images/frames with adaptive noise |
+| DiffusionPurification | Robustness (Image) | Regeneration attack: encodes the image to latent space, injects noise at a configurable schedule fraction, and reverse-denoises through the diffusion pipe. Reference: Nie et al., DiffPure (ICML 2022). | Purified (regenerated) images |
+| NeuralCodecCompression | Robustness (Image) | Regeneration attack: round-trips the image through a pretrained learned image codec (compressai, default `cheng2020-anchor`) at a target quality level. Reference: Cheng et al., CVPR 2020. Requires the `[optional]` extras. | Codec-compressed images |
 | **Video Attack Tools** | | | |
 | MPEG4Compression | Robustness (Video) | MPEG-4 video compression attack, testing video watermark compression robustness | Compressed video frames |
 | FrameAverage | Robustness (Video) | Frame averaging attack, destroying watermarks through inter-frame averaging | Averaged video frames |
