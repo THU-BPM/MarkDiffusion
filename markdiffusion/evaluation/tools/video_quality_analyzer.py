@@ -20,6 +20,14 @@ except ImportError:
 
 from pathlib import Path
 
+# Package root (parent of `markdiffusion/evaluation`). Used to resolve bundled
+# model checkpoints (.pth) and a hyphen-named module file by absolute path,
+# regardless of the user's current working directory.
+_MARKDIFFUSION_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+_DEFAULT_AMT_S_CKPT = os.path.join(_MARKDIFFUSION_ROOT, "model", "amt", "amt-s.pth")
+_DEFAULT_AMT_S_MODULE = os.path.join(_MARKDIFFUSION_ROOT, "model", "amt", "networks", "AMT-S.py")
+_DEFAULT_RAFT_CKPT = os.path.join(_MARKDIFFUSION_ROOT, "model", "raft", "raft-things.pth")
+
 if not hasattr(np, 'sctypes'):
     np.sctypes = {
         'int': [np.int8, np.int16, np.int32, np.int64],
@@ -232,7 +240,7 @@ class MotionSmoothnessAnalyzer(VideoQualityAnalyzer):
     with smoother motion resulting in higher scores.
     """
     
-    def __init__(self, model_path: str = "model/amt/amt-s.pth", 
+    def __init__(self, model_path: str = _DEFAULT_AMT_S_CKPT,
                  device: str = "cuda", niters: int = 1):
         """Initialize the MotionSmoothnessAnalyzer.
         
@@ -283,7 +291,7 @@ class MotionSmoothnessAnalyzer(VideoQualityAnalyzer):
         import importlib.util
         
         # Load the module with hyphen in filename
-        spec = importlib.util.spec_from_file_location("amt_s", "model/amt/networks/AMT-S.py")
+        spec = importlib.util.spec_from_file_location("amt_s", _DEFAULT_AMT_S_MODULE)
         amt_s_module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(amt_s_module)
         Model = amt_s_module.Model
@@ -495,7 +503,7 @@ class DynamicDegreeAnalyzer(VideoQualityAnalyzer):
     The score represents whether the video contains dynamic motion (1.0) or is mostly static (0.0).
     """
     
-    def __init__(self, model_path: str = "model/raft/raft-things.pth",
+    def __init__(self, model_path: str = _DEFAULT_RAFT_CKPT,
                  device: str = "cuda", sample_fps: int = 8):
         """Initialize the DynamicDegreeAnalyzer.
         

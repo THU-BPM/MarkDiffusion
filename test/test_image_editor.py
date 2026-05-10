@@ -825,6 +825,7 @@ class TestDiffusionPurification:
         assert editor.pipe is sentinel
 
     @pytest.mark.slow
+    @pytest.mark.timeout(3600)
     def test_edit_smoke_with_real_pipe(self, sample_rgb_image):
         """End-to-end smoke test. Requires network + GPU/CPU diffusion model load."""
         pytest.importorskip("diffusers")
@@ -880,6 +881,7 @@ class TestNeuralCodecCompression:
             editor._get_model()
 
     @pytest.mark.slow
+    @pytest.mark.timeout(3600)
     def test_edit_smoke_with_real_codec(self, sample_rgb_image):
         """End-to-end: cheng2020-anchor encode/decode round-trip."""
         pytest.importorskip("compressai")

@@ -4170,7 +4170,7 @@ class TestEdgeCases:
         import torch
 
         # Load inversions/base_inversion.py without importing inversions/__init__.py
-        base_path = os.path.join(os.getcwd(), "inversions", "base_inversion.py")
+        base_path = os.path.join(os.getcwd(), "markdiffusion", "inversions", "base_inversion.py")
         spec = importlib.util.spec_from_file_location("base_inversion_direct", base_path)
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)
@@ -4195,7 +4195,7 @@ class TestEdgeCases:
         import importlib.util
         import torch
 
-        base_path = os.path.join(os.getcwd(), "inversions", "base_inversion.py")
+        base_path = os.path.join(os.getcwd(), "markdiffusion", "inversions", "base_inversion.py")
         spec = importlib.util.spec_from_file_location("base_inversion_direct", base_path)
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)
@@ -4214,7 +4214,7 @@ class TestEdgeCases:
         import importlib.util
         import torch
 
-        base_path = os.path.join(os.getcwd(), "inversions", "base_inversion.py")
+        base_path = os.path.join(os.getcwd(), "markdiffusion", "inversions", "base_inversion.py")
         spec = importlib.util.spec_from_file_location("base_inversion_direct", base_path)
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)
@@ -4239,7 +4239,7 @@ class TestEdgeCases:
         import pytest
         import torch
 
-        base_path = os.path.join(os.getcwd(), "inversions", "base_inversion.py")
+        base_path = os.path.join(os.getcwd(), "markdiffusion", "inversions", "base_inversion.py")
         spec = importlib.util.spec_from_file_location("base_inversion_direct", base_path)
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)
@@ -4267,17 +4267,17 @@ class TestEdgeCases:
         # Ensure package context for relative imports in watermark/videoshield/video_shield.py
         if "watermark" not in sys.modules:
             pkg = types.ModuleType("watermark")
-            pkg.__path__ = [os.path.join(os.getcwd(), "watermark")]
+            pkg.__path__ = [os.path.join(os.getcwd(), "markdiffusion", "watermark")]
             monkeypatch.setitem(sys.modules, "watermark", pkg)
 
         if "markdiffusion.watermark.videoshield" not in sys.modules:
             subpkg = types.ModuleType("markdiffusion.watermark.videoshield")
-            subpkg.__path__ = [os.path.join(os.getcwd(), "watermark", "videoshield")]
+            subpkg.__path__ = [os.path.join(os.getcwd(), "markdiffusion", "watermark", "videoshield")]
             monkeypatch.setitem(sys.modules, "markdiffusion.watermark.videoshield", subpkg)
 
         # Load as real module name so "..base" works
         mod_name = "markdiffusion.watermark.videoshield.video_shield"
-        path = os.path.join(os.getcwd(), "watermark", "videoshield", "video_shield.py")
+        path = os.path.join(os.getcwd(), "markdiffusion", "watermark", "videoshield", "video_shield.py")
         spec = importlib.util.spec_from_file_location(mod_name, path)
         mod = importlib.util.module_from_spec(spec)
         monkeypatch.setitem(sys.modules, mod_name, mod)

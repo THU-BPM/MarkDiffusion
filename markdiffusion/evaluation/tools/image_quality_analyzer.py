@@ -1,3 +1,4 @@
+import os
 from PIL import Image
 from typing import List, Dict, Optional, Union, Tuple
 import torch
@@ -7,6 +8,11 @@ import numpy as np
 from abc import abstractmethod
 import lpips
 import piq
+
+# Package-relative path to bundled NIQE statistics; resolves regardless of CWD.
+_DEFAULT_NIQE_PARAMS = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "data", "niqe_image_params.mat"
+)
 
 class ImageQualityAnalyzer:
     """Base class for image quality analyzer."""
@@ -558,8 +564,8 @@ class NIQECalculator(DirectImageQualityAnalyzer):
     Lower NIQE scores indicate better/more natural image quality (typical range: 2-8).
     """
     
-    def __init__(self, 
-                 model_path: str = "evaluation/tools/data/niqe_image_params.mat",
+    def __init__(self,
+                 model_path: str = _DEFAULT_NIQE_PARAMS,
                  patch_size: int = 96,
                  sigma: float = 7.0/6.0,
                  C: float = 1.0):
