@@ -59,6 +59,13 @@ jobs:
             echo "Detected evaluation/test changes."
           fi
 
+          # Workflow self-changes should also trigger a real test run, otherwise
+          # we can't validate the workflow update itself.
+          if grep -E -q '^\.github/workflows/selective-tests\.yml$' changed.txt; then
+            RUN_EVAL="true"
+            echo "Detected CI workflow changes; running eval suite to validate."
+          fi
+
           ALGOS_FROM_CONFIG=$(awk -F'/' '$1=="markdiffusion" && $2=="config" && $3 ~ /\.json$/ {n=$3; sub(/\.json$/,"",n); print n}' changed.txt | sort -u)
           ALGOS_FROM_DIR=$(awk -F'/' '$1=="markdiffusion" && $2=="watermark" && $3!="" && $3 !~ /\./ {print $3}' changed.txt | sort -u)
           ALGORITHMS=$(printf "%s\n%s\n" "$ALGOS_FROM_CONFIG" "$ALGOS_FROM_DIR" | grep -v '^$' | sort -u | paste -sd, -)
@@ -111,6 +118,12 @@ jobs:
           micromamba run -n markdiffusion python -m pip install -U pip
           micromamba run -n markdiffusion pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
           micromamba run -n markdiffusion pip install -e '.[optional]' --no-cache-dir
+          # openai-clip 1.0.1 (pulled transitively via pyiqa) imports
+          # `from pkg_resources import packaging`, which setuptools' own
+          # deprecation message tells you to "pin to Setuptools<81". Recent
+          # 81.x patches stop returning it entirely (hard ImportError on CI).
+          # Done last so the [optional] resolver doesn't re-bump it.
+          micromamba run -n markdiffusion pip install --force-reinstall --no-deps 'setuptools<81'
 
       - name: Run evaluation fast tests
         if: steps.decide.outputs.run_eval == 'true'
