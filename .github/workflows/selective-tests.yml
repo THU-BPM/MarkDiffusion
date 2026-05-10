@@ -83,6 +83,13 @@ jobs:
           echo "run_algo=$RUN_ALGO" >> $GITHUB_OUTPUT
           echo "algorithms=$ALGORITHMS" >> $GITHUB_OUTPUT
 
+      - name: Install system libs for opencv (libGL)
+        # facexlib (transitive via pyiqa) pulls opencv-python which links libGL.so.1.
+        # ubuntu-latest runners don't ship libgl1 by default, so cv2 import fails
+        # unless we install it here (or unless opencv-python-headless wins the
+        # site-packages race, which isn't guaranteed).
+        run: sudo apt-get update -y && sudo apt-get install -y --no-install-recommends libgl1
+
       - name: Setup micromamba
         uses: mamba-org/setup-micromamba@v2
         with:
