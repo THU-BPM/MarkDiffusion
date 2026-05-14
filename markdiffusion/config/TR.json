@@ -6,5 +6,6 @@
     "w_mask_shape": "circle",
     "w_radius": 10,
     "w_pattern_const": 0,
-    "threshold": 50
+    "threshold": 50,
+    "threshold_p_value": 0.01
 }

@@ -31,6 +31,8 @@ class ROBINConfig(BaseConfig):
         self.w_injection = self.config_dict['w_injection']
         self.w_pattern_const = self.config_dict['w_pattern_const']
         self.threshold = self.config_dict['threshold']
+        self.threshold_p_value = self.config_dict.get('threshold_p_value', 0.01)
+        self.threshold_cosine_similarity = self.config_dict.get('threshold_cosine_similarity', 0.5)
         
         self.watermarking_step = self.config_dict['watermarking_step']
         
@@ -186,7 +188,9 @@ class ROBINUtils:
             watermarking_mask=watermarking_mask,
             gt_patch=optimized_watermark,
             threshold=self.config.threshold,
-            device=self.config.device
+            device=self.config.device,
+            threshold_p_value=self.config.threshold_p_value,
+            threshold_cosine_similarity=self.config.threshold_cosine_similarity,
         )
     
     # def preprocess_image_for_detection(self, image: Image.Image, prompt: str, guidance_scale: float) -> tuple:

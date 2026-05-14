@@ -23,11 +23,13 @@ class TRDetector(BaseDetector):
                  watermarking_mask: torch.Tensor,
                  gt_patch: torch.Tensor,
                  threshold: float,
-                 device: torch.device):
+                 device: torch.device,
+                 threshold_p_value: float = 0.01):
         super().__init__(threshold, device)
         self.watermarking_mask = watermarking_mask
         self.gt_patch = gt_patch
-        
+        self.threshold_p_value = threshold_p_value
+
     def eval_watermark(self,
                         reversed_latents: torch.Tensor,
                         reference_latents: torch.Tensor = None,
@@ -37,7 +39,7 @@ class TRDetector(BaseDetector):
             target_patch = self.gt_patch #[self.watermarking_mask].flatten()
             l1_distance = torch.abs(reversed_latents_fft[self.watermarking_mask] - target_patch[self.watermarking_mask]).mean().item()
             return {
-                'is_watermarked': l1_distance < self.threshold, 
+                'is_watermarked': l1_distance < self.threshold,
                 'l1_distance': l1_distance
             }
         elif detector_type == 'p_value':
@@ -50,7 +52,7 @@ class TRDetector(BaseDetector):
             x = (((reversed_latents_fft - target_patch) / sigma_) ** 2).sum().item()
             p = ncx2.cdf(x=x, df=len(target_patch), nc=lambda_)
             return {
-                'is_watermarked': bool(p < self.threshold), 
+                'is_watermarked': bool(p < self.threshold_p_value),
                 'p_value': p
             }
         else:

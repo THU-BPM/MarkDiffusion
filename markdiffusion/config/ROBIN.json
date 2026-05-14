@@ -10,6 +10,8 @@
     "w_injection": "complex",
     "watermarking_step": 35,
     "threshold": 45,
+    "threshold_p_value": 0.01,
+    "threshold_cosine_similarity": 0.5,
     "training_from_scratch": false,
     "learning_rate": 0.0005,
     "scale_lr": true,

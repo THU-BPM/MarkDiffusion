@@ -22,6 +22,7 @@ class TRConfig(BaseConfig):
         self.w_radius = self.config_dict['w_radius']
         self.w_pattern_const = self.config_dict['w_pattern_const']
         self.threshold = self.config_dict['threshold']
+        self.threshold_p_value = self.config_dict.get('threshold_p_value', 0.01)
         
     @property
     def algorithm_name(self) -> str:
@@ -153,7 +154,8 @@ class TR(BaseWatermark):
             watermarking_mask=self.utils.watermarking_mask,
             gt_patch=self.utils.gt_patch,
             threshold=self.config.threshold,
-            device=self.config.device
+            device=self.config.device,
+            threshold_p_value=self.config.threshold_p_value,
         )
     
     def _generate_watermarked_image(self, prompt: str, *args, **kwargs) -> Image.Image:

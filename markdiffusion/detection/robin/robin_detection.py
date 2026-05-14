@@ -24,10 +24,14 @@ class ROBINDetector(BaseDetector):
                  watermarking_mask: torch.Tensor,
                  gt_patch: torch.Tensor,
                  threshold: float,
-                 device: torch.device):
+                 device: torch.device,
+                 threshold_p_value: float = 0.01,
+                 threshold_cosine_similarity: float = 0.5):
         super().__init__(threshold, device)
         self.watermarking_mask = watermarking_mask
         self.gt_patch = gt_patch
+        self.threshold_p_value = threshold_p_value
+        self.threshold_cosine_similarity = threshold_cosine_similarity
         
     def eval_watermark(self,
                         reversed_latents: torch.Tensor,
@@ -74,7 +78,7 @@ class ROBINDetector(BaseDetector):
             x = (((reversed_latents_fft_wm_area - target_patch) / sigma_) ** 2).sum().item()
             p = ncx2.cdf(x=x, df=len(target_patch), nc=lambda_)
             return {
-                'is_watermarked': p < self.threshold, 
+                'is_watermarked': bool(p < self.threshold_p_value),
                 'p_value': p
             }
         elif detector_type == 'cosine_similarity':
@@ -82,7 +86,7 @@ class ROBINDetector(BaseDetector):
             target_patch = current_gt_patch[current_mask].flatten()
             cosine_similarity = F.cosine_similarity(reversed_latents_fft_wm_area.real, target_patch.real, dim=0)
             return {
-                'is_watermarked': cosine_similarity > self.threshold, 
+                'is_watermarked': bool(cosine_similarity > self.threshold_cosine_similarity),
                 'cosine_similarity': cosine_similarity
             }
         else:

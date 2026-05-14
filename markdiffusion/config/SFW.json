@@ -4,5 +4,6 @@
     "wm_type": "HSQR",
     "delta": 1,
     "w_channel": 3,
-    "threshold": 50
+    "threshold": 50,
+    "threshold_p_value": 0.01
 }

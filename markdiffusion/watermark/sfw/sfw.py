@@ -22,6 +22,7 @@ class SFWConfig(BaseConfig):
         self.delta=self.config_dict['delta']
         self.wm_type=self.config_dict['wm_type'] # "HSTR" or "HSQR"
         self.threshold = self.config_dict['threshold']
+        self.threshold_p_value = self.config_dict.get('threshold_p_value', 0.01)
         self.w_channel = self.config_dict['w_channel']
         
     @property
@@ -339,7 +340,8 @@ class SFW(BaseWatermark):
             w_channel=self.config.w_channel,
             threshold=self.config.threshold,
             device=self.config.device,
-            wm_type=self.config.wm_type
+            wm_type=self.config.wm_type,
+            threshold_p_value=self.config.threshold_p_value,
         )
     
     def _generate_watermarked_image(self, prompt: str, *args, **kwargs) -> Image.Image:

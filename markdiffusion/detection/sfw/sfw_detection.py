@@ -25,12 +25,14 @@ class SFWDetector(BaseDetector):
                  w_channel: int,
                  threshold: float,
                  device: torch.device,
-                 wm_type: str = "HSTR"):
+                 wm_type: str = "HSTR",
+                 threshold_p_value: float = 0.01):
         super().__init__(threshold, device)
         self.watermarking_mask = watermarking_mask
         self.gt_patch = gt_patch
         self.w_channel = w_channel
         self.wm_type = wm_type
+        self.threshold_p_value = threshold_p_value
 
     @torch.no_grad()
     def get_distance_hsqr(self,qr_gt_bool, target_fft,p=1):
@@ -99,7 +101,7 @@ class SFWDetector(BaseDetector):
                 x = (((reversed_latents_fft - target_patch) / sigma_) ** 2).sum().item()
                 p = ncx2.cdf(x=x, df=len(target_patch), nc=lambda_)
                 return {
-                    'is_watermarked': bool(p < self.threshold), 
+                    'is_watermarked': bool(p < self.threshold_p_value),
                     'p_value': p
                 }
             else:
