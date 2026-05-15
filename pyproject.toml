@@ -85,6 +85,17 @@ dependencies = [
     "joblib>=1.5.1",
     "pandas>=1.4",
     "pycryptodome>=3.23",
+    # Pin torch below 2.11 — 2.11 ships only with CUDA 13 wheels on PyPI,
+    # which require NVIDIA driver >=575. Older drivers (e.g. 535.x, CUDA 12.2)
+    # will hit "driver too old" at runtime. Users on CUDA 12.x should install
+    # torch from the matching wheel index, e.g.:
+    #   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+    "torch>=2.4,<2.11",
+    "torchvision>=0.19,<0.26",
+    # setuptools>=81 drops the bundled `pkg_resources` module, which the
+    # transitively-pulled `openai-clip` (via pyiqa) still imports. Pin it
+    # below 81 until openai-clip migrates to `importlib.metadata`.
+    "setuptools<81",
 ]
 
 [project.urls]
