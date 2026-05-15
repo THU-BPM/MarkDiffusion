@@ -78,7 +78,7 @@ Test dependencies include:
 
 Note: 
 - The testing process may require downloading models from Hugging Face. If access is restricted, please set up a proper mirror, such as `export HF_ENDPOINT=https://hf-mirror.com`.
-- This test includes **658 test cases, with 95% code coverage**. The entire testing process is relatively time-consuming and is expected to take around 40 minutes.
+- This test includes **672 test cases, with 94.73% code coverage**. The entire testing process is relatively time-consuming and is expected to take around 30 minutes on a single modern GPU (e.g. H20/A100).
 
 
 ### 2. Run Tests
