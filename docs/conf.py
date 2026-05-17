@@ -18,8 +18,8 @@ copyright = '2025, MarkDiffusion Team'
 author = 'MarkDiffusion Team'
 
 # The full version, including alpha/beta/rc tags
-release = '1.0.0'
-version = '1.0.0'
+release = '1.0.2'
+version = '1.0.2'
 
 # -- General configuration ---------------------------------------------------
 
