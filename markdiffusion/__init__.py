@@ -14,7 +14,7 @@
 
 """MarkDiffusion - An Open-Source Toolkit for Generative Watermarking of Latent Diffusion Models."""
 
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 __author__ = "THU-BPM MarkDiffusion Team"
 __license__ = "Apache-2.0"
 

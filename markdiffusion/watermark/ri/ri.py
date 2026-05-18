@@ -334,7 +334,7 @@ class RI(BaseWatermark):
             watermark_pattern= self.utils.pattern,
             watermark_channel=self.config.watermark_channel,
             watermark_region_mask=self.utils.mask,
-        ).to(torch.float32)
+        ).to(dtype=self.config.pipe.unet.dtype)
         
         # save watermarked latents
         self.set_orig_watermarked_latents(watermarked_latents)
