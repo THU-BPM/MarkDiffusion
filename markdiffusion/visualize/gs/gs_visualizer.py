@@ -19,18 +19,23 @@ class GaussianShadingVisualizer(BaseVisualizer):
         cipher = ChaCha20.new(key=self.data.chacha_key, nonce=self.data.chacha_nonce)
         sd_byte = cipher.decrypt(np.packbits(reversed_m).tobytes())
         sd_bit = np.unpackbits(np.frombuffer(sd_byte, dtype=np.uint8))
-        sd_tensor = torch.from_numpy(sd_bit).reshape(1, 4, 64, 64).to(torch.uint8)
+        sd_tensor = torch.from_numpy(sd_bit).reshape(
+            1, 4, self.data.latents_height, self.data.latents_width
+        ).to(torch.uint8)
         return sd_tensor.to(self.data.device)
-    
+
     def _diffusion_inverse(self, reversed_sd):
         """Inverse the diffusion process to extract the watermark."""
+        _, _, H, W = reversed_sd.shape
         ch_stride = 4 // self.data.channel_copy
-        hw_stride = 64 // self.data.hw_copy
+        hw_stride_h = H // self.data.hw_copy
+        hw_stride_w = W // self.data.hw_copy
         ch_list = [ch_stride] * self.data.channel_copy
-        hw_list = [hw_stride] * self.data.hw_copy
+        hw_list_h = [hw_stride_h] * self.data.hw_copy
+        hw_list_w = [hw_stride_w] * self.data.hw_copy
         split_dim1 = torch.cat(torch.split(reversed_sd, tuple(ch_list), dim=1), dim=0)
-        split_dim2 = torch.cat(torch.split(split_dim1, tuple(hw_list), dim=2), dim=0)
-        split_dim3 = torch.cat(torch.split(split_dim2, tuple(hw_list), dim=3), dim=0)
+        split_dim2 = torch.cat(torch.split(split_dim1, tuple(hw_list_h), dim=2), dim=0)
+        split_dim3 = torch.cat(torch.split(split_dim2, tuple(hw_list_w), dim=3), dim=0)
         vote = torch.sum(split_dim3, dim=0).clone()
         vote[vote <= self.data.vote_threshold] = 0
         vote[vote > self.data.vote_threshold] = 1
@@ -53,8 +58,13 @@ class GaussianShadingVisualizer(BaseVisualizer):
         Returns:
             Axes: The plotted axes.
         """
-        # Step 1: reshape self.data.watermark to [1, 4 // self.data.channel_copy, 64 // self.data.hw_copy, 64 // self.data.hw_copy]
-        watermark = self.data.watermark.reshape(1, 4 // self.data.channel_copy, 64 // self.data.hw_copy, 64 // self.data.hw_copy)
+        # Step 1: reshape self.data.watermark to [1, 4 // channel_copy, latents_height // hw_copy, latents_width // hw_copy]
+        watermark = self.data.watermark.reshape(
+            1,
+            4 // self.data.channel_copy,
+            self.data.latents_height // self.data.hw_copy,
+            self.data.latents_width // self.data.hw_copy,
+        )
         
         if channel is not None:
             # Single channel visualization
@@ -132,7 +142,12 @@ class GaussianShadingVisualizer(BaseVisualizer):
         
         reversed_watermark = self._diffusion_inverse(reversed_sd)
         bit_acc = (reversed_watermark == self.data.watermark).float().mean().item()
-        reconstructed_watermark = reversed_watermark.reshape(1, 4 // self.data.channel_copy, 64 // self.data.hw_copy, 64 // self.data.hw_copy)
+        reconstructed_watermark = reversed_watermark.reshape(
+            1,
+            4 // self.data.channel_copy,
+            self.data.latents_height // self.data.hw_copy,
+            self.data.latents_width // self.data.hw_copy,
+        )
         
         if channel is not None:
             # Single channel visualization
