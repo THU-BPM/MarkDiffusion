@@ -49,7 +49,7 @@
       </p>
       <p>
         Up to date, it unifies <strong>11 state-of-the-art algorithms</strong> into a single framework, provides a
-        comprehensive evaluation module with <strong>31 tools</strong> and <strong>8 automated pipelines</strong> for
+        comprehensive evaluation module with <strong>33 tools</strong> and <strong>8 automated pipelines</strong> for
         standardized benchmarking, and includes an intuitive visualization suite to lower the technical barrier.
         By providing a high-quality, well-documented, and extensible platform, MarkDiffusion promotes reproducible
         research in the vital area of AI safety, making it an ideal candidate for the JMLR open-source software section.
@@ -88,7 +88,7 @@
         <div class="feature">
           <h3>Evaluation Module</h3>
           <p>
-            With 31 evaluation tools covering detectability, robustness, and impact on output quality, MarkDiffusion
+            With 33 evaluation tools covering detectability, robustness, and impact on output quality, MarkDiffusion
             offers comprehensive assessment capabilities. It features automated pipelines such as Watermark Detection,
             Image/Video Quality Analysis, and robustness assessment tools.
           </p>
@@ -109,89 +109,77 @@
       </p>
 
       <h3>Installation</h3>
-      <p><strong>(Recommended)</strong> Install the PyPI package:</p>
+      <p>MarkDiffusion can be installed in three ways. Pick the one that matches what you plan to do:</p>
+
+      <table class="install-modes">
+        <thead>
+          <tr><th>Mode</th><th>Command</th><th>Use when&hellip;</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>A. PyPI</strong><br><em>(recommended for users)</em></td>
+            <td><code>pip install markdiffusion[optional]</code></td>
+            <td>You just want to <em>call</em> watermarking algorithms from your own script or notebook. No need to read or modify the library source, run the bundled tests, or generate visualizations from the demo notebooks.</td>
+          </tr>
+          <tr>
+            <td><strong>B. Editable install from source</strong><br><em>(recommended for contributors/researchers)</em></td>
+            <td><code>git clone &hellip; &amp;&amp; cd MarkDiffusion &amp;&amp; pip install -e ".[optional]"</code></td>
+            <td>You want to (a) run <code>MarkDiffusion_demo.ipynb</code> and the <code>test/</code> suite, (b) modify or add watermarking algorithms, (c) reproduce paper results, or (d) submit PRs. Source edits in <code>markdiffusion/</code> take effect immediately.</td>
+          </tr>
+          <tr>
+            <td><strong>C. conda-forge</strong><br><em>(conda-only environments)</em></td>
+            <td><code>conda install -c conda-forge markdiffusion</code></td>
+            <td>You are restricted to conda channels. Some advanced features that depend on PyPI-only packages (<code>pyiqa</code> / <code>lpips</code>&hellip;) are not bundled; install them separately if needed.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p><strong>Mode A &mdash; PyPI install:</strong></p>
       <pre><code>conda create -n markdiffusion python=3.11
 conda activate markdiffusion
 pip install markdiffusion[optional]</code></pre>
 
-      <p><strong>(Alternative)</strong> Conda-only users can install from conda-forge:</p>
+      <p><strong>Mode B &mdash; Editable install from source:</strong></p>
+      <pre><code>git clone https://github.com/THU-BPM/MarkDiffusion.git
+cd MarkDiffusion
+conda create -n markdiffusion python=3.11
+conda activate markdiffusion
+pip install -e ".[optional]"
+# (optional) install test extras to run pytest, coverage, parallel tests
+pip install -r test/requirements-test.txt</code></pre>
+
+      <p class="note">
+        <code>pyproject.toml</code> pins <code>torch&gt;=2.4,&lt;2.11</code> and <code>setuptools&lt;81</code> so the resolver picks
+        a CUDA-12.x wheel that runs on NVIDIA driver &ge; 525 and keeps <code>pkg_resources</code> available
+        (still required by <code>openai-clip</code>).
+      </p>
+
+      <p><strong>Mode C &mdash; conda-forge:</strong></p>
       <pre><code>conda create -n markdiffusion python=3.11
 conda activate markdiffusion
 conda config --add channels conda-forge
 conda config --set channel_priority strict
 conda install markdiffusion</code></pre>
 
-      <p class="note">
-        Note: some advanced features require additional packages that are not available on conda and cannot be included
-        in the release; install them separately if needed.
-      </p>
-
       <h3>How to Use the Toolkit</h3>
-      <p>After installation, there are two ways to use MarkDiffusion:</p>
+      <p>
+        The same <code>markdiffusion.*</code> import paths work in both PyPI and editable installs. The two demo
+        notebooks differ only in scope:
+      </p>
+      <ul>
+        <li><code>MarkDiffusion_pypi_demo.ipynb</code> &mdash; minimal end-to-end usage; safe starting point for PyPI users.</li>
+        <li><code>MarkDiffusion_demo.ipynb</code> &mdash; exhaustive walkthrough of all 11 algorithms plus visualization and evaluation pipelines; ships in the source repo (Mode B).</li>
+      </ul>
 
-      <ol>
-        <li>
-          <p>
-            <strong>Clone the repository</strong> to try the demos or use it for custom development.
-            The <code>MarkDiffusion_demo.ipynb</code> notebook provides detailed demonstrations.
-            Quick example (TR algorithm):
-          </p>
-          <pre><code class="language-python">import torch
-from watermark.auto_watermark import AutoWatermark
-from utils.diffusion_config import DiffusionConfig
-from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
-
-# Device setup
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
-
-# Configure diffusion pipeline
-scheduler = DPMSolverMultistepScheduler.from_pretrained("model_path", subfolder="scheduler")
-pipe = StableDiffusionPipeline.from_pretrained("model_path", scheduler=scheduler).to(device)
-diffusion_config = DiffusionConfig(
-    scheduler=scheduler,
-    pipe=pipe,
-    device=device,
-    image_size=(512, 512),
-    num_inference_steps=50,
-    guidance_scale=7.5,
-    gen_seed=42,
-    inversion_type="ddim"
-)
-
-# Load watermark algorithm
-watermark = AutoWatermark.load('TR',
-                            algorithm_config='config/TR.json',
-                            diffusion_config=diffusion_config)
-
-# Generate watermarked media
-prompt = "A beautiful sunset over the ocean"
-watermarked_image = watermark.generate_watermarked_media(prompt)
-watermarked_image.save("watermarked_image.png")
-
-# Detect watermark
-detection_result = watermark.detect_watermark_in_media(watermarked_image)
-print(f"Watermark detected: {detection_result}")</code></pre>
-        </li>
-
-        <li>
-          <p>
-            <strong>Use the PyPI library directly</strong> without cloning the repository.
-            The <code>MarkDiffusion_pypi_demo.ipynb</code> notebook provides examples.
-            Quick example:
-          </p>
-          <pre><code class="language-python">import torch
+      <p>Minimal end-to-end example for both modes:</p>
+      <pre><code class="language-python">import torch
 from markdiffusion.watermark import AutoWatermark
 from markdiffusion.utils import DiffusionConfig
 from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
 
-# Device
 device = "cuda" if torch.cuda.is_available() else "cpu"
-print(f"Using device: {device}")
 
-# Model path
 MODEL_PATH = "huanzi05/stable-diffusion-2-1-base"
-
-# Initialize scheduler and pipeline
 scheduler = DPMSolverMultistepScheduler.from_pretrained(MODEL_PATH, subfolder="scheduler")
 pipe = StableDiffusionPipeline.from_pretrained(
     MODEL_PATH,
@@ -200,36 +188,36 @@ pipe = StableDiffusionPipeline.from_pretrained(
     safety_checker=None,
 ).to(device)
 
-# Create DiffusionConfig for image generation
-image_diffusion_config = DiffusionConfig(
+diffusion_config = DiffusionConfig(
     scheduler=scheduler,
     pipe=pipe,
     device=device,
     image_size=(512, 512),
-    guidance_scale=7.5,
     num_inference_steps=50,
+    guidance_scale=7.5,
     gen_seed=42,
-    inversion_type="ddim"
+    inversion_type="ddim",
 )
 
-# Load Tree-Ring watermark algorithm
-tr_watermark = AutoWatermark.load('TR', diffusion_config=image_diffusion_config)
-print("TR watermark algorithm loaded successfully!")
+# AutoWatermark picks up the bundled default config (markdiffusion/config/TR.json)
+# automatically. Pass `algorithm_config=` only if you want to override it.
+tr_watermark = AutoWatermark.load("TR", diffusion_config=diffusion_config)
 
-# Generate watermarked image
 prompt = "A beautiful landscape with mountains and a river at sunset"
 watermarked_image = tr_watermark.generate_watermarked_media(input_data=prompt)
-
-# Save image
 watermarked_image.save("watermarked_image.png")
-print("Watermarked image generated!")
 
-# Detect watermark in the watermarked image
 detection_result = tr_watermark.detect_watermark_in_media(watermarked_image)
-print("Watermarked image detection result:")
 print(detection_result)</code></pre>
-        </li>
-      </ol>
+
+      <p>
+        If you installed in <strong>Mode B</strong>, you can additionally point <code>algorithm_config=</code> at a JSON
+        in your working copy (e.g. <code>markdiffusion/config/TR.json</code>) to experiment with parameters without
+        reinstalling. From the source repo you can also run the demo notebook end-to-end:
+      </p>
+      <pre><code>jupyter nbconvert --to notebook --execute MarkDiffusion_demo.ipynb \
+    --ExecutePreprocessor.kernel_name=markdiffusion \
+    --ExecutePreprocessor.timeout=1800</code></pre>
     </section>
 
     <section id="mloss" class="card">
@@ -299,8 +287,8 @@ print(detection_result)</code></pre>
         <ul>
           <li>
             <strong>Extensive unit and integration testing.</strong>
-            We provide extensive unit and integration testing, with <strong>658 unit tests</strong> covering all key functions.
-            Code coverage is <strong>95%</strong>. Here are the <a href="./htmlcov/index.html">coverage report</a> and the <a href="./report.html">result report</a> exported directly via pytest.
+            We provide extensive unit and integration testing, with <strong>672 unit tests</strong> covering all key functions.
+            Code coverage is <strong>94.73%</strong>. Here are the <a href="./htmlcov/index.html">coverage report</a> and the <a href="./report.html">result report</a> exported directly via pytest.
           </li>
           <li>
             <strong>Continuous integration and testing.</strong>

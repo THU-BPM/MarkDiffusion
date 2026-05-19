@@ -264,3 +264,25 @@ a{
   a::before, a::after{ content: none !important; }
   
   
+/* Install modes table (added v1.0.2) */
+table.install-modes {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0 1.5em;
+  font-size: 0.95em;
+}
+table.install-modes th,
+table.install-modes td {
+  border: 1px solid #e2e8f0;
+  padding: 10px 12px;
+  vertical-align: top;
+  text-align: left;
+}
+table.install-modes thead th {
+  background: #f1f5f9;
+  font-weight: 600;
+}
+table.install-modes td:first-child { width: 22%; }
+table.install-modes td:nth-child(2) { width: 30%; }
+table.install-modes td:nth-child(2) code { word-break: break-all; }
+table.install-modes em { color: #475569; font-style: normal; font-size: 0.9em; display: block; }
