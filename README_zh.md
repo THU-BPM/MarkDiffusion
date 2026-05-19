@@ -35,6 +35,12 @@
 
 
 ## 🔥 更新日志
+🛠 **(2026.05.15)** 将测试套件扩展到 672 个单元测试，代码覆盖率达 94.73%（在新的 `markdiffusion-test` 环境上完成 GPU + CPU 全量回归）。
+
+🏗️ **(2026.05.10)** 将仓库重构为标准的 `markdiffusion/` Python 包结构，使 `pip install -e .` 与 PyPI 安装共享同一套 import 路径（`from markdiffusion.watermark import AutoWatermark`）。editable 安装与 CI 现在基于统一的源码布局。
+
+🎯 **(2026.05.10)** 新增 *DiffusionPurification* 与 *NeuralCodecCompression* 再生成攻击；*CrSc*（裁剪与缩放）支持 `position="random"` 以及显式偏移参数 —— 感谢贡献者!
+
 🛠 **(2025.12.19)** 为所有功能添加了包含658个测试用例的完整测试套件。
 
 🛠 **(2025.12.10)** 使用 GitHub Actions 添加了持续集成测试系统。
@@ -146,14 +152,39 @@ MarkDiffusion 支持八个流水线，两个用于检测（WatermarkedMediaDetec
 如果您想在不安装任何内容的情况下试用 MarkDiffusion，可以使用 [Google Colab](https://colab.research.google.com/drive/1N1C9elDAB5zwF4FxKKYMCqR3eSpCSqAW?usp=sharing#scrollTo=-kWt7m9Y3o-G) 查看其工作方式。
 
 ### 安装
-**（推荐）** 我们为 MarkDiffusion 发布了 pypi 包。您可以直接使用 pip 安装：
+
+MarkDiffusion 提供三种安装方式，请根据使用场景选择：
+
+| 方式 | 命令 | 适用场景 |
+|---|---|---|
+| **A. PyPI（推荐普通用户）** | `pip install markdiffusion[optional]` | 你只想在自己的脚本/notebook 里**调用**水印算法，不需要阅读或修改库源码，也不需要跑仓库内的测试套件 / demo notebook。 |
+| **B. 源码 editable 安装（推荐贡献者 / 研究者）** | `git clone … && cd MarkDiffusion && pip install -e ".[optional]"` | 你想（a）跑 `MarkDiffusion_demo.ipynb` / `test/` 测试套件，（b）修改或新增水印算法，（c）复现论文结果，或（d）提 PR。`markdiffusion/` 下的源码改动立即生效。 |
+| **C. conda-forge（仅 conda 环境）** | `conda install -c conda-forge markdiffusion` | 你只能使用 conda 渠道。部分依赖 PyPI-only 包（如 `pyiqa` / `lpips`）的高级功能未打包进 conda 发布，如需使用请单独安装。 |
+
+**方式 A —— PyPI 安装：**
+
 ```bash
 conda create -n markdiffusion python=3.11
 conda activate markdiffusion
 pip install markdiffusion[optional]
 ```
 
-（替代方案）对于*仅限于使用 conda 环境*的用户，我们还提供了 conda-forge 包，可以使用以下命令安装：
+**方式 B —— 源码 editable 安装：**
+
+```bash
+git clone https://github.com/THU-BPM/MarkDiffusion.git
+cd MarkDiffusion
+conda create -n markdiffusion python=3.11
+conda activate markdiffusion
+pip install -e ".[optional]"
+# （可选）安装测试附加依赖，以运行 pytest / 覆盖率 / 并行测试
+pip install -r test/requirements-test.txt
+```
+
+`pyproject.toml` 已将 `torch>=2.4,<2.11` 与 `setuptools<81` pin 住，依赖解析器会选 CUDA-12.x wheel（需要驱动 ≥ 525），同时保留 `pkg_resources`（`openai-clip` 仍依赖）。
+
+**方式 C —— conda-forge：**
+
 ```bash
 conda create -n markdiffusion python=3.11
 conda activate markdiffusion
@@ -161,110 +192,66 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 conda install markdiffusion
 ```
-但是，请注意，某些高级功能需要 conda 上不可用的额外包，因此无法包含在发布版本中。如有必要，您需要单独安装这些包。
 
 ### 如何使用工具包
 
-安装后，有两种方式使用 MarkDiffusion：
+PyPI 安装与 editable 安装使用同一套 `markdiffusion.*` import 路径。两本 demo notebook 仅作用范围不同：
 
-1. **克隆仓库以尝试演示或用于自定义开发。** `MarkDiffusion_demo.ipynb` notebook 提供了各种用例的详细演示——请查看以获取指导。以下是使用 TR 算法生成和检测带水印图像的快速示例：
+- **`MarkDiffusion_pypi_demo.ipynb`** —— 端到端最小示例；PyPI 用户的安全起点。
+- **`MarkDiffusion_demo.ipynb`** —— 覆盖全部 11 个算法、可视化和评估流水线的完整演练；仅随源码仓库提供（方式 B）。
 
+两种安装方式都可直接使用的最小端到端示例：
 
-    ```python
-    import torch
-    from watermark.auto_watermark import AutoWatermark
-    from utils.diffusion_config import DiffusionConfig
-    from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
+```python
+import torch
+from markdiffusion.watermark import AutoWatermark
+from markdiffusion.utils import DiffusionConfig
+from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
 
-    # 设备设置
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    # 配置扩散流水线
-    scheduler = DPMSolverMultistepScheduler.from_pretrained("model_path", subfolder="scheduler")
-    pipe = StableDiffusionPipeline.from_pretrained("model_path", scheduler=scheduler).to(device)
-    diffusion_config = DiffusionConfig(
-        scheduler=scheduler,
-        pipe=pipe,
-        device=device,
-        image_size=(512, 512),
-        num_inference_steps=50,
-        guidance_scale=7.5,
-        gen_seed=42,
-        inversion_type="ddim"
-    )
+MODEL_PATH = "huanzi05/stable-diffusion-2-1-base"
+scheduler = DPMSolverMultistepScheduler.from_pretrained(MODEL_PATH, subfolder="scheduler")
+pipe = StableDiffusionPipeline.from_pretrained(
+    MODEL_PATH,
+    scheduler=scheduler,
+    torch_dtype=torch.float16 if device == "cuda" else torch.float32,
+    safety_checker=None,
+).to(device)
 
-    # 加载水印算法
-    watermark = AutoWatermark.load('TR', 
-                                algorithm_config='config/TR.json',
-                                diffusion_config=diffusion_config)
+diffusion_config = DiffusionConfig(
+    scheduler=scheduler,
+    pipe=pipe,
+    device=device,
+    image_size=(512, 512),
+    num_inference_steps=50,
+    guidance_scale=7.5,
+    gen_seed=42,
+    inversion_type="ddim",
+)
 
-    # 生成带水印的媒体
-    prompt = "A beautiful sunset over the ocean"
-    watermarked_image = watermark.generate_watermarked_media(prompt)
-    watermarked_image.save("watermarked_image.png")
+# AutoWatermark 默认从包内置 config（markdiffusion/config/TR.json）加载；
+# 如需覆盖，传 `algorithm_config=`。
+tr_watermark = AutoWatermark.load("TR", diffusion_config=diffusion_config)
 
-    # 检测水印
-    detection_result = watermark.detect_watermark_in_media(watermarked_image)
-    print(f"Watermark detected: {detection_result}")
-    ```
+prompt = "A beautiful landscape with mountains and a river at sunset"
+watermarked_image = tr_watermark.generate_watermarked_media(input_data=prompt)
+watermarked_image.save("watermarked_image.png")
 
-2. **在代码中直接导入 markdiffusion 库，无需克隆仓库。** `MarkDiffusion_pypi_demo.ipynb` notebook 提供了通过 markdiffusion 库使用 MarkDiffusion 的全面示例——请查看以获取指导。以下是一个快速示例：
+detection_result = tr_watermark.detect_watermark_in_media(watermarked_image)
+print(detection_result)
+```
 
-    ```python
-    import torch
-    from markdiffusion.watermark import AutoWatermark
-    from markdiffusion.utils import DiffusionConfig
-    from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
+如果使用**方式 B**，还可以让 `algorithm_config=` 指向工作目录中的 JSON（例如 `markdiffusion/config/TR.json`），无需重新安装即可调参。在源码仓库下也可以直接执行完整 demo notebook：
 
-    # 设备
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    print(f"Using device: {device}")
-
-    # 模型路径
-    MODEL_PATH = "huanzi05/stable-diffusion-2-1-base"
-
-    # 初始化调度器和流水线
-    scheduler = DPMSolverMultistepScheduler.from_pretrained(MODEL_PATH, subfolder="scheduler")
-    pipe = StableDiffusionPipeline.from_pretrained(
-        MODEL_PATH,
-        scheduler=scheduler,
-        torch_dtype=torch.float16 if device == "cuda" else torch.float32,
-        safety_checker=None,
-    ).to(device)
-
-    # 创建用于图像生成的 DiffusionConfig
-    image_diffusion_config = DiffusionConfig(
-        scheduler=scheduler,
-        pipe=pipe,
-        device=device,
-        image_size=(512, 512),
-        guidance_scale=7.5,
-        num_inference_steps=50,
-        gen_seed=42,
-        inversion_type="ddim"
-    )
-
-    # 加载 Tree-Ring 水印算法
-    tr_watermark = AutoWatermark.load('TR', diffusion_config=image_diffusion_config)
-    print("TR watermark algorithm loaded successfully!")
-
-    # 生成带水印的图像
-    prompt = "A beautiful landscape with mountains and a river at sunset"
-
-    watermarked_image = tr_watermark.generate_watermarked_media(input_data=prompt)
-
-    # 显示带水印的图像
-    watermarked_image.save("watermarked_image.png")
-    print("Watermarked image generated!")
-
-    # 检测带水印图像中的水印
-    detection_result = tr_watermark.detect_watermark_in_media(watermarked_image)
-    print("Watermarked image detection result:")
-    print(detection_result)
-    ```
+```bash
+jupyter nbconvert --to notebook --execute MarkDiffusion_demo.ipynb \
+    --ExecutePreprocessor.kernel_name=markdiffusion \
+    --ExecutePreprocessor.timeout=1800
+```
 
 ## 🛠 测试模块
-我们提供了一套全面的测试模块来确保代码质量。该模块包含658个单元测试，覆盖率约为95%。详情请参考 `test/` 目录。
+我们提供了一套全面的测试模块来确保代码质量。该模块包含 672 个单元测试，代码覆盖率 94.73%。详情请参考 `test/` 目录。这里是直接由 pytest 导出的[完整覆盖率报告](https://thu-bpm.github.io/MarkDiffusion/ToReviewers/htmlcov/index.html)与[测试结果报告](https://thu-bpm.github.io/MarkDiffusion/ToReviewers/report.html?sort=result)。
 
 ## 引用
 ```

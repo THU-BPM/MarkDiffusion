@@ -35,6 +35,12 @@
 
 
 ## 🔥 Mises à jour
+🛠 **(2026.05.15)** Suite de tests étendue à 672 tests unitaires avec 94,73 % de couverture de code (régression complète GPU + CPU dans le nouvel environnement `markdiffusion-test`).
+
+🏗️ **(2026.05.10)** Restructuration du dépôt en un véritable package Python `markdiffusion/` afin que `pip install -e .` et l'installation depuis PyPI partagent les mêmes chemins d'import (`from markdiffusion.watermark import AutoWatermark`). Les installations editable et la CI utilisent désormais une mise en page unique.
+
+🎯 **(2026.05.10)** Ajout des attaques de régénération *DiffusionPurification* et *NeuralCodecCompression* ; *CrSc* (Crop & Scale) prend désormais `position="random"` et un décalage explicite — merci aux contributeurs !
+
 🛠 **(2025.12.19)** Ajout d'une suite de tests complète pour toutes les fonctionnalités avec 658 cas de test.
 
 🛠 **(2025.12.10)** Ajout d'un système de tests d'intégration continue utilisant GitHub Actions.
@@ -146,14 +152,39 @@ MarkDiffusion prend en charge huit pipelines, deux pour la détection (Watermark
 Si vous souhaitez essayer MarkDiffusion sans rien installer, vous pouvez utiliser [Google Colab](https://colab.research.google.com/drive/1N1C9elDAB5zwF4FxKKYMCqR3eSpCSqAW?usp=sharing#scrollTo=-kWt7m9Y3o-G) pour voir comment cela fonctionne.
 
 ### Installation
-**(Recommandé)** Nous avons publié un package pypi pour MarkDiffusion. Vous pouvez l'installer directement avec pip :
+
+MarkDiffusion peut être installé de trois façons. Choisissez celle qui correspond à votre usage :
+
+| Mode | Commande | À utiliser quand... |
+|---|---|---|
+| **A. PyPI (recommandé pour les utilisateurs)** | `pip install markdiffusion[optional]` | Vous voulez simplement *appeler* les algorithmes de tatouage depuis votre propre script/notebook. Pas besoin de lire ou de modifier la source de la bibliothèque, ni d'exécuter les tests ou les notebooks de démonstration. |
+| **B. Installation editable depuis la source (recommandé pour contributeurs/chercheurs)** | `git clone … && cd MarkDiffusion && pip install -e ".[optional]"` | Vous voulez (a) exécuter `MarkDiffusion_demo.ipynb` / la suite de tests `test/`, (b) modifier ou ajouter des algorithmes, (c) reproduire les résultats de l'article, ou (d) soumettre des PR. Les modifications apportées à `markdiffusion/` prennent effet immédiatement. |
+| **C. conda-forge (environnements conda uniquement)** | `conda install -c conda-forge markdiffusion` | Vous êtes restreint aux canaux conda. Certaines fonctionnalités avancées (dépendant de paquets PyPI-only comme `pyiqa` / `lpips`) ne sont pas incluses ; installez-les séparément si nécessaire. |
+
+**Mode A — Installation PyPI :**
+
 ```bash
 conda create -n markdiffusion python=3.11
 conda activate markdiffusion
 pip install markdiffusion[optional]
 ```
 
-(Alternative) Pour les utilisateurs qui sont *restreints uniquement à l'utilisation de l'environnement conda*, nous fournissons également un package conda-forge, qui peut être installé avec les commandes suivantes :
+**Mode B — Installation editable depuis la source :**
+
+```bash
+git clone https://github.com/THU-BPM/MarkDiffusion.git
+cd MarkDiffusion
+conda create -n markdiffusion python=3.11
+conda activate markdiffusion
+pip install -e ".[optional]"
+# (optionnel) installer les dépendances de test pour exécuter pytest, couverture, tests parallèles
+pip install -r test/requirements-test.txt
+```
+
+`pyproject.toml` épingle `torch>=2.4,<2.11` et `setuptools<81` pour que le résolveur sélectionne une wheel CUDA-12.x compatible avec un pilote ≥ 525 et conserve `pkg_resources` (toujours requis par `openai-clip`).
+
+**Mode C — conda-forge :**
+
 ```bash
 conda create -n markdiffusion python=3.11
 conda activate markdiffusion
@@ -161,110 +192,66 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 conda install markdiffusion
 ```
-Cependant, veuillez noter que certaines fonctionnalités avancées nécessitent des packages supplémentaires qui ne sont pas disponibles sur conda et ne peuvent pas être inclus dans la version. Vous devrez les installer séparément si nécessaire.
 
 ### Comment utiliser la boîte à outils
 
-Après l'installation, il existe deux façons d'utiliser MarkDiffusion :
+Les mêmes chemins d'import `markdiffusion.*` fonctionnent à la fois pour l'installation PyPI et l'installation editable. Les deux notebooks de démonstration ne diffèrent que par leur portée :
 
-1. **Cloner le dépôt pour essayer les démos ou l'utiliser pour un développement personnalisé.** Le notebook `MarkDiffusion_demo.ipynb` offre des démonstrations détaillées pour divers cas d'utilisation — veuillez le consulter pour obtenir des conseils. Voici un exemple rapide de génération et de détection d'image tatouée avec l'algorithme TR :
+- **`MarkDiffusion_pypi_demo.ipynb`** — utilisation minimale de bout en bout ; point de départ sûr pour les utilisateurs PyPI.
+- **`MarkDiffusion_demo.ipynb`** — parcours exhaustif des 11 algorithmes ainsi que des outils de visualisation et des pipelines d'évaluation ; livré avec le dépôt source (Mode B).
 
+Voici l'exemple minimal de bout en bout pour les deux modes :
 
-    ```python
-    import torch
-    from watermark.auto_watermark import AutoWatermark
-    from utils.diffusion_config import DiffusionConfig
-    from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
+```python
+import torch
+from markdiffusion.watermark import AutoWatermark
+from markdiffusion.utils import DiffusionConfig
+from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
 
-    # Configuration du périphérique
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    # Configuration du pipeline de diffusion
-    scheduler = DPMSolverMultistepScheduler.from_pretrained("model_path", subfolder="scheduler")
-    pipe = StableDiffusionPipeline.from_pretrained("model_path", scheduler=scheduler).to(device)
-    diffusion_config = DiffusionConfig(
-        scheduler=scheduler,
-        pipe=pipe,
-        device=device,
-        image_size=(512, 512),
-        num_inference_steps=50,
-        guidance_scale=7.5,
-        gen_seed=42,
-        inversion_type="ddim"
-    )
+MODEL_PATH = "huanzi05/stable-diffusion-2-1-base"
+scheduler = DPMSolverMultistepScheduler.from_pretrained(MODEL_PATH, subfolder="scheduler")
+pipe = StableDiffusionPipeline.from_pretrained(
+    MODEL_PATH,
+    scheduler=scheduler,
+    torch_dtype=torch.float16 if device == "cuda" else torch.float32,
+    safety_checker=None,
+).to(device)
 
-    # Charger l'algorithme de tatouage
-    watermark = AutoWatermark.load('TR', 
-                                algorithm_config='config/TR.json',
-                                diffusion_config=diffusion_config)
+diffusion_config = DiffusionConfig(
+    scheduler=scheduler,
+    pipe=pipe,
+    device=device,
+    image_size=(512, 512),
+    num_inference_steps=50,
+    guidance_scale=7.5,
+    gen_seed=42,
+    inversion_type="ddim",
+)
 
-    # Générer un média tatoué
-    prompt = "A beautiful sunset over the ocean"
-    watermarked_image = watermark.generate_watermarked_media(prompt)
-    watermarked_image.save("watermarked_image.png")
+# AutoWatermark récupère automatiquement la config par défaut intégrée
+# (markdiffusion/config/TR.json). Passez `algorithm_config=` pour la remplacer.
+tr_watermark = AutoWatermark.load("TR", diffusion_config=diffusion_config)
 
-    # Détecter le tatouage
-    detection_result = watermark.detect_watermark_in_media(watermarked_image)
-    print(f"Watermark detected: {detection_result}")
-    ```
+prompt = "A beautiful landscape with mountains and a river at sunset"
+watermarked_image = tr_watermark.generate_watermarked_media(input_data=prompt)
+watermarked_image.save("watermarked_image.png")
 
-2. **Importer la bibliothèque markdiffusion directement dans votre code sans cloner le dépôt.** Le notebook `MarkDiffusion_pypi_demo.ipynb` fournit des exemples complets pour utiliser MarkDiffusion via la bibliothèque markdiffusion — veuillez le consulter pour obtenir des conseils. Voici un exemple rapide :
+detection_result = tr_watermark.detect_watermark_in_media(watermarked_image)
+print(detection_result)
+```
 
-    ```python
-    import torch
-    from markdiffusion.watermark import AutoWatermark
-    from markdiffusion.utils import DiffusionConfig
-    from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
+Avec le **Mode B**, vous pouvez en outre pointer `algorithm_config=` vers un JSON dans votre copie de travail (par ex. `markdiffusion/config/TR.json`) pour expérimenter avec les paramètres sans réinstaller. Depuis le dépôt source, vous pouvez aussi exécuter le notebook de démonstration de bout en bout :
 
-    # Périphérique
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    print(f"Using device: {device}")
-
-    # Chemin du modèle
-    MODEL_PATH = "huanzi05/stable-diffusion-2-1-base"
-
-    # Initialiser le planificateur et le pipeline
-    scheduler = DPMSolverMultistepScheduler.from_pretrained(MODEL_PATH, subfolder="scheduler")
-    pipe = StableDiffusionPipeline.from_pretrained(
-        MODEL_PATH,
-        scheduler=scheduler,
-        torch_dtype=torch.float16 if device == "cuda" else torch.float32,
-        safety_checker=None,
-    ).to(device)
-
-    # Créer DiffusionConfig pour la génération d'images
-    image_diffusion_config = DiffusionConfig(
-        scheduler=scheduler,
-        pipe=pipe,
-        device=device,
-        image_size=(512, 512),
-        guidance_scale=7.5,
-        num_inference_steps=50,
-        gen_seed=42,
-        inversion_type="ddim"
-    )
-
-    # Charger l'algorithme de tatouage Tree-Ring
-    tr_watermark = AutoWatermark.load('TR', diffusion_config=image_diffusion_config)
-    print("TR watermark algorithm loaded successfully!")
-
-    # Générer une image tatouée
-    prompt = "A beautiful landscape with mountains and a river at sunset"
-
-    watermarked_image = tr_watermark.generate_watermarked_media(input_data=prompt)
-
-    # Afficher l'image tatouée
-    watermarked_image.save("watermarked_image.png")
-    print("Watermarked image generated!")
-
-    # Détecter le tatouage dans l'image tatouée
-    detection_result = tr_watermark.detect_watermark_in_media(watermarked_image)
-    print("Watermarked image detection result:")
-    print(detection_result)
-    ```
+```bash
+jupyter nbconvert --to notebook --execute MarkDiffusion_demo.ipynb \
+    --ExecutePreprocessor.kernel_name=markdiffusion \
+    --ExecutePreprocessor.timeout=1800
+```
 
 ## 🛠 Modules de test
-Nous fournissons un ensemble complet de modules de test pour assurer la qualité du code. Le module comprend 658 tests unitaires avec environ 95% de couverture de code. Veuillez vous référer au répertoire `test/` pour plus de détails.
+Nous fournissons un ensemble complet de modules de test pour assurer la qualité du code. Le module comprend 672 tests unitaires avec 94,73 % de couverture de code. Veuillez vous référer au répertoire `test/` pour plus de détails. Voici le [rapport de couverture complet](https://thu-bpm.github.io/MarkDiffusion/ToReviewers/htmlcov/index.html) et le [rapport de résultats](https://thu-bpm.github.io/MarkDiffusion/ToReviewers/report.html?sort=result) exportés directement via pytest.
 
 ## Citation
 ```

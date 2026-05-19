@@ -35,6 +35,12 @@
 
 
 ## 🔥 Actualizaciones
+🛠 **(2026.05.15)** Suite de pruebas ampliada a 672 pruebas unitarias con un 94,73 % de cobertura de código (regresión completa GPU + CPU en el nuevo entorno `markdiffusion-test`).
+
+🏗️ **(2026.05.10)** Repositorio reestructurado como un auténtico paquete Python `markdiffusion/`, de modo que `pip install -e .` y la instalación desde PyPI comparten las mismas rutas de import (`from markdiffusion.watermark import AutoWatermark`). Las instalaciones editable y la CI ahora se basan en una disposición única.
+
+🎯 **(2026.05.10)** Añadidos los ataques de regeneración *DiffusionPurification* y *NeuralCodecCompression*; *CrSc* (Crop & Scale) admite ahora `position="random"` y un desplazamiento explícito — ¡gracias a los contribuyentes!
+
 🛠 **(2025.12.19)** Agregada una suite de pruebas completa para todas las funcionalidades con 658 casos de prueba.
 
 🛠 **(2025.12.10)** Agregado un sistema de pruebas de integración continua usando GitHub Actions.
@@ -146,14 +152,39 @@ MarkDiffusion admite ocho pipelines, dos para detección (WatermarkedMediaDetect
 Si deseas probar MarkDiffusion sin instalar nada, puedes usar [Google Colab](https://colab.research.google.com/drive/1N1C9elDAB5zwF4FxKKYMCqR3eSpCSqAW?usp=sharing#scrollTo=-kWt7m9Y3o-G) para ver cómo funciona.
 
 ### Instalación
-**(Recomendado)** Hemos publicado un paquete pypi para MarkDiffusion. Puedes instalarlo directamente con pip:
+
+MarkDiffusion se puede instalar de tres formas. Elige la que se ajuste a tu uso:
+
+| Modo | Comando | Cuándo usarlo... |
+|---|---|---|
+| **A. PyPI (recomendado para usuarios)** | `pip install markdiffusion[optional]` | Solo quieres *invocar* algoritmos de marca de agua desde tu propio script/notebook. No necesitas leer o modificar el código fuente de la biblioteca, ni ejecutar las pruebas o los notebooks de demostración. |
+| **B. Instalación editable desde la fuente (recomendado para contribuyentes/investigadores)** | `git clone … && cd MarkDiffusion && pip install -e ".[optional]"` | Quieres (a) ejecutar `MarkDiffusion_demo.ipynb` / la suite `test/`, (b) modificar o añadir algoritmos, (c) reproducir resultados del paper, o (d) enviar PR. Las ediciones en `markdiffusion/` surten efecto de inmediato. |
+| **C. conda-forge (entornos solo conda)** | `conda install -c conda-forge markdiffusion` | Estás restringido a canales conda. Algunas características avanzadas (que dependen de paquetes solo en PyPI como `pyiqa` / `lpips`) no están incluidas; instálalas por separado si las necesitas. |
+
+**Modo A — Instalación PyPI:**
+
 ```bash
 conda create -n markdiffusion python=3.11
 conda activate markdiffusion
 pip install markdiffusion[optional]
 ```
 
-(Alternativa) Para usuarios que están *restringidos solo al uso del entorno conda*, también proporcionamos un paquete conda-forge, que se puede instalar con los siguientes comandos:
+**Modo B — Instalación editable desde la fuente:**
+
+```bash
+git clone https://github.com/THU-BPM/MarkDiffusion.git
+cd MarkDiffusion
+conda create -n markdiffusion python=3.11
+conda activate markdiffusion
+pip install -e ".[optional]"
+# (opcional) instalar extras de prueba para ejecutar pytest, cobertura, pruebas paralelas
+pip install -r test/requirements-test.txt
+```
+
+`pyproject.toml` fija `torch>=2.4,<2.11` y `setuptools<81` para que el resolvedor elija una wheel de CUDA-12.x compatible con controladores ≥ 525 y conserve `pkg_resources` (aún requerido por `openai-clip`).
+
+**Modo C — conda-forge:**
+
 ```bash
 conda create -n markdiffusion python=3.11
 conda activate markdiffusion
@@ -161,110 +192,66 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 conda install markdiffusion
 ```
-Sin embargo, ten en cuenta que algunas características avanzadas requieren paquetes adicionales que no están disponibles en conda y no se pueden incluir en la versión. Necesitarás instalarlos por separado si es necesario.
 
 ### Cómo usar el kit de herramientas
 
-Después de la instalación, hay dos formas de usar MarkDiffusion:
+Las mismas rutas de import `markdiffusion.*` funcionan tanto para la instalación PyPI como para la editable. Los dos notebooks de demostración solo difieren en su alcance:
 
-1. **Clonar el repositorio para probar las demos o usarlo para desarrollo personalizado.** El notebook `MarkDiffusion_demo.ipynb` ofrece demostraciones detalladas para varios casos de uso — por favor revísalo para obtener orientación. Aquí hay un ejemplo rápido de generación y detección de imagen con marca de agua usando el algoritmo TR:
+- **`MarkDiffusion_pypi_demo.ipynb`** — uso mínimo de extremo a extremo; punto de partida seguro para usuarios PyPI.
+- **`MarkDiffusion_demo.ipynb`** — recorrido exhaustivo por los 11 algoritmos junto con herramientas de visualización y pipelines de evaluación; se entrega con el repositorio fuente (Modo B).
 
+Ejemplo mínimo de extremo a extremo válido para ambos modos:
 
-    ```python
-    import torch
-    from watermark.auto_watermark import AutoWatermark
-    from utils.diffusion_config import DiffusionConfig
-    from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
+```python
+import torch
+from markdiffusion.watermark import AutoWatermark
+from markdiffusion.utils import DiffusionConfig
+from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
 
-    # Configuración del dispositivo
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    # Configurar pipeline de difusión
-    scheduler = DPMSolverMultistepScheduler.from_pretrained("model_path", subfolder="scheduler")
-    pipe = StableDiffusionPipeline.from_pretrained("model_path", scheduler=scheduler).to(device)
-    diffusion_config = DiffusionConfig(
-        scheduler=scheduler,
-        pipe=pipe,
-        device=device,
-        image_size=(512, 512),
-        num_inference_steps=50,
-        guidance_scale=7.5,
-        gen_seed=42,
-        inversion_type="ddim"
-    )
+MODEL_PATH = "huanzi05/stable-diffusion-2-1-base"
+scheduler = DPMSolverMultistepScheduler.from_pretrained(MODEL_PATH, subfolder="scheduler")
+pipe = StableDiffusionPipeline.from_pretrained(
+    MODEL_PATH,
+    scheduler=scheduler,
+    torch_dtype=torch.float16 if device == "cuda" else torch.float32,
+    safety_checker=None,
+).to(device)
 
-    # Cargar algoritmo de marca de agua
-    watermark = AutoWatermark.load('TR', 
-                                algorithm_config='config/TR.json',
-                                diffusion_config=diffusion_config)
+diffusion_config = DiffusionConfig(
+    scheduler=scheduler,
+    pipe=pipe,
+    device=device,
+    image_size=(512, 512),
+    num_inference_steps=50,
+    guidance_scale=7.5,
+    gen_seed=42,
+    inversion_type="ddim",
+)
 
-    # Generar medios con marca de agua
-    prompt = "A beautiful sunset over the ocean"
-    watermarked_image = watermark.generate_watermarked_media(prompt)
-    watermarked_image.save("watermarked_image.png")
+# AutoWatermark toma automáticamente la configuración por defecto integrada
+# (markdiffusion/config/TR.json). Pasa `algorithm_config=` para sobrescribirla.
+tr_watermark = AutoWatermark.load("TR", diffusion_config=diffusion_config)
 
-    # Detectar marca de agua
-    detection_result = watermark.detect_watermark_in_media(watermarked_image)
-    print(f"Watermark detected: {detection_result}")
-    ```
+prompt = "A beautiful landscape with mountains and a river at sunset"
+watermarked_image = tr_watermark.generate_watermarked_media(input_data=prompt)
+watermarked_image.save("watermarked_image.png")
 
-2. **Importar la biblioteca markdiffusion directamente en tu código sin clonar el repositorio.** El notebook `MarkDiffusion_pypi_demo.ipynb` proporciona ejemplos completos para usar MarkDiffusion a través de la biblioteca markdiffusion — por favor revísalo para obtener orientación. Aquí hay un ejemplo rápido:
+detection_result = tr_watermark.detect_watermark_in_media(watermarked_image)
+print(detection_result)
+```
 
-    ```python
-    import torch
-    from markdiffusion.watermark import AutoWatermark
-    from markdiffusion.utils import DiffusionConfig
-    from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
+En el **Modo B**, además puedes apuntar `algorithm_config=` a un JSON de tu copia de trabajo (por ejemplo `markdiffusion/config/TR.json`) para experimentar con parámetros sin reinstalar. Desde el repositorio fuente también puedes ejecutar el notebook de demostración de extremo a extremo:
 
-    # Dispositivo
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    print(f"Using device: {device}")
-
-    # Ruta del modelo
-    MODEL_PATH = "huanzi05/stable-diffusion-2-1-base"
-
-    # Inicializar planificador y pipeline
-    scheduler = DPMSolverMultistepScheduler.from_pretrained(MODEL_PATH, subfolder="scheduler")
-    pipe = StableDiffusionPipeline.from_pretrained(
-        MODEL_PATH,
-        scheduler=scheduler,
-        torch_dtype=torch.float16 if device == "cuda" else torch.float32,
-        safety_checker=None,
-    ).to(device)
-
-    # Crear DiffusionConfig para generación de imágenes
-    image_diffusion_config = DiffusionConfig(
-        scheduler=scheduler,
-        pipe=pipe,
-        device=device,
-        image_size=(512, 512),
-        guidance_scale=7.5,
-        num_inference_steps=50,
-        gen_seed=42,
-        inversion_type="ddim"
-    )
-
-    # Cargar algoritmo de marca de agua Tree-Ring
-    tr_watermark = AutoWatermark.load('TR', diffusion_config=image_diffusion_config)
-    print("TR watermark algorithm loaded successfully!")
-
-    # Generar imagen con marca de agua
-    prompt = "A beautiful landscape with mountains and a river at sunset"
-
-    watermarked_image = tr_watermark.generate_watermarked_media(input_data=prompt)
-
-    # Mostrar la imagen con marca de agua
-    watermarked_image.save("watermarked_image.png")
-    print("Watermarked image generated!")
-
-    # Detectar marca de agua en la imagen con marca de agua
-    detection_result = tr_watermark.detect_watermark_in_media(watermarked_image)
-    print("Watermarked image detection result:")
-    print(detection_result)
-    ```
+```bash
+jupyter nbconvert --to notebook --execute MarkDiffusion_demo.ipynb \
+    --ExecutePreprocessor.kernel_name=markdiffusion \
+    --ExecutePreprocessor.timeout=1800
+```
 
 ## 🛠 Módulos de prueba
-Proporcionamos un conjunto completo de módulos de prueba para garantizar la calidad del código. El módulo incluye 658 pruebas unitarias con aproximadamente un 95% de cobertura de código. Consulta el directorio `test/` para más detalles.
+Proporcionamos un conjunto completo de módulos de prueba para garantizar la calidad del código. El módulo incluye 672 pruebas unitarias con un 94,73 % de cobertura de código. Consulta el directorio `test/` para más detalles. Aquí están el [informe completo de cobertura](https://thu-bpm.github.io/MarkDiffusion/ToReviewers/htmlcov/index.html) y el [informe de resultados](https://thu-bpm.github.io/MarkDiffusion/ToReviewers/report.html?sort=result) exportados directamente vía pytest.
 
 ## Citación
 ```
