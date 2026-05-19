@@ -52,8 +52,8 @@ Key Features
    how different watermarking algorithms operate under various scenarios.
 
 📊 **Comprehensive Evaluation Module**
-   With 31 evaluation tools covering detectability, robustness, and impact on output quality, 
-   MarkDiffusion provides comprehensive assessment capabilities with 6 automated evaluation pipelines.
+   With 33 evaluation tools covering detectability, robustness, and impact on output quality,
+   MarkDiffusion provides comprehensive assessment capabilities with 8 automated evaluation pipelines.
 
 .. image:: ../img/fig1_overview.png
    :alt: MarkDiffusion Overview

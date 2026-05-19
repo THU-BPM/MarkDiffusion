@@ -63,7 +63,7 @@
 
 MarkDiffusion es un kit de herramientas de Python de código abierto para marcas de agua generativas de modelos de difusión latente. A medida que se expande el uso de modelos generativos basados en difusión, garantizar la autenticidad y el origen de los medios generados se vuelve crítico. MarkDiffusion simplifica el acceso, la comprensión y la evaluación de tecnologías de marcas de agua, haciéndolo accesible tanto para investigadores como para la comunidad en general. *Nota: si estás interesado en marcas de agua LLM (marca de agua de texto), consulta el kit de herramientas [MarkLLM](https://github.com/THU-BPM/MarkLLM) de nuestro grupo.*
 
-El kit de herramientas comprende tres componentes clave: un marco de implementación unificado para integraciones simplificadas de algoritmos de marcas de agua e interfaces fáciles de usar; un conjunto de visualización de mecanismos que muestra intuitivamente los patrones de marcas de agua agregados y extraídos para ayudar a la comprensión pública; y un módulo de evaluación integral que ofrece implementaciones estándar de 31 herramientas en tres aspectos esenciales: detectabilidad, robustez y calidad de salida, además de 6 pipelines de evaluación automatizados.
+El kit de herramientas comprende tres componentes clave: un marco de implementación unificado para integraciones simplificadas de algoritmos de marcas de agua e interfaces fáciles de usar; un conjunto de visualización de mecanismos que muestra intuitivamente los patrones de marcas de agua agregados y extraídos para ayudar a la comprensión pública; y un módulo de evaluación integral que ofrece implementaciones estándar de 33 herramientas en tres aspectos esenciales: detectabilidad, robustez y calidad de salida, además de 8 pipelines de evaluación automatizados.
 
 <img src="img/fig1_overview.png" alt="MarkDiffusion Overview" style="zoom:50%;" />
 
@@ -75,7 +75,7 @@ El kit de herramientas comprende tres componentes clave: un marco de implementac
 
 - **Soluciones de visualización:** El kit de herramientas incluye herramientas de visualización personalizadas que permiten vistas claras y perspicaces sobre cómo operan los diferentes algoritmos de marcas de agua en varios escenarios. Estas visualizaciones ayudan a desmitificar los mecanismos de los algoritmos, haciéndolos más comprensibles para los usuarios.
 
-- **Módulo de evaluación:** Con 31 herramientas de evaluación que cubren detectabilidad, robustez e impacto en la calidad de salida, MarkDiffusion proporciona capacidades de evaluación integral. Cuenta con 6 pipelines de evaluación automatizados: Pipeline de detección de marcas de agua, Pipeline de análisis de calidad de imagen, Pipeline de análisis de calidad de video y herramientas especializadas de evaluación de robustez.
+- **Módulo de evaluación:** Con 33 herramientas de evaluación que cubren detectabilidad, robustez e impacto en la calidad de salida, MarkDiffusion proporciona capacidades de evaluación integral. Cuenta con 8 pipelines de evaluación automatizados: Pipeline de detección de marcas de agua, Pipeline de análisis de calidad de imagen, Pipeline de análisis de calidad de video y herramientas especializadas de evaluación de robustez.
 
 ### ✨ Algoritmos implementados
 

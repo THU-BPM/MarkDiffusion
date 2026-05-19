@@ -64,7 +64,7 @@
 
 MarkDiffusion is an open-source Python toolkit for generative watermarking of latent diffusion models. As the use of diffusion-based generative models expands, ensuring the authenticity and origin of generated media becomes critical. MarkDiffusion simplifies the access, understanding, and assessment of watermarking technologies, making it accessible to both researchers and the broader community. *Note: if you are interested in LLM watermarking (text watermark), please refer to the [MarkLLM](https://github.com/THU-BPM/MarkLLM) toolkit from our group.*
 
-The toolkit comprises three key components: a unified implementation framework for streamlined watermarking algorithm integrations and user-friendly interfaces; a mechanism visualization suite that intuitively showcases added and extracted watermark patterns to aid public understanding; and a comprehensive evaluation module offering standard implementations of 31 tools across three essential aspects—detectability, robustness, and output quality, plus 6 automated evaluation pipelines.
+The toolkit comprises three key components: a unified implementation framework for streamlined watermarking algorithm integrations and user-friendly interfaces; a mechanism visualization suite that intuitively showcases added and extracted watermark patterns to aid public understanding; and a comprehensive evaluation module offering standard implementations of 33 tools across three essential aspects—detectability, robustness, and output quality, plus 8 automated evaluation pipelines.
 
 <img src="img/fig1_overview.png" alt="MarkDiffusion Overview" style="zoom:50%;" />
 
@@ -76,7 +76,7 @@ The toolkit comprises three key components: a unified implementation framework f
 
 - **Visualization Solutions:** The toolkit includes custom visualization tools that enable clear and insightful views into how different watermarking algorithms operate under various scenarios. These visualizations help demystify the algorithms' mechanisms, making them more understandable for users.
 
-- **Evaluation Module:** With 31 evaluation tools covering detectability, robustness, and impact on output quality, MarkDiffusion provides comprehensive assessment capabilities. It features 6 automated evaluation pipelines: Watermark Detection Pipeline, Image Quality Analysis Pipeline, Video Quality Analysis Pipeline, and specialized robustness assessment tools.
+- **Evaluation Module:** With 33 evaluation tools covering detectability, robustness, and impact on output quality, MarkDiffusion provides comprehensive assessment capabilities. It features 8 automated evaluation pipelines: Watermark Detection Pipeline, Image Quality Analysis Pipeline, Video Quality Analysis Pipeline, and specialized robustness assessment tools.
 
 ### ✨ Implemented Algorithms
 
