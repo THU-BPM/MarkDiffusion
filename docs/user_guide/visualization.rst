@@ -28,11 +28,11 @@ Simple Visualization
 
 .. code-block:: python
 
-   from watermark.auto_watermark import AutoWatermark
-   from visualize.auto_visualization import AutoVisualizer
+   from markdiffusion.watermark.auto_watermark import AutoWatermark
+   from markdiffusion.visualize.auto_visualization import AutoVisualizer
 
    # Generate watermarked image
-   watermark = AutoWatermark.load('GS', 'config/GS.json', diffusion_config)
+   watermark = AutoWatermark.load('GS', 'markdiffusion/config/GS.json', diffusion_config)
    watermarked_image = watermark.generate_watermarked_media(prompt)
 
    # Get visualization data

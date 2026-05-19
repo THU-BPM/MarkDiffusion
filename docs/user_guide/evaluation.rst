@@ -29,13 +29,13 @@ Basic Detection Evaluation
 
 .. code-block:: python
 
-   from evaluation.dataset import StableDiffusionPromptsDataset
-   from evaluation.pipelines.detection import (
+   from markdiffusion.evaluation.dataset import StableDiffusionPromptsDataset
+   from markdiffusion.evaluation.pipelines.detection import (
        WatermarkedMediaDetectionPipeline,
        UnWatermarkedMediaDetectionPipeline,
        DetectionPipelineReturnType
    )
-   from evaluation.tools.success_rate_calculator import (
+   from markdiffusion.evaluation.tools.success_rate_calculator import (
        DynamicThresholdSuccessRateCalculator
    )
 
@@ -102,7 +102,7 @@ Fixed Threshold Evaluation
 
 .. code-block:: python
 
-   from evaluation.tools.success_rate_calculator import (
+   from markdiffusion.evaluation.tools.success_rate_calculator import (
        FundamentalSuccessRateCalculator
    )
 
@@ -125,7 +125,7 @@ Test watermark robustness against various image attacks:
 
 .. code-block:: python
 
-   from evaluation.tools.image_editor import (
+   from markdiffusion.evaluation.tools.image_editor import (
        JPEGCompression,
        GaussianBlurring,
        GaussianNoise,
@@ -184,7 +184,7 @@ Test video watermark robustness:
 
 .. code-block:: python
 
-   from evaluation.tools.video_editor import (
+   from markdiffusion.evaluation.tools.video_editor import (
        MPEG4Compression,
        FrameAverage,
        FrameSwap,
@@ -203,7 +203,7 @@ Test video watermark robustness:
    }
 
    # Evaluate video robustness
-   from evaluation.dataset import VBenchDataset
+   from markdiffusion.evaluation.dataset import VBenchDataset
    
    video_dataset = VBenchDataset(max_samples=50)
    video_robustness_results = {}
@@ -256,11 +256,11 @@ For single image quality metrics:
 
 .. code-block:: python
 
-   from evaluation.pipelines.image_quality_analysis import (
+   from markdiffusion.evaluation.pipelines.image_quality_analysis import (
        DirectImageQualityAnalysisPipeline,
        QualityPipelineReturnType
    )
-   from evaluation.tools.image_quality_analyzer import (
+   from markdiffusion.evaluation.tools.image_quality_analyzer import (
        NIQECalculator, BRISQUEAnalyzer
    )
 
@@ -285,11 +285,11 @@ For metrics requiring reference images or text:
 
 .. code-block:: python
 
-   from evaluation.pipelines.image_quality_analysis import (
+   from markdiffusion.evaluation.pipelines.image_quality_analysis import (
        ReferencedImageQualityAnalysisPipeline
    )
-   from evaluation.tools.image_quality_analyzer import CLIPScoreCalculator
-   from evaluation.dataset import MSCOCODataset
+   from markdiffusion.evaluation.tools.image_quality_analyzer import CLIPScoreCalculator
+   from markdiffusion.evaluation.dataset import MSCOCODataset
 
    mscoco_dataset = MSCOCODataset(max_samples=100)
 
@@ -314,10 +314,10 @@ Compare watermarked vs unwatermarked images:
 
 .. code-block:: python
 
-   from evaluation.pipelines.image_quality_analysis import (
+   from markdiffusion.evaluation.pipelines.image_quality_analysis import (
        ComparedImageQualityAnalysisPipeline
    )
-   from evaluation.tools.image_quality_analyzer import (
+   from markdiffusion.evaluation.tools.image_quality_analyzer import (
        PSNRAnalyzer, SSIMAnalyzer, LPIPSAnalyzer,
        VIFAnalyzer, FSIMAnalyzer
    )
@@ -351,10 +351,10 @@ Metrics requiring sets of images:
 
 .. code-block:: python
 
-   from evaluation.pipelines.image_quality_analysis import (
+   from markdiffusion.evaluation.pipelines.image_quality_analysis import (
        GroupImageQualityAnalysisPipeline
    )
-   from evaluation.tools.image_quality_analyzer import (
+   from markdiffusion.evaluation.tools.image_quality_analyzer import (
        FIDCalculator, InceptionScoreCalculator
    )
 
@@ -380,7 +380,7 @@ For diversity evaluation:
 
 .. code-block:: python
 
-   from evaluation.pipelines.image_quality_analysis import (
+   from markdiffusion.evaluation.pipelines.image_quality_analysis import (
        RepeatImageQualityAnalysisPipeline
    )
 
@@ -402,11 +402,11 @@ Video Quality Metrics
 
 .. code-block:: python
 
-   from evaluation.dataset import VBenchDataset
-   from evaluation.pipelines.video_quality_analysis import (
+   from markdiffusion.evaluation.dataset import VBenchDataset
+   from markdiffusion.evaluation.pipelines.video_quality_analysis import (
        DirectVideoQualityAnalysisPipeline
    )
-   from evaluation.tools.video_quality_analyzer import (
+   from markdiffusion.evaluation.tools.video_quality_analyzer import (
        SubjectConsistencyAnalyzer,
        BackgroundConsistencyAnalyzer,
        MotionSmoothnessAnalyzer,

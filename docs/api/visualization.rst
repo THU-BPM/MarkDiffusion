@@ -35,7 +35,7 @@ The ``AutoVisualizer`` class provides unified visualization for all watermarking
 
 .. code-block:: python
 
-   from visualize.auto_visualization import AutoVisualizer
+   from markdiffusion.visualize.auto_visualization import AutoVisualizer
    
    # Get visualization data from watermark
    data_for_vis = watermark.get_data_for_visualize(watermarked_image)

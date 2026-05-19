@@ -43,7 +43,7 @@ Example:
            PIL.Image: Watermarked image
            
        Examples:
-           >>> watermark = AutoWatermark.load('GS', 'config/GS.json', config)
+           >>> watermark = AutoWatermark.load('GS', 'markdiffusion/config/GS.json', config)
            >>> image = watermark.generate_watermarked_media("A sunset")
        """
        # Implementation
@@ -166,7 +166,7 @@ To add a new watermarking algorithm:
 
    .. code-block:: python
 
-      from watermark.my_algorithm.my_algorithm import MyAlgorithm
+      from markdiffusion.watermark.my_algorithm.my_algorithm import MyAlgorithm
 
       class AutoWatermark:
           ALGORITHM_MAP = {
@@ -199,7 +199,7 @@ To add a new evaluation tool:
 
    .. code-block:: python
 
-      from evaluation.tools.image_editor import BaseImageEditor
+      from markdiffusion.evaluation.tools.image_editor import BaseImageEditor
 
       class MyAttack(BaseImageEditor):
           def __init__(self, param1, param2, **kwargs):
@@ -215,7 +215,7 @@ To add a new evaluation tool:
 
    .. code-block:: python
 
-      from evaluation.tools.image_quality_analyzer import BaseImageQualityAnalyzer
+      from markdiffusion.evaluation.tools.image_quality_analyzer import BaseImageQualityAnalyzer
 
       class MyMetric(BaseImageQualityAnalyzer):
           def analyze(self, image1, image2=None):

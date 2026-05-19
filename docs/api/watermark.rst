@@ -28,12 +28,12 @@ The ``AutoWatermark`` class is the primary interface for watermarking operations
 
 .. code-block:: python
 
-   from watermark.auto_watermark import AutoWatermark
-   from utils.diffusion_config import DiffusionConfig
+   from markdiffusion.watermark.auto_watermark import AutoWatermark
+   from markdiffusion.utils.diffusion_config import DiffusionConfig
 
    # Load a watermark algorithm
    watermark = AutoWatermark.load('TR', 
-                                  algorithm_config='config/TR.json',
+                                  algorithm_config='markdiffusion/config/TR.json',
                                   diffusion_config=diffusion_config)
 
    # Generate watermarked image

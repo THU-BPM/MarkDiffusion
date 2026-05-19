@@ -11,7 +11,7 @@ Complete DiffusionConfig Options
 
 .. code-block:: python
 
-   from utils.diffusion_config import DiffusionConfig
+   from markdiffusion.utils.diffusion_config import DiffusionConfig
 
    diffusion_config = DiffusionConfig(
        # Required parameters
@@ -81,7 +81,7 @@ Algorithm Configuration
 Tree-Ring Configuration
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-``config/TR.json``:
+``markdiffusion/config/TR.json``:
 
 .. code-block:: json
 
@@ -109,7 +109,7 @@ Tree-Ring Configuration
 Gaussian-Shading Configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``config/GS.json``:
+``markdiffusion/config/GS.json``:
 
 .. code-block:: json
 
@@ -141,7 +141,7 @@ Gaussian-Shading Configuration
 ROBIN Configuration
 ~~~~~~~~~~~~~~~~~~~
 
-``config/ROBIN.json``:
+``markdiffusion/config/ROBIN.json``:
 
 .. code-block:: json
 
@@ -447,7 +447,7 @@ Create a comprehensive config file:
 
    watermark:
      algorithm: "GS"
-     config_file: "config/GS.json"
+     config_file: "markdiffusion/config/GS.json"
      parameters:
        watermark_strength: 1.0
        detection_threshold: 0.5
@@ -548,8 +548,8 @@ Example Complete Setup
    import yaml
    import logging
    from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
-   from watermark.auto_watermark import AutoWatermark
-   from utils.diffusion_config import DiffusionConfig
+   from markdiffusion.watermark.auto_watermark import AutoWatermark
+   from markdiffusion.utils.diffusion_config import DiffusionConfig
 
    def setup_experiment(config_path):
        """Set up complete experiment from config."""

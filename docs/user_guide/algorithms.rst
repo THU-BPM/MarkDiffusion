@@ -81,11 +81,11 @@ Tree-Ring embeds circular patterns in the Fourier domain of initial latents, mak
 
 .. code-block:: python
 
-   from watermark.auto_watermark import AutoWatermark
+   from markdiffusion.watermark.auto_watermark import AutoWatermark
    
    watermark = AutoWatermark.load(
        'TR',
-       algorithm_config='config/TR.json',
+       algorithm_config='markdiffusion/config/TR.json',
        diffusion_config=diffusion_config
    )
    
@@ -97,7 +97,7 @@ Tree-Ring embeds circular patterns in the Fourier domain of initial latents, mak
 
 **Configuration Parameters:**
 
-From ``config/TR.json``:
+From ``markdiffusion/config/TR.json``:
 
 - ``w_seed``: 999999 - Watermark seed
 - ``w_channel``: 0 - Channel index to embed watermark
@@ -126,13 +126,13 @@ Ring-ID extends Tree-Ring to support multiple keys, enabling multi-user identifi
 
    watermark = AutoWatermark.load(
        'RI',
-       algorithm_config='config/RI.json',
+       algorithm_config='markdiffusion/config/RI.json',
        diffusion_config=diffusion_config
    )
 
 **Configuration Parameters:**
 
-From ``config/RI.json``:
+From ``markdiffusion/config/RI.json``:
 
 - ``ring_width``: 1 - Ring width
 - ``quantization_levels``: 4 - Quantization levels
@@ -163,13 +163,13 @@ ROBIN uses adversarial optimization to create robust watermarks that are invisib
 
    watermark = AutoWatermark.load(
        'ROBIN',
-       algorithm_config='config/ROBIN.json',
+       algorithm_config='markdiffusion/config/ROBIN.json',
        diffusion_config=diffusion_config
    )
 
 **Configuration Parameters:**
 
-From ``config/ROBIN.json``:
+From ``markdiffusion/config/ROBIN.json``:
 
 - ``w_seed``: 999999 - Watermark seed
 - ``w_channel``: 3 - Watermark channel
@@ -200,7 +200,7 @@ WIND implements a two-stage watermarking approach that hides watermarks in the n
 
    watermark = AutoWatermark.load(
        'WIND',
-       algorithm_config='config/WIND.json',
+       algorithm_config='markdiffusion/config/WIND.json',
        diffusion_config=diffusion_config
    )
 
@@ -223,7 +223,7 @@ SFW combines semantic information with Fourier domain watermarking for enhanced 
 
    watermark = AutoWatermark.load(
        'SFW',
-       algorithm_config='config/SFW.json',
+       algorithm_config='markdiffusion/config/SFW.json',
        diffusion_config=diffusion_config
    )
 
@@ -251,13 +251,13 @@ Gaussian-Shading provides provably performance-lossless watermarking by injectin
 
    watermark = AutoWatermark.load(
        'GS',
-       algorithm_config='config/GS.json',
+       algorithm_config='markdiffusion/config/GS.json',
        diffusion_config=diffusion_config
    )
 
 **Configuration Parameters:**
 
-From ``config/GS.json``:
+From ``markdiffusion/config/GS.json``:
 
 - ``channel_copy``: 1 - Channel to copy watermark
 - ``wm_key``: 42 - Watermark key
@@ -286,7 +286,7 @@ GaussMarker combines spatial and frequency domain watermarking for enhanced robu
 
    watermark = AutoWatermark.load(
        'GM',
-       algorithm_config='config/GM.json',
+       algorithm_config='markdiffusion/config/GM.json',
        diffusion_config=diffusion_config
    )
 
@@ -294,7 +294,7 @@ GaussMarker combines spatial and frequency domain watermarking for enhanced robu
 
 .. code-block:: bash
 
-   python watermark/gm/train_GNR.py --config config/GM.json
+   python markdiffusion/watermark/gm/train_GNR.py --config markdiffusion/config/GM.json
 
 PRC
 ~~~
@@ -315,7 +315,7 @@ PRC creates undetectable watermarks that are imperceptible to human observers an
 
    watermark = AutoWatermark.load(
        'PRC',
-       algorithm_config='config/PRC.json',
+       algorithm_config='markdiffusion/config/PRC.json',
        diffusion_config=diffusion_config
    )
 
@@ -338,7 +338,7 @@ SEAL leverages semantic information to embed watermarks that adapt to image cont
 
    watermark = AutoWatermark.load(
        'SEAL',
-       algorithm_config='config/SEAL.json',
+       algorithm_config='markdiffusion/config/SEAL.json',
        diffusion_config=diffusion_config
    )
 

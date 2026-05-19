@@ -22,7 +22,7 @@ Inherit from Base Dataset
 
 .. code-block:: python
 
-   from evaluation.dataset import BaseDataset
+   from markdiffusion.evaluation.dataset import BaseDataset
    from PIL import Image
    import os
 
@@ -73,7 +73,7 @@ Create Custom Attack
 
 .. code-block:: python
 
-   from evaluation.tools.image_editor import BaseImageEditor
+   from markdiffusion.evaluation.tools.image_editor import BaseImageEditor
    import torch
    import torch.nn.functional as F
 
@@ -159,7 +159,7 @@ Create Quality Analyzer
 
 .. code-block:: python
 
-   from evaluation.tools.image_quality_analyzer import BaseImageQualityAnalyzer
+   from markdiffusion.evaluation.tools.image_quality_analyzer import BaseImageQualityAnalyzer
    import torch
    import torch.nn as nn
 
@@ -269,7 +269,7 @@ Basic Custom Pipeline
 
 .. code-block:: python
 
-   from evaluation.pipelines.detection import BaseDetectionPipeline
+   from markdiffusion.evaluation.pipelines.detection import BaseDetectionPipeline
 
    class CustomEvaluationPipeline:
        """Custom evaluation pipeline."""
@@ -541,7 +541,7 @@ Using Custom Pipeline
 
 .. code-block:: python
 
-   from watermark.auto_watermark import AutoWatermark
+   from markdiffusion.watermark.auto_watermark import AutoWatermark
    
    # Create custom dataset
    dataset = CustomDataset('my_data', max_samples=100)
@@ -568,7 +568,7 @@ Using Custom Pipeline
    )
    
    # Load watermark
-   watermark = AutoWatermark.load('GS', 'config/GS.json', diffusion_config)
+   watermark = AutoWatermark.load('GS', 'markdiffusion/config/GS.json', diffusion_config)
    
    # Run evaluation
    results = pipeline.evaluate(watermark)

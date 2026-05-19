@@ -151,10 +151,10 @@ Success Rate Calculator
 
 .. code-block:: python
 
-   from evaluation.dataset import MSCOCODataset
-   from evaluation.pipelines.detection import WatermarkedMediaDetectionPipeline
-   from evaluation.tools.image_editor import JPEGCompression
-   from evaluation.tools.success_rate_calculator import DynamicThresholdSuccessRateCalculator
+   from markdiffusion.evaluation.dataset import MSCOCODataset
+   from markdiffusion.evaluation.pipelines.detection import WatermarkedMediaDetectionPipeline
+   from markdiffusion.evaluation.tools.image_editor import JPEGCompression
+   from markdiffusion.evaluation.tools.success_rate_calculator import DynamicThresholdSuccessRateCalculator
    
    # Load dataset
    dataset = MSCOCODataset('dataset/mscoco/mscoco.parquet', max_samples=100)
@@ -172,9 +172,9 @@ Success Rate Calculator
 
 .. code-block:: python
 
-   from evaluation.pipelines.image_quality_analysis import DirectImageQualityAnalysisPipeline
-   from evaluation.dataset import StableDiffusionPromptsDataset
-   from evaluation.tools.image_quality_analyzer import PSNRAnalyzer, SSIMAnalyzer
+   from markdiffusion.evaluation.pipelines.image_quality_analysis import DirectImageQualityAnalysisPipeline
+   from markdiffusion.evaluation.dataset import StableDiffusionPromptsDataset
+   from markdiffusion.evaluation.tools.image_quality_analyzer import PSNRAnalyzer, SSIMAnalyzer
    
    # Load dataset
    dataset = StableDiffusionPromptsDataset('dataset/prompts.parquet', max_samples=50)

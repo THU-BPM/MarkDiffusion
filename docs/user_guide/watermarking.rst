@@ -24,7 +24,7 @@ First, configure your diffusion model:
 
    import torch
    from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
-   from utils.diffusion_config import DiffusionConfig
+   from markdiffusion.utils.diffusion_config import DiffusionConfig
 
    # Device selection
    device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -94,12 +94,12 @@ Each watermarking algorithm has its own configuration file:
 
 .. code-block:: python
 
-   from watermark.auto_watermark import AutoWatermark
+   from markdiffusion.watermark.auto_watermark import AutoWatermark
 
    # Load watermark with configuration
    watermark = AutoWatermark.load(
        'GS',  # Algorithm name
-       algorithm_config='config/GS.json',  # Config file path
+       algorithm_config='markdiffusion/config/GS.json',  # Config file path
        diffusion_config=diffusion_config
    )
 
@@ -267,7 +267,7 @@ Verify watermark persistence after attacks:
 
 .. code-block:: python
 
-   from evaluation.tools.image_editor import (
+   from markdiffusion.evaluation.tools.image_editor import (
        JPEGCompression, GaussianBlurring, Rotation
    )
 

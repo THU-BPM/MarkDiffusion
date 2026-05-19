@@ -21,7 +21,7 @@ All watermarking algorithms inherit from ``BaseWatermark``:
 
 .. code-block:: python
 
-   from watermark.base import BaseWatermark
+   from markdiffusion.watermark.base import BaseWatermark
 
    class MyWatermark(BaseWatermark):
        """Your custom watermarking algorithm."""
@@ -171,7 +171,7 @@ Here's a complete example of a simple frequency domain watermarking algorithm:
    import torch.fft as fft
    import numpy as np
    from PIL import Image
-   from watermark.base import BaseWatermark
+   from markdiffusion.watermark.base import BaseWatermark
 
    class FrequencyWatermark(BaseWatermark):
        """Simple frequency domain watermarking."""
@@ -244,7 +244,7 @@ Here's a complete example of a simple frequency domain watermarking algorithm:
        def detect_watermark_in_media(self, media, **kwargs):
            """Detect watermark in image."""
            # Invert image to latents
-           from inversions.ddim_inversion import DDIMInversion
+           from markdiffusion.inversions.ddim_inversion import DDIMInversion
            
            inversion = DDIMInversion(self.diffusion_config)
            latents = inversion.invert(media)
@@ -265,7 +265,7 @@ Here's a complete example of a simple frequency domain watermarking algorithm:
        
        def get_data_for_visualize(self, media):
            """Get visualization data."""
-           from inversions.ddim_inversion import DDIMInversion
+           from markdiffusion.inversions.ddim_inversion import DDIMInversion
            
            inversion = DDIMInversion(self.diffusion_config)
            latents = inversion.invert(media)
@@ -305,7 +305,7 @@ Register your algorithm in ``watermark/auto_watermark.py``:
 
 .. code-block:: python
 
-   from watermark.frequency.frequency_watermark import FrequencyWatermark
+   from markdiffusion.watermark.frequency.frequency_watermark import FrequencyWatermark
 
    class AutoWatermark:
        ALGORITHM_MAP = {
@@ -322,7 +322,7 @@ Create a custom visualizer for your algorithm:
 
 .. code-block:: python
 
-   from visualize.base import BaseVisualizer
+   from markdiffusion.visualize.base import BaseVisualizer
    import matplotlib.pyplot as plt
 
    class FrequencyWatermarkVisualizer(BaseVisualizer):
@@ -399,7 +399,7 @@ Register your visualizer in ``visualize/auto_visualization.py``:
 
 .. code-block:: python
 
-   from visualize.frequency.frequency_visualizer import FrequencyWatermarkVisualizer
+   from markdiffusion.visualize.frequency.frequency_visualizer import FrequencyWatermarkVisualizer
 
    class AutoVisualizer:
        VISUALIZER_MAP = {
@@ -417,8 +417,8 @@ Create tests for your algorithm:
 .. code-block:: python
 
    import unittest
-   from watermark.auto_watermark import AutoWatermark
-   from utils.diffusion_config import DiffusionConfig
+   from markdiffusion.watermark.auto_watermark import AutoWatermark
+   from markdiffusion.utils.diffusion_config import DiffusionConfig
 
    class TestFrequencyWatermark(unittest.TestCase):
        """Test cases for FrequencyWatermark."""
@@ -454,7 +454,7 @@ Create tests for your algorithm:
        
        def test_robustness(self):
            """Test robustness to attacks."""
-           from evaluation.tools.image_editor import JPEGCompression
+           from markdiffusion.evaluation.tools.image_editor import JPEGCompression
            
            prompt = "A test image"
            image = self.watermark.generate_watermarked_media(prompt)
@@ -491,7 +491,7 @@ Implement custom latent inversion:
 
 .. code-block:: python
 
-   from inversions.base_inversion import BaseInversion
+   from markdiffusion.inversions.base_inversion import BaseInversion
 
    class CustomInversion(BaseInversion):
        def invert(self, image):

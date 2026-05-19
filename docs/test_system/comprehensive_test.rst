@@ -7,8 +7,8 @@ This comprehensive test module is located in the ``test/`` directory.
 Test Coverage Statistics
 ------------------------
 
-- **Total Test Cases**: 658 unit tests
-- **Code Coverage**: Approximately 95%
+- **Total Test Cases**: 672 unit tests
+- **Code Coverage**: 94.73%
 - **Coverage Scope**: Nearly all functional modules
 - **Uncovered Code**: Primarily exception handling and edge case logic
 

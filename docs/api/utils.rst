@@ -27,7 +27,7 @@ The ``DiffusionConfig`` class configures the diffusion model parameters for wate
 
 .. code-block:: python
 
-   from utils.diffusion_config import DiffusionConfig
+   from markdiffusion.utils.diffusion_config import DiffusionConfig
    from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
    import torch
    
