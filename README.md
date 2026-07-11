@@ -36,6 +36,8 @@
 
 
 ## 🔥 Updates
+🎉 **(2026.07.11)** MarkDiffusion is accepted by JMLR!
+
 🛠 **(2026.05.15)** Expanded the test suite to 672 unit tests with 94.73% code coverage (full GPU + CPU regression on the new `markdiffusion-test` env).
 
 🏗️ **(2026.05.10)** Restructured the repo into a proper `markdiffusion/` Python package so `pip install -e .` and PyPI installs share the same import paths (`from markdiffusion.watermark import AutoWatermark`). Editable installs and CI now run from a single source layout.
