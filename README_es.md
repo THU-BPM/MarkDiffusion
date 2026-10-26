@@ -255,11 +255,15 @@ Proporcionamos un conjunto completo de módulos de prueba para garantizar la cal
 
 ## Citación
 ```
-@article{pan2025markdiffusion,
-  title={MarkDiffusion: An Open-Source Toolkit for Generative Watermarking of Latent Diffusion Models},
-  author={Pan, Leyi and Guan, Sheng and Fu, Zheyu and Si, Luyang and Wang, Zian and Hu, Xuming and King, Irwin and Yu, Philip S and Liu, Aiwei and Wen, Lijie},
-  journal={arXiv preprint arXiv:2509.10569},
-  year={2025}
+@article{JMLR:v27:25-2553,
+  author  = {Leyi Pan and Sheng Guan and Zheyu Fu and Luyang Si and Huan Wang and Zian Wang and Hanqian Li and Xuming Hu and Irwin King and Philip S. Yu and Aiwei Liu and Lijie Wen},
+  title   = {MarkDiffusion: An Open-Source Toolkit for Generative Watermarking of Latent Diffusion Models},
+  journal = {Journal of Machine Learning Research},
+  year    = {2026},
+  volume  = {27},
+  number  = {204},
+  pages   = {1--22},
+  url     = {http://jmlr.org/papers/v27/25-2553.html}
 }
 ```
 

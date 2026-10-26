@@ -10,7 +10,11 @@ authors:
   - family-names: "Si"
     given-names: "Luyang"
   - family-names: "Wang"
+    given-names: "Huan"
+  - family-names: "Wang"
     given-names: "Zian"
+  - family-names: "Li"
+    given-names: "Hanqian"
   - family-names: "Hu"
     given-names: "Xuming"
   - family-names: "King"
@@ -35,7 +39,11 @@ preferred-citation:
   - family-names: "Si"
     given-names: "Luyang"
   - family-names: "Wang"
+    given-names: "Huan"
+  - family-names: "Wang"
     given-names: "Zian"
+  - family-names: "Li"
+    given-names: "Hanqian"
   - family-names: "Hu"
     given-names: "Xuming"
   - family-names: "King"
@@ -47,5 +55,10 @@ preferred-citation:
   - family-names: "Wen"
     given-names: "Lijie"
   title: "MarkDiffusion: An Open-Source Toolkit for Generative Watermarking of Latent Diffusion Models"
-  journal: "arXiv preprint arXiv:2509.10569"
-  year: 2025
+  journal: "Journal of Machine Learning Research"
+  year: 2026
+  volume: 27
+  issue: 204
+  start: 1
+  end: 22
+  url: "https://www.jmlr.org/papers/v27/25-2553.html"
